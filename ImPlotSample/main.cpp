@@ -5,7 +5,8 @@
 #define PI acos(-1)
 
 // 関数宣言
-void ShowPlotWindow();
+void ShowPlotWindow1();
+void ShowPlotWindow2();
 
 int main() {
     // GUI初期化
@@ -22,9 +23,8 @@ int main() {
         
         // ウィンドウ描画
         // 描画したい要素をここに記述する
-        ShowPlotWindow();
-
-
+        ShowPlotWindow1();
+        ShowPlotWindow2();
 
 
 		// ここまで
@@ -39,13 +39,13 @@ int main() {
 }
 
 // プロットウィンドウの表示
-void ShowPlotWindow() {
+void ShowPlotWindow1() {
 	static double x_data[5000],y_data[5000];
 	static int size = 5000;
     static double freq = 100e3;
 	static double dt = 1e-8;
-
-    ImGui::Begin("Hello, ImGui + ImPlot!");
+	// ウィンドウ開始
+    ImGui::Begin("Window title 1");
 
     
     if (ImGui::Button("Plot Sine Wave")) {
@@ -60,10 +60,22 @@ void ShowPlotWindow() {
 
     // プロット描画
     ImPlot::SetNextAxesToFit();
-    if (ImPlot::BeginPlot("Sine Wave", ImVec2(-1, -1))) {
+    if (ImPlot::BeginPlot("Plot title", ImVec2(-1, -1))) {
         ImPlot::PlotLine("y = sin(x)", x_data, y_data, size);
         ImPlot::EndPlot();
     }
+	// ウィンドウ終了
+    ImGui::End();
+}
 
+void ShowPlotWindow2() {
+    // ウィンドウ開始
+    ImGui::SetNextWindowPos(ImVec2(400, 100), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver);
+    ImGui::Begin("Window title 2");
+
+
+    
+    // ウィンドウ終了
     ImGui::End();
 }
