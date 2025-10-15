@@ -4,7 +4,7 @@
 #include "Gui.h"
 #define PI acos(-1)
 
-// 関数宣言
+// ImGuiのWindowの関数
 void ShowPlotWindow1();
 void ShowPlotWindow2();
 
@@ -22,12 +22,12 @@ int main() {
         Gui::BeginFrame();
         
         // ウィンドウ描画
-        // 描画したい要素をここに記述する
+		/*** 描画したいImGuiのWindowをここに記述する ***/
         ShowPlotWindow1();
         ShowPlotWindow2();
 
 
-		// ここまで
+		/*** ここまで **********************************/
         
         // フレーム描画・スワップ
         Gui::EndFrame();
@@ -73,9 +73,13 @@ void ShowPlotWindow2() {
     ImGui::SetNextWindowPos(ImVec2(400, 100), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver);
     ImGui::Begin("Window title 2");
+    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
+    // https://github.com/ocornut/imgui
+    // https://github.com/epezent/implot
+	ImGui::Text("Hello world.");
 
 
-    
+    /*** ここまで *************************************************/
     // ウィンドウ終了
     ImGui::End();
 }
