@@ -4,82 +4,82 @@
 #include "Gui.h"
 #define PI acos(-1)
 
-// ImGui‚ÌWindow‚ÌŠÖ”
+// ImGuiã®Windowã®é–¢æ•°
 void ShowPlotWindow1();
 void ShowPlotWindow2();
 
 int main() {
-    // GUI‰Šú‰»
+    // GUIåˆæœŸåŒ–
     Gui::Initialize();
     if (Gui::GetWindow() == nullptr) {
         std::cerr << "[Error] Failed to initialize GUI\n";
         return -1;
     }
     
-    // ƒƒCƒ“ƒ‹[ƒv
+    // ãƒ¡ã‚¤ãƒ³ãƒ«ãƒ¼ãƒ—
     while (!glfwWindowShouldClose(Gui::GetWindow())) {
-        // ƒtƒŒ[ƒ€ŠJn
+        // ãƒ•ãƒ¬ãƒ¼ãƒ é–‹å§‹
         Gui::BeginFrame();
         
-        // ƒEƒBƒ“ƒhƒE•`‰æ
-		/*** •`‰æ‚µ‚½‚¢ImGui‚ÌWindow‚ğ‚±‚±‚É‹Lq‚·‚é ***/
+        // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦æç”»
+		/*** æç”»ã—ãŸã„ImGuiã®Windowã‚’ã“ã“ã«è¨˜è¿°ã™ã‚‹ ***/
         ShowPlotWindow1();
         ShowPlotWindow2();
 
 
-		/*** ‚±‚±‚Ü‚Å **********************************/
+		/*** ã“ã“ã¾ã§ **********************************/
         
-        // ƒtƒŒ[ƒ€•`‰æEƒXƒƒbƒv
+        // ãƒ•ãƒ¬ãƒ¼ãƒ æç”»ãƒ»ã‚¹ãƒ¯ãƒƒãƒ—
         Gui::EndFrame();
     }
 
-    // I—¹ˆ—
+    // çµ‚äº†å‡¦ç†
     Gui::Shutdown();
     return 0;
 }
 
-// ƒvƒƒbƒgƒEƒBƒ“ƒhƒE‚Ì•\¦
+// ãƒ—ãƒ­ãƒƒãƒˆã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®è¡¨ç¤º
 void ShowPlotWindow1() {
 	static double x_data[5000],y_data[5000];
 	static int size = 5000;
     static double freq = 100e3;
 	static double dt = 1e-8;
-	// ƒEƒBƒ“ƒhƒEŠJn
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦é–‹å§‹
     ImGui::Begin("Window title 1");
 
     
     if (ImGui::Button("Plot Sine Wave")) {
-        // ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚ç‚±‚±‚ªÀs‚³‚ê‚é
-        // ƒTƒCƒ“”gƒf[ƒ^¶¬
+        // ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã‚‰ã“ã“ãŒå®Ÿè¡Œã•ã‚Œã‚‹
+        // ã‚µã‚¤ãƒ³æ³¢ãƒ‡ãƒ¼ã‚¿ç”Ÿæˆ
         for (int i = 0; i < size; ++i) {
             x_data[i] = i * dt;
             y_data[i] = std::sin(2*PI*freq*x_data[i]);
         }
-        freq += 10e3; // ü”g”‚ğ­‚µ‚¸‚Â•Ï‰»‚³‚¹‚é
+        freq += 10e3; // å‘¨æ³¢æ•°ã‚’å°‘ã—ãšã¤å¤‰åŒ–ã•ã›ã‚‹
     }
 
-    // ƒvƒƒbƒg•`‰æ
+    // ãƒ—ãƒ­ãƒƒãƒˆæç”»
     ImPlot::SetNextAxesToFit();
     if (ImPlot::BeginPlot("Plot title", ImVec2(-1, -1))) {
         ImPlot::PlotLine("y = sin(x)", x_data, y_data, size);
         ImPlot::EndPlot();
     }
-	// ƒEƒBƒ“ƒhƒEI—¹
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦çµ‚äº†
     ImGui::End();
 }
 
 void ShowPlotWindow2() {
-    // ƒEƒBƒ“ƒhƒEŠJn
+    // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦é–‹å§‹
     ImGui::SetNextWindowPos(ImVec2(400, 100), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver);
     ImGui::Begin("Window title 2");
-    /*** •`‰æ‚µ‚½‚¢ImGui‚ÌWidget‚âImPlot‚ÌPlot‚ğ‚±‚±‚É‹Lq‚·‚é ***/
+    /*** æç”»ã—ãŸã„ImGuiã®Widgetã‚„ImPlotã®Plotã‚’ã“ã“ã«è¨˜è¿°ã™ã‚‹ ***/
     // https://github.com/ocornut/imgui
     // https://github.com/epezent/implot
-	ImGui::Text("Hello world.");
+	ImGui::Text("Hello, world!");
 
 
-    /*** ‚±‚±‚Ü‚Å *************************************************/
-    // ƒEƒBƒ“ƒhƒEI—¹
+    /*** ã“ã“ã¾ã§ *************************************************/
+    // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦çµ‚äº†
     ImGui::End();
 }
