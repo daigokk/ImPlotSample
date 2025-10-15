@@ -363,5 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # ImGui
-imgui.ini
 /ImPlotSample/imgui.ini
