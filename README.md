@@ -1,6 +1,6 @@
 # ImPlotSample
 
-- このソフトウェアはImPlotをVisual Studioで利用するためのひな型です。
+- このソフトウェアは[ImPlot](https://github.com/epezent/implot)をVisual Studioで利用するためのひな型です。
 - [職業能力開発総合大学校 電気工学専攻](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)の「プログラミング」、「自動計測実習」で用います。
 
 # 🧱 ImGui ウィジェット使用例チートシート
@@ -142,9 +142,9 @@ if (ImPlot::BeginPlot("My Plot")) {
 
 
 # ⚙️ Dependencies
-- GLFW
-- Dear ImGui
-- ImPlot
+- [GLFW](https://www.glfw.org/)
+- [Dear ImGui](https://github.com/ocornut/imgui)
+- [ImPlot](https://github.com/epezent/implot)
 
 # 🙏 Acknowledgments
 This software was developed with user-friendly yet powerful software, GLFW, Dear ImGui, and ImPlot. The author would like to express their gratitude to the OSS communities.
