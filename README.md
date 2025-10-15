@@ -1,9 +1,9 @@
 # ImPlotSample
 
 - このソフトウェアは[ImPlot](https://github.com/epezent/implot)をVisual Studioで利用するためのひな型です。
-- ImPlotと[Dear ImGui](https://github.com/ocornut/imgui)に依存しています。
-- ImPlotとは、簡潔なコードでプログラムデータをリアルタイムで視覚化したり、インタラクティブなプロットを作成することを目的としたライブラリです。
+- [Dear ImGui](https://github.com/ocornut/imgui)とImPlotに依存しています。
 - ImGuiとは、直感的かつ簡潔なコードでGUIを作成することを目的としたライブラリです。
+- ImPlotとは、データをリアルタイムで視覚化したり、インタラクティブなプロットを作成することを目的としたライブラリです。
 - [職業能力開発総合大学校 電気工学専攻](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)の「プログラミング」、「自動計測実習」で用います。
 
 # 🧱 ImGui ウィジェット使用例チートシート
