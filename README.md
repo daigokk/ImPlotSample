@@ -19,7 +19,15 @@
 | `DragInt()` | ドラッグ式数値入力 | `int count = 10; ImGui::DragInt("Count", &count, 1, 0, 100);` |
 | `ColorEdit3()` | RGB色選択 | `float color[3] = {1.0f, 0.0f, 0.0f}; ImGui::ColorEdit3("Color", color);` |
 
-## 🟩 レイアウト・構造
+## 🟩 ウィンドウの開始・終了
+
+```cpp
+ImGui::Begin("Window title");
+ImGui::Text("Hello world.");
+ImGui::End();
+```
+
+## 🟨 レイアウト・構造
 
 | ウィジェット | 説明 | 使用例 |
 |--------------|------|--------|
@@ -29,7 +37,7 @@
 | `Indent()` / `Unindent()` | インデント調整 | `ImGui::Indent(); ImGui::Text("Indented"); ImGui::Unindent();` |
 | `BeginGroup()` / `EndGroup()` | グループ化 | `ImGui::BeginGroup(); /* 複数ウィジェット */ ImGui::EndGroup();` |
 
-## 🟨 コンボ・リスト・ツリー
+## 🟥 コンボ・リスト・ツリー
 
 | ウィジェット | 説明 | 使用例 |
 |--------------|------|--------|
@@ -38,14 +46,14 @@
 | `TreeNode()` | ツリーノード | `if (ImGui::TreeNode("Details")) { ImGui::Text("More info"); ImGui::TreePop(); }` |
 | `CollapsingHeader()` | 折りたたみセクション | `if (ImGui::CollapsingHeader("Advanced Settings")) { /* 内容 */ }` |
 
-## 🟥 テーブル・グリッド
+## 🟪 テーブル・グリッド
 
 | ウィジェット | 説明 | 使用例 |
 |--------------|------|--------|
 | `BeginTable()` | テーブル開始 | `if (ImGui::BeginTable("MyTable", 2)) { ImGui::TableNextRow(); ImGui::TableNextColumn(); ImGui::Text("Cell 1"); ImGui::TableNextColumn(); ImGui::Text("Cell 2"); ImGui::EndTable(); }` |
 | `TableSetupColumn()` | 列の設定 | `ImGui::TableSetupColumn("Name"); ImGui::TableSetupColumn("Value");` |
 
-## 🟪 その他便利ウィジェット
+## 🧪 その他便利ウィジェット
 
 | ウィジェット | 説明 | 使用例 |
 |--------------|------|--------|
@@ -55,7 +63,7 @@
 | `OpenPopup()` / `BeginPopup()` | ポップアップ表示 | `ImGui::OpenPopup("MyPopup"); if (ImGui::BeginPopup("MyPopup")) { ImGui::Text("Popup content"); ImGui::EndPopup(); }` |
 | `SetNextWindowSize()` | ウィンドウサイズ指定 | `ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_Once);` |
 
-## 🧪 インタラクション・状態取得
+## 📌 インタラクション・状態取得
 
 | ウィジェット | 説明 | 使用例 |
 |--------------|------|--------|
