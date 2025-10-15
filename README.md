@@ -1,6 +1,6 @@
 # ImPlotSample
 
-- このソフトウェアはImPlotをVisual Studioで開発するためのひな型です。
+- このソフトウェアはImPlotをVisual Studioで利用するためのひな型です。
 - [職業能力開発総合大学校 電気工学専攻](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)の「プログラミング」、「自動計測実習」で用います。
 
 # 🧱 ImGui ウィジェット使用例チートシート
