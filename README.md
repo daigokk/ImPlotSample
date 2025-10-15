@@ -1,5 +1,8 @@
 # ImPlotSample
 
+- このソフトウェアはImPlotをVisual Studioで開発するためのひな型です。
+- [職業能力開発総合大学校 電気工学専攻の](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)「プログラミング」、「自動計測実習」で用います。
+e
 # 🧱 ImGui ウィジェット使用例チートシート
 
 ## 🟦 基本ウィジェット
@@ -83,6 +86,7 @@ if (ImPlot::BeginPlot("My Plot")) {
     ImPlot::PlotLine("Data", x, y, 100);
     ImPlot::EndPlot();
 }
+```
 
 ## 🟨 軸の設定
 
@@ -135,3 +139,12 @@ if (ImPlot::BeginPlot("My Plot")) {
 - `BeginPlot()` ～ `EndPlot()` の間に描画関数を呼び出す
 - 軸やスタイルは `SetupAxis` や `PushStyleVar` で柔軟に設定可能
 - `SetNextAxesToFit()` を使えば自動スケーリングが有効になる
+
+
+# ⚙️ Dependencies
+- GLFW
+- Dear ImGui
+- ImPlot
+
+# 🙏 Acknowledgments
+This software was developed with user-friendly yet powerful software, GLFW, Dear ImGui, and ImPlot. The author would like to express their gratitude to the OSS communities.
