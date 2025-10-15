@@ -61,7 +61,9 @@ void ShowPlotWindow1() {
     // プロット描画
     ImPlot::SetNextAxesToFit();
     if (ImPlot::BeginPlot("Plot title", ImVec2(-1, -1))) {
-        ImPlot::PlotLine("y = sin(x)", x_data, y_data, size);
+        ImPlot::SetupAxis(ImAxis_X1, "Time (s)");
+        ImPlot::SetupAxis(ImAxis_Y1, "v (V)");
+        ImPlot::PlotLine("v = sin(wt)", x_data, y_data, size);
         ImPlot::EndPlot();
     }
 	// ウィンドウ終了
@@ -76,7 +78,7 @@ void ShowPlotWindow2() {
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     // https://github.com/ocornut/imgui
     // https://github.com/epezent/implot
-	ImGui::Text("Hello, world!");
+	ImGui::Text("Hello world.");
 
 
     /*** ここまで *************************************************/
