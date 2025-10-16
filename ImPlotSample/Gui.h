@@ -33,7 +33,6 @@ public:
     static void ImGui_SetNeonRedTheme();
     static void ImGui_SetEvaTheme();
     static float monitorScale;
-    static bool SurfacePro7;
 private:
     static GLFWwindow* window_;
     static int monitorWidth;

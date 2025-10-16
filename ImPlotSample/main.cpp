@@ -10,7 +10,7 @@ void ShowPlotWindow2();
 
 int main() {
     // GUI初期化
-    Gui::Initialize("ImPlot sample", 0, 0, 1024, 720);
+    Gui::Initialize("ImPlot sample", 0, 24, 1024, 720);
     if (Gui::GetWindow() == nullptr) {
         std::cerr << "[Error] Failed to initialize GUI\n";
         return -1;
@@ -80,6 +80,7 @@ void ShowPlotWindow2() {
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     // https://github.com/ocornut/imgui
     // https://github.com/epezent/implot
+    // https://github.com/daigokk/ImPlotSample
 	ImGui::Text("Hello world.");
 
 

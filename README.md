@@ -1,4 +1,5 @@
 # ImPlotSample
+  ![Hard copy](./HardCopy.png)
 
 - このソフトウェアは[ImPlot](https://github.com/epezent/implot)をVisual Studioで利用するためのひな型です。
 - [Dear ImGui](https://github.com/ocornut/imgui)とImPlotに依存しています。

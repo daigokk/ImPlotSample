@@ -5,7 +5,6 @@ GLFWwindow* Gui::window_ = nullptr;
 float Gui::monitorScale = 1.0f;
 int Gui::monitorWidth = 0;
 int Gui::monitorHeight = 0;
-bool Gui::SurfacePro7 = false;
 int Gui::windowFlag = 4; // ImGuiCond_FirstUseEver
 
 // ESCキーでウィンドウを閉じるコールバック
