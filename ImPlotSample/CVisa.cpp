@@ -2,7 +2,7 @@
 #include <iostream>
 #include "CVisa.h"
 
-ViSession CVisa::rm;
+ViSession CVisa::resourceManager;
 
 void vi_checkError(const ViStatus status, const char filename[], const int line)
 {
@@ -72,8 +72,8 @@ void vi_FindRsrc(const ViSession rm) {
     viClose(findList);
 }
 
-bool CVisa::OpenRM(const char filename[], const int line) {
-    ViStatus status = viOpenDefaultRM(&rm);
+bool CVisa::OpenRM(const char* filename, const int line) {
+    ViStatus status = viOpenDefaultRM(&resourceManager);
     if (status < VI_SUCCESS) {
         vi_checkError(status, filename, line);
 		return false;
@@ -81,40 +81,40 @@ bool CVisa::OpenRM(const char filename[], const int line) {
 	return true;
 }
 
-ViSession CVisa::OpenInstrument(const char address[], const char filename[], const int line) {
-    ViSession instr = VI_NULL;
-    ViStatus status = viOpen(rm, address, VI_NULL, VI_NULL, &instr);
+ViSession CVisa::OpenInstrument(const char address[], const char* filename, const int line) {
+    ViSession instrument = VI_NULL;
+    ViStatus status = viOpen(resourceManager, address, VI_NULL, VI_NULL, &instrument);
     if (status < VI_SUCCESS) {
         vi_checkError(status, filename, line);
         return VI_NULL;
     }
 
-    status = viSetAttribute(instr, VI_ATTR_TMO_VALUE, 2000);
+    status = viSetAttribute(instrument, VI_ATTR_TMO_VALUE, 2000);
     if (status < VI_SUCCESS) {
         std::cerr << "[Error] viSetAttribute failed: " << status << "\n";
         return VI_NULL;
     }
 
-    return instr;
+    return instrument;
 }
 
 void CVisa::CloseRM() {
-    if (rm) {
-        viClose(rm);
-        rm = VI_NULL;
+    if (resourceManager) {
+        viClose(resourceManager);
+		resourceManager = VI_NULL;
     }
 }
 
-void CVisa::CloseInstrument(ViSession instr) {
-    if (instr) {
-        viClose(instr);
+void CVisa::CloseInstrument(ViSession instrument) {
+    if (instrument) {
+        viClose(instrument);
     }
 }
 
-bool CVisa::cviPrintf(const ViSession instr, const char filename[], const int line, const char* format, ...) {
+bool CVisa::cviPrintf(const ViSession instrument, const char* filename, const int line, const char* format, ...) {
     va_list args;
     va_start(args, format);
-    ViStatus status = viPrintf(instr, format, args);
+    ViStatus status = viPrintf(instrument, format, args);
     va_end(args);
 
     if (status < VI_SUCCESS) {
@@ -125,8 +125,8 @@ bool CVisa::cviPrintf(const ViSession instr, const char filename[], const int li
 }
 
 // cviScanfにおいてformatで用いる文字列は%tを使う。%sを使うと空白で区切られた最初の単語しか読み取れない。
-bool CVisa::cviScanf(const ViSession instr, const char filename[], int line, const char* format, void* output) {
-    ViStatus status = viScanf(instr, format, output);
+bool CVisa::cviScanf(const ViSession instrument, const char* filename, int line, const char* format, void* output) {
+    ViStatus status = viScanf(instrument, format, output);
     if (status < VI_SUCCESS) {
         vi_checkError(status, filename, line);
         return false;
@@ -134,12 +134,12 @@ bool CVisa::cviScanf(const ViSession instr, const char filename[], int line, con
     return true;
 }
 
-char* CVisa::cviQueryf(const ViSession instr, const char filename[], const int line, const char* format, ...) {
+char* CVisa::cviQueryf(const ViSession instrument, const char* filename, const int line, const char* format, ...) {
     static char ret[256];
     va_list args;
 
     va_start(args, format);
-    ViStatus status = viPrintf(instr, format, args);
+    ViStatus status = viPrintf(instrument, format, args);
     va_end(args);
 
     if (status < VI_SUCCESS) {
@@ -147,7 +147,7 @@ char* CVisa::cviQueryf(const ViSession instr, const char filename[], const int l
         return nullptr;
     }
 
-    status = viScanf(instr, "%255t", ret);
+    status = viScanf(instrument, "%255t", ret);
     if (status < VI_SUCCESS) {
         vi_checkError(status, filename, line);
         return nullptr;
@@ -207,15 +207,10 @@ double scope_get_timediv(ViSession vi)
 	return atof(ret);
 }
 
-void scope_get_Waveforms(ViSession vi, int ch, double voltages[])
-{
+void scope_get_Waveforms(ViSession vi, int ch, double voltages[]) {
 	vi_checkError(viPrintf(vi, "COMMunicate:HEADer OFF\n"), __FILE__, __LINE__);
-	double position, range, offset;
-	int length, count;
-	char c;
-	char ret[256];
 
-	length = scope_get_RecordLength(vi);
+	int length = scope_get_RecordLength(vi);
 	scope_set_ViewCh(vi, ch);
 
 	vi_checkError(viPrintf(vi, "WAVeform:STARt 0\n"), __FILE__, __LINE__);
@@ -223,71 +218,63 @@ void scope_get_Waveforms(ViSession vi, int ch, double voltages[])
 	vi_checkError(viPrintf(vi, "WAVeform:TRACe %d\n", ch), __FILE__, __LINE__);
 	vi_checkError(viPrintf(vi, "WAVeform:FORMat RBYTe\n"), __FILE__, __LINE__);
 
-	
-	vi_checkError(viQueryf(vi, "%s", "%255t", "WAVeform:POSition ?\n", ret), __FILE__, __LINE__);
-	position = atof(ret);
-	vi_checkError(viQueryf(vi, "%s", "%255t", "WAVeform:RANGe?\n", ret), __FILE__, __LINE__);
-	range = atof(ret);
-	vi_checkError(viQueryf(vi, "%s", "%255t", "WAVeform:OFFSet?\n", ret), __FILE__, __LINE__);
-	offset = atof(ret);
+	double position = atof(CVisa::cviQueryf(vi, __FILE__, __LINE__, "WAVeform:POSition?\n"));
+	double range = atof(CVisa::cviQueryf(vi, __FILE__, __LINE__, "WAVeform:RANGe?\n"));
+	double offset = atof(CVisa::cviQueryf(vi, __FILE__, __LINE__, "WAVeform:OFFSet?\n"));
+
 	vi_checkError(viPrintf(vi, "WAVeform:SEND?\n"), __FILE__, __LINE__);
 
-	c = visa_viGetchar(vi);
+	char c = visa_viGetchar(vi);
 	if (c != '#') exit(-1);
-	c = visa_viGetchar(vi);
-	if (c < '0' && '9' < c) exit(-1);
-	count = c - '0';
-	for (int i = 0; i < count; i++)
-	{
-		c = visa_viGetchar(vi);
-		if (c < '0' && '9' < c) exit(-1);
+
+	int count = visa_viGetchar(vi) - '0';
+	for (int i = 0; i < count; ++i) {
+		visa_viGetchar(vi); // skip header digits
 	}
-	for (int i = 0; i < length; i++)
-	{
+
+	for (int i = 0; i < length; ++i) {
 		c = visa_viGetchar(vi);
-		voltages[i] = range * ((unsigned char)c - position) / 25 + offset;
+		voltages[i] = range * ((unsigned char)c - position) / 25.0 + offset;
 	}
 }
 
-int scope_save_Waveformsf(ViSession vi, const char* format, ...)
-{
-	double* v1, * v2;
-	int length;
-	double dt;
-	char* lines;
+int scope_save_Waveformsf(ViSession vi, const char* format, ...) {
+    char filename[256];
+    va_list ap;
+    va_start(ap, format);
+    vsnprintf(filename, sizeof(filename) - 1, format, ap);
+    va_end(ap);
 
-	char filename[256];
-	va_list ap;
-	va_start(ap, format);
-	vsnprintf(filename, 256 - 1, format, ap);
-	va_end(ap);
+    int length = scope_get_RecordLength(vi);
+    double dt = scope_get_timediv(vi) * 10 / length;
 
-	length = scope_get_RecordLength(vi);
-	dt = scope_get_timediv(vi) * 10 / length;
-	v1 = (double*)malloc(sizeof(double) * length);
-	v2 = (double*)malloc(sizeof(double) * length);
+    double* v1 = new double[length];
+    double* v2 = new double[length];
 
-	int flag = scope_get_State(vi);
-	scope_set_Stop(vi);
-	scope_get_Waveforms(vi, 1, v1);
-	scope_get_Waveforms(vi, 2, v2);
-	if (flag == 1)
-		scope_set_Run(vi);
+    int wasRunning = scope_get_State(vi);
+    scope_set_Stop(vi);
+    scope_get_Waveforms(vi, 1, v1);
+    scope_get_Waveforms(vi, 2, v2);
+    if (wasRunning) scope_set_Run(vi);
 
-	FILE* fp;
-	fopen_s(&fp, filename, "w");
-	if (fp == NULL)
-	{
-		printf("Failed. '%s' couldn't be opened.\n", filename);
-		return -1;
-	}
-	for (int i = 0; i < length; i++)
-	{
-		fprintf(fp, "%e, %e, %e\n", (i + 1) * dt, v1[i], v2[i]);
-	}
-	fclose(fp);
-	printf("Succeeded. '%s' could be saved.\n", filename);
-	free(v1); v1 = NULL;
-	free(v2); v2 = NULL;
-	return 0;
+    FILE* fp;
+    fopen_s(&fp, filename, "w");
+    if (!fp) {
+        std::cerr << "Failed to open file: " << filename << "\n";
+        delete[] v1;
+        delete[] v2;
+        return -1;
+    }
+
+    for (int i = 0; i < length; ++i) {
+        fprintf(fp, "%e, %e, %e\n", (i + 1) * dt, v1[i], v2[i]);
+    }
+
+    fclose(fp);
+    std::cout << "Saved waveform to: " << filename << "\n";
+
+    delete[] v1;
+    delete[] v2;
+    return 0;
 }
+

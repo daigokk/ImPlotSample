@@ -6,7 +6,7 @@
 
 #define PI acos(-1)
 
-#define VISA
+//#define VISA
 #ifdef VISA
     #include "CVisa.h"
 #endif // VISA
@@ -27,10 +27,10 @@ int main() {
 #ifdef VISA
 	// VISA初期化
     /*** ここから **********************************/
-    ViSession rm = 0, scope = 0;
-    vi_checkError(viOpenDefaultRM(&rm), __FILE__, __LINE__);
-    vi_FindRsrc(rm); 
-    vi_checkError(viOpen(rm, "USB0::????????::INSTR", VI_NULL, VI_NULL, &scope), __FILE__, __LINE__);
+    ViSession resourceManager = 0, scope = 0;
+    vi_checkError(viOpenDefaultRM(&resourceManager), __FILE__, __LINE__);
+    vi_FindRsrc(resourceManager);
+    vi_checkError(viOpen(resourceManager, "USB0::????????::INSTR", VI_NULL, VI_NULL, &scope), __FILE__, __LINE__);
 
 
     /*** ここまで **********************************/
@@ -61,7 +61,7 @@ int main() {
 
 
 	vi_checkError(viClose(scope), __FILE__, __LINE__);
-    vi_checkError(viClose(rm), __FILE__, __LINE__);
+    vi_checkError(viClose(resourceManager), __FILE__, __LINE__);
     /*** ここまで **********************************/
 #endif // VISA
     // GUI終了処理
