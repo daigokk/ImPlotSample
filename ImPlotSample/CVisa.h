@@ -7,10 +7,10 @@
 void vi_checkError(ViStatus status, const char* filename, int line);
 
 // VISAリソース検索
-void vi_FindRsrc(ViSession resourceManager);
+void vi_FindRsrc(const ViSession resourceManager);
 
 // 波形保存（可変引数）
-int scope_save_Waveformsf(ViSession instrument, const char* format, ...);
+int scope_save_Waveformsf(const ViSession instrument, const char* format, ...);
 
 class CVisa {
 private:

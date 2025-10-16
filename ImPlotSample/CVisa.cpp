@@ -47,26 +47,47 @@ void vi_checkError(const ViStatus status, const char filename[], const int line)
 	}
 }
 
-void vi_FindRsrc(const ViSession rm) {
+void vi_getIdn(const ViSession resourceManager, const ViChar* instrDesc, char* ret) {
+    ViSession instrument;
+    ViStatus status;
+    status = viOpen(resourceManager, instrDesc, VI_NULL, VI_NULL, &instrument);
+    if (status < VI_SUCCESS) {
+        std::cerr << "計測器のオープンに失敗しました。" << std::endl;
+        return;
+    }
+    status = viQueryf(instrument, "%s", "%255t", "*IDN?\n", ret);
+    if (status < VI_SUCCESS) {
+        std::cerr << "計測器の問い合わせに失敗しました。" << std::endl;
+        return;
+    }
+    status = viClose(instrument);
+    if (status < VI_SUCCESS) {
+        std::cerr << "計測器のクローズに失敗しました。" << std::endl;
+        return;
+    }
+}
+
+void vi_FindRsrc(const ViSession resourceManager) {
     // 接続されている計測器を検索（例: GPIB, USB, TCPIPなど）
 	ViStatus status;
 	ViFindList findList;
     ViUInt32 numInstrs;
-	ViChar instrDesc[256];
-    status = viFindRsrc(rm, "?*INSTR", &findList, &numInstrs, instrDesc);
+	ViChar instrDesc[256], ret[256];
+    status = viFindRsrc(resourceManager, "?*INSTR", &findList, &numInstrs, instrDesc);
     if (status < VI_SUCCESS) {
         std::cerr << "計測器の検索に失敗しました。" << std::endl;
         return;
     }
-
     std::cout << "見つかった計測器の数: " << numInstrs << std::endl;
-    std::cout << "1: " << instrDesc << std::endl;
+	vi_getIdn(resourceManager, instrDesc, ret);
+    std::cout << "1: " << instrDesc << ", " << ret << std::endl;
 
     // 残りの計測器を取得
     for (ViUInt32 i = 1; i < numInstrs; ++i) {
         status = viFindNext(findList, instrDesc);
         if (status < VI_SUCCESS) break;
-        std::cout << i + 1 << ": " << instrDesc << std::endl;
+        vi_getIdn(resourceManager, instrDesc, ret);
+        std::cout << i + 1 << ": " << instrDesc << ", " << ret << std::endl;
     }
 
     viClose(findList);
@@ -88,7 +109,7 @@ ViSession CVisa::OpenInstrument(const char address[], const char* filename, cons
         vi_checkError(status, filename, line);
         return VI_NULL;
     }
-
+	// Timeout属性の設定（ミリ秒単位）
     status = viSetAttribute(instrument, VI_ATTR_TMO_VALUE, 2000);
     if (status < VI_SUCCESS) {
         std::cerr << "[Error] viSetAttribute failed: " << status << "\n";
@@ -207,7 +228,7 @@ double scope_get_timediv(ViSession vi)
 	return atof(ret);
 }
 
-void scope_get_Waveforms(ViSession vi, int ch, double voltages[]) {
+void scope_get_Waveforms(const ViSession vi, int ch, double voltages[]) {
 	vi_checkError(viPrintf(vi, "COMMunicate:HEADer OFF\n"), __FILE__, __LINE__);
 
 	int length = scope_get_RecordLength(vi);
@@ -238,7 +259,7 @@ void scope_get_Waveforms(ViSession vi, int ch, double voltages[]) {
 	}
 }
 
-int scope_save_Waveformsf(ViSession vi, const char* format, ...) {
+int scope_save_Waveformsf(const ViSession vi, const char* format, ...) {
     char filename[256];
     va_list ap;
     va_start(ap, format);
