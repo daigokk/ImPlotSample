@@ -6,25 +6,37 @@
 #pragma comment(lib, "./GLFW/glfw3_mt.lib")
 
 // ImGui & ImPlot
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-#include "implot.h"
+#include <IMGUI/imgui.h>
+#include <IMGUI/imgui_impl_glfw.h>
+#include <IMGUI/imgui_impl_opengl3.h>
+#include <IMGUI/implot.h>
 
 // GLFW & ïWèÄÉâÉCÉuÉâÉä
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-
-
 class Gui {
 public:
-    static void Initialize();
+    static void Initialize(
+        const char title[],
+        const int windowPosX, const int windowPosY,
+        const int windowWidth, const int windowHeight
+    );
     static void Shutdown();
     static void BeginFrame();
     static void EndFrame();
-	static GLFWwindow* GetWindow() { return window_; }
+    static GLFWwindow* GetWindow() { return window_; }
+    static void setStyle(const int theme);
+    static void ImGui_SetGrayTheme();
+    static void ImGui_SetNeonBlueTheme();
+    static void ImGui_SetNeonGreenTheme();
+    static void ImGui_SetNeonRedTheme();
+    static void ImGui_SetEvaTheme();
+    static float monitorScale;
+    static bool SurfacePro7;
 private:
     static GLFWwindow* window_;
+    static int monitorWidth;
+    static int monitorHeight;
+    static int windowFlag;
 };
-

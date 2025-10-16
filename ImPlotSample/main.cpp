@@ -10,7 +10,7 @@ void ShowPlotWindow2();
 
 int main() {
     // GUI初期化
-    Gui::Initialize();
+    Gui::Initialize("ImPlot sample", 0, 0, 1024, 720);
     if (Gui::GetWindow() == nullptr) {
         std::cerr << "[Error] Failed to initialize GUI\n";
         return -1;
@@ -45,6 +45,8 @@ void ShowPlotWindow1() {
     static double freq = 100e3;
 	static double dt = 1e-8;
 	// ウィンドウ開始
+    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(640, 480), ImGuiCond_FirstUseEver);
     ImGui::Begin("Window title 1");
 
     
