@@ -2,7 +2,9 @@
 
 ## 概要
 
-VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコンピュータの間の通信を抽象化するためのソフトウェアインターフェースです。NI(National Instruments）によって開発され、現在では多くのベンダーがサポートしています。
+VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコンピュータの間の通信方法の違いを気にせず、同じ方法で操作できるようにするためのソフトウェアインターフェースです。NI（National Instruments）によって開発され、現在では多くのメーカーが対応しています。
+
+例えば、USBやLAN、GPIBなど異なる接続方式でも、VISAを使えば同じ命令で機器を制御できます。
 
 ---
 
@@ -43,7 +45,9 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 
 ## 📄 SCPIとの関係
 
-VISAは通信の手段であり、SCPI（Standard Commands for Programmable Instruments、スキッピ）は通信の内容（コマンド体系）です。SCPIは多くの計測器で使われており、VISA経由で `*IDN?` や `MEAS:VOLT?` などのコマンドを送信します。
+VISAは「通信の方法」を統一する仕組みであり、SCPI（Standard Commands for Programmable Instruments、スキッピ）は「通信の中身（命令）」を標準化する仕組みです。
+
+例えば、`*IDN?` というSCPIコマンドは「あなたは誰ですか？」という意味で、機器のメーカー名や型番などを返します。VISAを使えば、このコマンドをどの接続方式でも同じように送ることができます。
 
 ---
 
@@ -70,6 +74,9 @@ VISAは、計測器制御の世界で欠かせない共通言語のような存�
 
 ## 最小のサンプルプログラム
 ```cpp
+// このサンプルは、USB接続されたSCPI対応機器に対して識別情報を取得する最小構成の例です。
+// "USB0::????????::INSTR" の部分は、NI MAXで確認した実際のアドレスに置き換えてください。
+
 #pragma comment(lib, "visa64.lib")
 #include <visa.h>
 #include <stdio.h>
@@ -78,18 +85,13 @@ int main() {
     ViSession defaultRM, instr;
     char buffer[256] = {0};
 
-    // VISAリソースマネージャを初期化
-    viOpenDefaultRM(&defaultRM);
-    // 計測器に接続（例: USB接続のオシロスコープ）
-    viOpen(defaultRM, "USB0::????????::INSTR", VI_NULL, VI_NULL, &instr);
-    // SCPIコマンド送信
-    viPrintf(instr, "*IDN?\n");
-    // 応答受信（最大255文字）
-    viScanf(instr, "%255t", buffer);
-    printf("Instrument ID: %s\n", buffer);
+    viOpenDefaultRM(&defaultRM); // VISAリソースマネージャを初期化
+    viOpen(defaultRM, "USB0::????????::INSTR", VI_NULL, VI_NULL, &instr); // 計測器に接続
+    viPrintf(instr, "*IDN?\n"); // SCPIコマンド送信
+    viScanf(instr, "%255t", buffer); // 応答受信
+    printf("Instrument ID: %s\n", buffer); // 結果表示
 
-    // 接続を閉じる
-    viClose(instr);
+    viClose(instr); // 接続を閉じる
     viClose(defaultRM);
     return 0;
 }
