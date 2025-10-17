@@ -35,7 +35,7 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 | `viOpen`          | 機器への接続 | `status = viOpen(defaultRM, "USB0::????????::INSTR", VI_NULL, VI_NULL, &instr);` |
 | `viWrite`         | コマンド送信。バイナリ/テキスト問わず | `status = viWrite(instr, (ViBuf)"*IDN?\n", 6, &count);`|
 | `viRead`          | 応答受信。バイナリ/テキスト問わず | `status = viRead(instr, (ViBuf)buffer, sizeof(buffer), &count);`|
-| `viPrintf` / `viScanf` | フォーマット付き送受信 | `status = viPrintf(instr, "*IDN?\n");`<br>'viScanf(instr, "%255t", buffer);'|
+| `viPrintf` / `viScanf` | フォーマット付き送受信 | `status = viPrintf(instr, "*IDN?\n");`<br>'status = viScanf(instr, "%255t", buffer);'|
 | `viQueryf` | フォーマット付き送受信<br>`viPrintf`, `viScanf`を連続して実行する。 | `status = viQueryf(instr, "*IDN?\n", "%t", idn);`|
 | `viClose`         | 接続終了 | `viClose(instr);''viClose(defaultRM);` |
 
