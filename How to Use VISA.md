@@ -67,7 +67,7 @@ VISAは通信の手段であり、SCPI（Standard Commands for Programmable Inst
 
 VISAは、計測器制御の世界で欠かせない共通言語のような存在です。複雑な通信方式を隠蔽し、統一されたAPIで機器を扱えるため、開発効率と保守性が大幅に向上します。
 
-## サンプルプログラム
+## 最小のサンプルプログラム
 ```cpp
 #include <visa.h>
 #include <iostream>
