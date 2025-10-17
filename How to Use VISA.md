@@ -28,16 +28,16 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 
 ## 🧰 主なVISA関数（C/C++）
 
-| 関数名         | 役割 |
-|----------------|------|
-| `viOpenDefaultRM` | リソースマネージャの初期化 |
-| `viFindRsrc`      | 利用可能な機器の検索 |
-| `viOpen`          | 機器への接続 |
-| `viWrite`         | コマンド送信 |
-| `viRead`          | 応答受信 |
-| `viPrintf` / `viScanf` | フォーマット付き送受信 |
-| `viQuery` | フォーマット付き送受信。viPrintf` / `viScanf`を連続して実行する。 |
-| `viClose`         | 接続終了 |
+| 関数名         | 役割 | |
+|----------------|------|-----|
+| `viOpenDefaultRM` | リソースマネージャの初期化 | |
+| `viFindRsrc`      | 利用可能な機器の検索 | |
+| `viOpen`          | 機器への接続 | |
+| `viWrite`         | コマンド送信 | |
+| `viRead`          | 応答受信 | |
+| `viPrintf` / `viScanf` | フォーマット付き送受信 | |
+| `viQuery` | フォーマット付き送受信。viPrintf` / `viScanf`を連続して実行する。 | `status = viQueryf(instr, "*IDN?\n", "%t", idn);`|
+| `viClose`         | 接続終了 | |
 
 ---
 
