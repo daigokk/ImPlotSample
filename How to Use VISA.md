@@ -9,9 +9,9 @@ int main() {
     char buffer[256] = {0};
 
     // VISAリソースマネージャを初期化
-    status = viOpenDefaultRM(&defaultRM);
+    viOpenDefaultRM(&defaultRM);
     // 計測器に接続（例: USB接続のオシロスコープ）
-    status = viOpen(defaultRM, "USB0::????????::INSTR", VI_NULL, VI_NULL, &instr);
+    viOpen(defaultRM, "USB0::????????::INSTR", VI_NULL, VI_NULL, &instr);
     // SCPIコマンド送信
     viPrintf(instr, "*IDN?\n");
     // 応答受信（最大255文字）
