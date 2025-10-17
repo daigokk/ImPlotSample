@@ -36,7 +36,7 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 | `viWrite`         | コマンド送信 | |
 | `viRead`          | 応答受信 | |
 | `viPrintf` / `viScanf` | フォーマット付き送受信 | |
-| `viQuery` | フォーマット付き送受信。viPrintf` / `viScanf`を連続して実行する。 | `status = viQueryf(instr, "*IDN?\n", "%t", idn);`|
+| `viQuery` | フォーマット付き送受信\nviPrintf` / `viScanf`を連続して実行する。 | `status = viQueryf(instr, "*IDN?\n", "%t", idn);`|
 | `viClose`         | 接続終了 | |
 
 ---
