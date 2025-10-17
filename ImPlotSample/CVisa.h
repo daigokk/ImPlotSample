@@ -48,6 +48,52 @@ void vi_checkError(const ViStatus status, const char filename[], const int line)
     }
 }
 
+void vi_getIdn(const ViSession resourceManager, const ViChar* instrDesc, char* ret) {
+    ViSession instrument;
+    ViStatus status;
+    status = viOpen(resourceManager, instrDesc, VI_NULL, VI_NULL, &instrument);
+    if (status < VI_SUCCESS) {
+        std::cerr << "計測器のオープンに失敗しました。" << std::endl;
+        return;
+    }
+    status = viQueryf(instrument, "%s", "%255t", "*IDN?\n", ret);
+    if (status < VI_SUCCESS) {
+        std::cerr << "計測器の問い合わせに失敗しました。" << std::endl;
+        return;
+    }
+    status = viClose(instrument);
+    if (status < VI_SUCCESS) {
+        std::cerr << "計測器のクローズに失敗しました。" << std::endl;
+        return;
+    }
+}
+
+void vi_FindRsrc(const ViSession resourceManager) {
+    // 接続されている計測器を検索（例: GPIB, USB, TCPIPなど）
+    ViStatus status;
+    ViFindList findList;
+    ViUInt32 numInstrs;
+    ViChar instrDesc[256], ret[256];
+    status = viFindRsrc(resourceManager, "?*INSTR", &findList, &numInstrs, instrDesc);
+    if (status < VI_SUCCESS) {
+        std::cerr << "計測器の検索に失敗しました。" << std::endl;
+        return;
+    }
+    std::cout << "見つかった計測器の数: " << numInstrs << std::endl;
+    vi_getIdn(resourceManager, instrDesc, ret);
+    std::cout << "1: " << instrDesc << ", " << ret << std::endl;
+
+    // 残りの計測器を取得
+    for (ViUInt32 i = 1; i < numInstrs; ++i) {
+        status = viFindNext(findList, instrDesc);
+        if (status < VI_SUCCESS) break;
+        vi_getIdn(resourceManager, instrDesc, ret);
+        std::cout << i + 1 << ": " << instrDesc << ", " << ret << std::endl;
+    }
+
+    viClose(findList);
+}
+
 
 class CVisa {
 private:
@@ -163,6 +209,7 @@ char* CVisa::cviQueryf(const ViSession instrument, const char* filename, const i
     return ret;
 }
 
+
 char visa_viGetchar(ViSession vi)
 {
     char c;
@@ -170,6 +217,8 @@ char visa_viGetchar(ViSession vi)
     return c;
 }
 
+// DLM2022専用関数群
+// レコード長を取得する
 int scope_get_RecordLength(ViSession vi)
 {
     char ret[256];
@@ -177,11 +226,13 @@ int scope_get_RecordLength(ViSession vi)
     return atoi(ret);
 }
 
+// チャンネルchを表示する
 void scope_set_ViewCh(ViSession vi, int ch)
 {
     vi_checkError(viPrintf(vi, "CHANnel%d:DISPlay ON\n"), __FILE__, __LINE__);
 }
 
+// オシロスコープの動作状態を取得する。1:RUN, 0:STOP
 int scope_get_State(ViSession vi)
 {
     char ret[256];
@@ -192,21 +243,38 @@ int scope_get_State(ViSession vi)
         return 0;	//STOP
 }
 
+// オシロスコープを停止する
 void scope_set_Stop(ViSession vi)
 {
     vi_checkError(viPrintf(vi, "STOP\n"), __FILE__, __LINE__);
 }
 
+// オシロスコープを動作させる
 void scope_set_Run(ViSession vi)
 {
     vi_checkError(viPrintf(vi, "STARt\n"), __FILE__, __LINE__);
 }
 
+// チャンネルchの垂直目盛りを設定・取得する
+void scope_set_Voltdir(ViSession vi, int ch, double volt)
+{
+    vi_checkError(viPrintf(vi, "CHANnel%d:VDIV %f\n", ch, volt), __FILE__, __LINE__);
+}
+
+double scope_get_Voltdir(ViSession vi, int ch)
+{
+    char ret[256];
+    vi_checkError(viQueryf(vi, "%s", "%255t", "CHANnel%d:VDIV?\n", ch, ret), __FILE__, __LINE__);
+    return atof(ret);
+}
+
+// 時間軸の時間目盛りを設定・取得する
 void scope_set_timediv(ViSession vi, double sec)
 {
     vi_checkError(viPrintf(vi, "TIMebase:TDIV %f\n", sec), __FILE__, __LINE__);
 }
 
+// 時間軸の時間目盛りを取得する
 double scope_get_timediv(ViSession vi)
 {
     char ret[256];
@@ -214,7 +282,17 @@ double scope_get_timediv(ViSession vi)
     return atof(ret);
 }
 
-void scope_get_Waveforms(const ViSession vi, int ch, double voltages[]) {
+// 時間軸データをtimes配列に取得する
+void scope_get_times(const ViSession vi, double times[]) {
+    int length = scope_get_RecordLength(vi);
+    double dt = scope_get_timediv(vi) * 10 / length;
+    for (int i = 0; i < length; ++i) {
+        times[i] = (i + 1) * dt;
+    }
+}
+
+// チャンネルchの波形データをvoltages配列に取得する
+void scope_get_Waveform(const ViSession vi, int ch, double voltages[]) {
     vi_checkError(viPrintf(vi, "COMMunicate:HEADer OFF\n"), __FILE__, __LINE__);
 
     int length = scope_get_RecordLength(vi);
@@ -245,6 +323,7 @@ void scope_get_Waveforms(const ViSession vi, int ch, double voltages[]) {
     }
 }
 
+// 波形データをファイルに保存する
 int scope_save_Waveformsf(const ViSession vi, const char* format, ...) {
     char filename[256];
     va_list ap;
@@ -260,8 +339,8 @@ int scope_save_Waveformsf(const ViSession vi, const char* format, ...) {
 
     int wasRunning = scope_get_State(vi);
     scope_set_Stop(vi);
-    scope_get_Waveforms(vi, 1, v1);
-    scope_get_Waveforms(vi, 2, v2);
+    scope_get_Waveform(vi, 1, v1);
+    scope_get_Waveform(vi, 2, v2);
     if (wasRunning) scope_set_Run(vi);
 
     FILE* fp;
@@ -283,52 +362,4 @@ int scope_save_Waveformsf(const ViSession vi, const char* format, ...) {
     delete[] v1;
     delete[] v2;
     return 0;
-}
-
-
-
-void vi_getIdn(const ViSession resourceManager, const ViChar* instrDesc, char* ret) {
-    ViSession instrument;
-    ViStatus status;
-    status = viOpen(resourceManager, instrDesc, VI_NULL, VI_NULL, &instrument);
-    if (status < VI_SUCCESS) {
-        std::cerr << "計測器のオープンに失敗しました。" << std::endl;
-        return;
-    }
-    status = viQueryf(instrument, "%s", "%255t", "*IDN?\n", ret);
-    if (status < VI_SUCCESS) {
-        std::cerr << "計測器の問い合わせに失敗しました。" << std::endl;
-        return;
-    }
-    status = viClose(instrument);
-    if (status < VI_SUCCESS) {
-        std::cerr << "計測器のクローズに失敗しました。" << std::endl;
-        return;
-    }
-}
-
-void vi_FindRsrc(const ViSession resourceManager) {
-    // 接続されている計測器を検索（例: GPIB, USB, TCPIPなど）
-    ViStatus status;
-    ViFindList findList;
-    ViUInt32 numInstrs;
-    ViChar instrDesc[256], ret[256];
-    status = viFindRsrc(resourceManager, "?*INSTR", &findList, &numInstrs, instrDesc);
-    if (status < VI_SUCCESS) {
-        std::cerr << "計測器の検索に失敗しました。" << std::endl;
-        return;
-    }
-    std::cout << "見つかった計測器の数: " << numInstrs << std::endl;
-    vi_getIdn(resourceManager, instrDesc, ret);
-    std::cout << "1: " << instrDesc << ", " << ret << std::endl;
-
-    // 残りの計測器を取得
-    for (ViUInt32 i = 1; i < numInstrs; ++i) {
-        status = viFindNext(findList, instrDesc);
-        if (status < VI_SUCCESS) break;
-        vi_getIdn(resourceManager, instrDesc, ret);
-        std::cout << i + 1 << ": " << instrDesc << ", " << ret << std::endl;
-    }
-
-    viClose(findList);
 }
