@@ -31,13 +31,7 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 | 関数名         | 役割 | |
 |----------------|------|-----|
 | `viOpenDefaultRM` | リソースマネージャの初期化 | `viOpenDefaultRM(&defaultRM);` |
-| `viFindRsrc`      | 利用可能な機器の検索 | ```cpp
-ViStatus status;
-ViFindList findList;
-ViUInt32 numInstrs;
-ViChar instrDesc[256], ret[256];
-status = viFindRsrc(resourceManager, "?*INSTR", &findList, &numInstrs, instrDesc);
-```|
+| `viFindRsrc`      | 利用可能な機器の検索 | `status = viFindRsrc(resourceManager, "?*INSTR", &findList, &numInstrs, instrDesc);`|
 | `viOpen`          | 機器への接続 | `viOpen(defaultRM, "USB0::????????::INSTR", VI_NULL, VI_NULL, &instr);` |
 | `viWrite`         | コマンド送信。バイナリ/テキスト問わず | |
 | `viRead`          | 応答受信。バイナリ/テキスト問わず | |
