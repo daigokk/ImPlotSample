@@ -94,10 +94,12 @@ ImGui::End();
 ## 🟩 プロットの開始・終了
 
 ```cpp
+ImGui::Begin("Plot Window");
 if (ImPlot::BeginPlot("My Plot")) {
     ImPlot::PlotLine("Data", x, y, 100);
     ImPlot::EndPlot();
 }
+ImGui::End();
 ```
 
 ## 🟨 軸の設定
