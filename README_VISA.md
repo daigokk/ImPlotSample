@@ -64,7 +64,7 @@ VISAとよく混同されますが、これらは役割が違います。
   printf("Time/div: %f", atof(ret));
   ```
   * [マニュアル](https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf)
-* [ファンクションジェネレータ(NF WF1973)のSCPI]
+* ファンクションジェネレータ(NF WF1973)のSCPI
   ```cpp
   char ret[256];
   viQueryf(vi, "%s", "%255t", ":SOURce1:FREQuency?\n", ret);
