@@ -79,6 +79,34 @@ VISAは、接続方法に関わらず計測器に一意の「住所」を割り�
 * **NI MAX (Measurement & Automation Explorer)**
     VISAを提供するNI社が提供するGUIツール。接続した計測器の**VISAアドレスの確認**、**接続テスト**、デバッグに非常に便利です。VISAを導入したら、まずこのツールで機器が認識されているか確認するのが一般的です。
 
+* NI MAXも内部で以下のようにVISAを使っています。
+```cpp
+void vi_FindRsrc(const ViSession resourceManager) {
+    // 接続されている計測器を検索（例: GPIB, USB, TCPIPなど）
+    ViStatus status;
+    ViFindList findList;
+    ViUInt32 numInstrs;
+    ViChar instrDesc[256], ret[256];
+    status = viFindRsrc(resourceManager, "?*INSTR", &findList, &numInstrs, instrDesc);
+    if (status < VI_SUCCESS) {
+        printf("計測器の検索に失敗しました。\n");
+        return;
+    }
+    printf("見つかった計測器の数: %d\n", numInstrs);
+    vi_getIdn(resourceManager, instrDesc, ret);
+    printf("1: %s, %s\n", instrDesc, ret);
+
+    // 残りの計測器を取得
+    for (ViUInt32 i = 1; i < numInstrs; ++i) {
+        status = viFindNext(findList, instrDesc);
+        if (status < VI_SUCCESS) break;
+        vi_getIdn(resourceManager, instrDesc, ret);
+        printf("%d: &s, %s\n", i + 1, instrDesc, ret);
+    }
+
+    viClose(findList);
+}
+```
 ---
 
 ## 🔧 最小のサンプルプログラム（C言語によるイメージ）
