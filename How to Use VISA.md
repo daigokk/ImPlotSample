@@ -8,7 +8,7 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 
 ## 🎯 VISAの目的
 
-- 異なる通信プロトコル（GPIB, USB, RS-232, TCP/IP など）を統一的なAPIで扱えるようにする
+- 異なる通信方式（GPIB, USB, RS-232, TCP/IP など）を統一的なAPIで扱えるようにする
 - 計測器制御を簡素化・標準化する
 - 複数ベンダーの機器を同じコードで制御可能にする
 
@@ -18,7 +18,7 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 
 | 通信方式 | 説明 |
 |----------|------|
-| GPIB     | 古典的な計測器通信。多くのラボ機器で使用 |
+| GPIB     | HPが開発した古典的な計測器通信。多くのラボ機器で使用 |
 | USB      | USBTMC（Test & Measurement Class）対応機器 |
 | RS-232   | シリアル通信。古い機器でよく使われる |
 | TCP/IP   | LAN経由での通信。SCPI-over-Socketなど |
@@ -36,6 +36,7 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 | `viWrite`         | コマンド送信 |
 | `viRead`          | 応答受信 |
 | `viPrintf` / `viScanf` | フォーマット付き送受信 |
+| `viQuery` | フォーマット付き送受信。viPrintf` / `viScanf`を連続して実行する。 |
 | `viClose`         | 接続終了 |
 
 ---
