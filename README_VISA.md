@@ -6,7 +6,7 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 
 もしVISAがなければ、USB機器、LAN機器、または古いGPIB機器を制御するために**それぞれ異なる通信方式専用のコード**を書く必要がありました。
 
-VISAは、異なる通信方法の違いを気にせず、**同じ操作方法API**でどのメーカーの、どの通信方式の機器でも統一的に操作できるようにします。NI（National Instruments）が開発し、現在は多くの計測器メーカーが採用している業界標準です。
+VISAは、異なる通信方法の違いを気にせず、**同じ操作方法**でどのメーカーの、どの通信方式の機器でも統一的に操作できるようにします。NI（National Instruments）が開発し、現在は多くの計測器メーカーが採用している業界標準です。
 
 ---
 
@@ -36,7 +36,7 @@ VISA関数は、計測器を操作する際の「手順」を**身近な動作**
 
 | 関数名 | 役割（比喩） | 説明 |
 | :--- | :--- | :--- |
-| `viOpenDefaultRM` | **オフィスに入る** | VISAを動かすための親玉（リソースマネージャ）を初期化します。 |
+| `viOpenDefaultRM` | **オフィスに入る** | VISAを動かすための親玉（リソースマネージャ）を初期化します。PCに接続された全ての計測器を管理・統括する存在です。 |
 | `viFindRsrc` | **名刺を探す** | 接続されている利用可能な計測器（リソース）を検索します。 |
 | `viOpen` | **ドアを開ける** | 特定の計測器（リソース）との接続を確立します。 |
 | `viWrite` | **話しかける** | コマンド（命令）を計測器へ送信します。 |
@@ -62,17 +62,18 @@ VISAとよく混同されますが、これらは役割が違います。
   char ret[256];
   viQueryf(vi, "%s", "%255t", ":TIMebase:TDIV?\n", ret);
   printf("Time/div: %f", atof(ret));
-  ```
-  * [マニュアル](https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf)
-* ファンクションジェネレータ(NF WF1973)のSCPI
-  ```cpp
-  char ret[256];
-  viQueryf(vi, "%s", "%255t", ":SOURce1:FREQuency?\n", ret);
-  printf("周波数: %f", atof(ret));
-  ```
-  * [マニュアル](https://www.nfcorp.co.jp/files/WF1973_74_InstructionManual_ExternalControl_Jp.pdf)
+````
 
----
+  * [マニュアル](https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf)
+  * ファンクションジェネレータ(NF WF1973)のSCPI
+    ```cpp
+    char ret[256];
+    viQueryf(vi, "%s", "%255t", ":SOURce1:FREQuency?\n", ret);
+    printf("周波数: %f", atof(ret));
+    ```
+      * [マニュアル](https://www.nfcorp.co.jp/files/WF1973_74_InstructionManual_ExternalControl_Jp.pdf)
+
+-----
 
 ## 📦 VISAアドレスの例: 計測器の「住所」
 
@@ -84,14 +85,17 @@ VISAは、接続方法に関わらず計測器に一意の「住所」を割り�
 | `USB0::0x1234::INSTR` | USB接続の機器 | `USB0`: USBインターフェース。`0x1234`: ベンダー/プロダクトIDなど。 |
 | `TCPIP0::192.168.0.10::INSTR`| LAN接続の機器 | `TCPIP0`: TCP/IPインターフェース。`192.168.0.10`: IPアドレス。 |
 
----
+-----
 
 ## 🧭 補助ツール: NI MAX
 
-* **NI MAX (Measurement & Automation Explorer)**
+  * **NI MAX (Measurement & Automation Explorer)**
     VISAを提供するNI社が提供するGUIツール。接続した計測器の**VISAアドレスの確認**、**接続テスト**、デバッグに非常に便利です。VISAを導入したら、まずこのツールで機器が認識されているか確認するのが一般的です。
 
-* NI MAXも内部で以下のようにVISAを使っています。
+  * NI MAXも内部で以下のようにVISAを使っています。
+
+<!-- end list -->
+
 ```cpp
 void vi_FindRsrc(const ViSession resourceManager) {
     // 接続されている計測器を検索（例: GPIB, USB, TCPIPなど）
@@ -119,11 +123,12 @@ void vi_FindRsrc(const ViSession resourceManager) {
     viClose(findList);
 }
 ```
----
+
+-----
 
 ## 🔧 最小のサンプルプログラム（C言語によるイメージ）
 
-このC言語のサンプルは、**VISAによる通信がどのような手順を踏んでいるか**を示すものです。PythonやMATLABなど、他の言語でも同様の手順で制御を行います。
+このC言語のサンプルは、**VISAによる通信がどのような手順を踏んでいるか**を示すものです。
 
 ```cpp
 // このサンプルは、いずれかの通信方式で接続されたSCPI対応機器に対して識別情報を取得する最小構成の例です。
@@ -158,8 +163,40 @@ int main() {
 }
 ```
 
----
+-----
+
+## 🐍 Python (PyVISA)でのサンプルプログラム
+
+C言語と同様の手順を、近年よく使われるPythonで行う例です。`pyvisa`というライブラリを使うと、よりシンプルに記述できます。
+
+```python
+# pip install pyvisa-py でライブラリをインストールしておく必要があります
+# "USB0::????????::INSTR" の部分は、NI MAXで確認した実際のアドレスに置き換えてください。
+
+import pyvisa
+
+# 1. オフィスに入る（リソースマネージャ初期化）
+rm = pyvisa.ResourceManager()
+
+# 2. ドアを開ける（計測器に接続）
+# Pythonでは、接続を閉じる処理を忘れないように with構文 を使うのが一般的です
+with rm.open_resource("USB0::????????::INSTR") as instr:
+
+    # 3 & 4. 質問して答えを聞く
+    # .query() は、コマンドの送信(Write)と応答の受信(Read)を一度に行う便利な命令です
+    response = instr.query("*IDN?")
+    
+    print(f"Instrument ID: {response.strip()}") # 結果表示
+
+# 5. さよならする (with構文を使ったため、このブロックを抜ける際に自動で接続が閉じられます)
+print("接続を終了しました。")
+
+```
+
+-----
 
 ## 🧠 まとめ
 
 VISAは、現代の計測器制御において**必須の共通言語**です。複雑な通信方式の壁を取り払い、統一されたシンプルな手順（API）で機器を扱えるようにすることで、開発効率と保守性を大幅に向上させています。
+
+```
