@@ -2,7 +2,7 @@
 
 ## 概要
 
-VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコンピュータの間の通信方法の違いを気にせず、同じ方法で操作できるようにするためのソフトウェアインターフェースです。NI（National Instruments）によって開発され、現在では多くのメーカーが対応しています。
+VISA(Virtual Instrument Software Architecture、ビサ)は、計測器とコンピュータの間の通信方法の違いを気にせず、同じ方法で操作できるようにするためのソフトウェアインターフェースです。NI(National Instruments)によって開発され、現在では多くのメーカーが対応しています。
 
 例えば、USBやLAN、GPIBなど異なる接続方式でも、VISAを使えば同じ命令で機器を制御できます。
 
@@ -10,7 +10,7 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 
 ## 🎯 VISAの目的
 
-- 異なる通信方式（GPIB, USB, RS-232, TCP/IP など）を統一的なAPIで扱えるようにする
+- 異なる通信方式(GPIB, USB, RS-232, TCP/IP など)を統一的なAPIで扱えるようにする
 - 計測器制御を簡素化・標準化する
 - 複数ベンダーの機器を同じコードで制御可能にする
 
@@ -45,9 +45,9 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 
 ## 📄 SCPIとの関係
 
-VISAは「通信の方法」を統一する仕組みであり、SCPI（Standard Commands for Programmable Instruments、スキッピ）は「通信の中身（命令）」を標準化する仕組みです。
+VISAは「通信の方法」を統一する仕組みであり、SCPI(Standard Commands for Programmable Instruments、スキッピ)は「通信の中身（命令）」を標準化する仕組みです。
 
-例えば、`*IDN?` というSCPIコマンドは「あなたは誰ですか？」という意味で、機器のメーカー名や型番などを返します。VISAを使えば、このコマンドをどの接続方式でも同じように送ることができます。
+例えば、`*IDN?` というSCPIコマンドは「あなたは誰ですか？」という意味で、対応している機器のメーカー名や型番などを返します。VISAを使えば、このコマンドをどの接続方式でも同じように送ることができます。
 
 ---
 
