@@ -57,7 +57,7 @@ VISAとよく混同されますが、これらは役割が違います。
 
 例えば、`*IDN?` というSCPIコマンドは「あなたは誰ですか？」という意味で、メーカー名や型番などを返します。**VISAを使えば、この`*IDN?`という同じ命令を、USBでもLANでも同じように送れるのです。**
 
-* オシロスコープ(横河計測 DLM2022)のSCPI: `:TIMebase:TDIV?`
+* オシロスコープ(横河計測 DLM2022)のSCPIの例: `:TIMebase:TDIV?`
   * 使い方 
   ```cpp
   char ret[256];
@@ -65,7 +65,7 @@ VISAとよく混同されますが、これらは役割が違います。
   printf("Time/div: %f", atof(ret));
   ```
   * [マニュアル](https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf)
-* ファンクションジェネレータ(NF WF1973)のSCPI: `:SOURce1:FREQuency?`
+* ファンクションジェネレータ(NF WF1973)のSCPIの例: `:SOURce1:FREQuency?`
   * 使い方
   ```cpp
   char ret[256];
