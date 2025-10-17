@@ -2,7 +2,7 @@
 
 ## 概要
 
-VISA（Virtual Instrument Software Architecture）は、計測器とコンピュータの間の通信を抽象化するためのソフトウェアインターフェースです。National Instruments（NI）によって開発され、現在では多くのベンダーがサポートしています。
+VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコンピュータの間の通信を抽象化するためのソフトウェアインターフェースです。National Instruments（NI）によって開発され、現在では多くのベンダーがサポートしています。
 
 ---
 
@@ -42,15 +42,7 @@ VISA（Virtual Instrument Software Architecture）は、計測器とコンピュ
 
 ## 📄 SCPIとの関係
 
-VISAは通信の手段であり、SCPI（Standard Commands for Programmable Instruments）は通信の内容（コマンド体系）です。SCPIは多くの計測器で使われており、VISA経由で `*IDN?` や `MEAS:VOLT?` などのコマンドを送信します。
-
----
-
-## 🖥️ 開発環境
-
-- **Windows**: NI-VISA ドライバ + Visual Studio
-- **Linux**: NI-VISA for Linux（RPM/DEBパッケージあり）
-- **言語**: C/C++, Python（PyVISA）, LabVIEW, .NET など
+VISAは通信の手段であり、SCPI（Standard Commands for Programmable Instruments、スキッピ）は通信の内容（コマンド体系）です。SCPIは多くの計測器で使われており、VISA経由で `*IDN?` や `MEAS:VOLT?` などのコマンドを送信します。
 
 ---
 
