@@ -1,83 +1,95 @@
-# 🧪 VISAとは？Virtual Instrument Software Architecture
+# 🧪 計測器の共通言語！VISAとは？（Virtual Instrument Software Architecture）
 
-## 概要
+## 概要: 万能アダプターとしてのVISA
 
-VISA(Virtual Instrument Software Architecture、ビサ)は、計測器とコンピュータの間の通信方法の違いを気にせず、同じ方法で操作できるようにするためのソフトウェアインターフェースです。NI(National Instruments)によって開発され、現在では多くのメーカーが対応しています。
+VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコンピュータをつなぐための**「万能アダプター」**や**「翻訳家」**のような役割を果たすソフトウェアインターフェースです。
 
-例えば、USBやLAN、GPIBなど異なる接続方式でも、VISAを使えば同じ命令で機器を制御できます。
+もしVISAがなければ、USB機器を制御するため、LAN機器を制御するため、古いGPIB機器を制御するために**それぞれ異なる専用のコード**を書く必要がありました。
 
----
-
-## 🎯 VISAの目的
-
-- 異なる通信方式(GPIB, USB, RS-232, TCP/IP など)を統一的なAPIで扱えるようにする
-- 計測器制御を簡素化・標準化する
-- 複数ベンダーの機器を同じコードで制御可能にする
+VISAは、この複雑な通信方法の違いを気にせず、**同じ操作方法（API）**でどのメーカーの、どの接続方式の機器でも統一的に操作できるようにします。NI（National Instruments）が開発し、現在は多くの計測器メーカーが採用している業界標準です。
 
 ---
 
-## 🔌 対応する通信方式
+## 🎯 VISAの目的（なぜ必要？）
+
+* **接続方式の統一:** 異なる通信方式（**GPIB, USB, LAN**など）を**統一的なAPI** (Application Programming Interface)で扱えるようにします。
+* **制御の簡素化:** 難しい通信プロトコルの詳細を隠蔽し、計測器の制御を劇的に簡単にします。
+* **標準化:** 複数ベンダー（メーカー）の機器を、ほぼ同じコードで制御することを可能にします。
+
+---
+
+## 🔌 対応する主な通信方式
 
 | 通信方式 | 説明 |
-|----------|------|
-| GPIB     | HPが開発した古典的な計測器通信。多くのラボ機器で使用 |
-| USB      | USBTMC（Test & Measurement Class）対応機器 |
-| RS-232   | シリアル通信。古い機器でよく使われる |
-| TCP/IP   | LAN経由での通信。SCPI-over-Socketなど |
-| PXI/VXI  | モジュール型計測器システム |
+| :--- | :--- |
+| **GPIB** | **計測器の世界で長く使われてきたケーブル接続規格**（HPが開発）。多くのラボ機器で使用されています。 |
+| **USB** | USBTMC（Test & Measurement Class）という規格に対応した機器の接続に使われます。 |
+| **RS-232** | シリアル通信。古めの機器やシンプルなデータ送受信によく使われます。 |
+| **TCP/IP (LAN)** | ネットワーク経由での通信。遠隔地からの制御や高速データ転送に使われます。 |
+| **PXI/VXI** | モジュール型の計測器システムで使われる、内部的な高速接続規格です。 |
 
 ---
 
-## 🧰 主なVISA関数（C/C++）
+## 🧰 主なVISA関数（C/C++での役割）
 
-| 関数名         | 役割 | |
-|----------------|------|-----|
-| `viOpenDefaultRM` | リソースマネージャの初期化 | `status = viOpenDefaultRM(&defaultRM);` |
-| `viFindRsrc`      | 利用可能な機器の検索 | `status = viFindRsrc(resourceManager, "?*INSTR", &findList, &numInstrs, instrDesc);`|
-| `viOpen`          | 機器への接続 | `status = viOpen(defaultRM, "USB0::????????::INSTR", VI_NULL, VI_NULL, &instr);` |
-| `viWrite`         | コマンド送信。バイナリ/テキスト問わず | `status = viWrite(instr, (ViBuf)"*IDN?\n", 6, &count);`|
-| `viRead`          | 応答受信。バイナリ/テキスト問わず | `status = viRead(instr, (ViBuf)buffer, sizeof(buffer), &count);`|
-| `viPrintf` / `viScanf` | フォーマット付き送受信 | `status = viPrintf(instr, "*IDN?\n");`<br>'status = viScanf(instr, "%255t", buffer);'|
-| `viQueryf` | フォーマット付き送受信<br>`viPrintf`, `viScanf`を連続して実行する。 | `status = viQueryf(instr, "*IDN?\n", "%t", idn);`|
-| `viClose`         | 接続終了 | `viClose(instr);''viClose(defaultRM);` |
+VISA関数は、計測器を操作する際の「手順」を**身近な動作**に置き換えて考えると分かりやすいです。
 
----
-
-## 📄 SCPIとの関係
-
-VISAは「通信の方法」を統一する仕組みであり、SCPI(Standard Commands for Programmable Instruments、スキッピ)は「通信の中身（命令）」を標準化する仕組みです。
-
-例えば、`*IDN?` というSCPIコマンドは「あなたは誰ですか？」という意味で、対応している機器のメーカー名や型番などを返します。VISAを使えば、このコマンドをどの接続方式でも同じように送ることができます。
+| 関数名 | 役割（比喩） | 説明 |
+| :--- | :--- | :--- |
+| `viOpenDefaultRM` | **オフィスに入る** | VISAを動かすための親玉（リソースマネージャ）を初期化します。 |
+| `viFindRsrc` | **名刺を探す** | 接続されている利用可能な計測器（リソース）を検索します。 |
+| `viOpen` | **ドアを開ける** | 特定の計測器（リソース）との接続を確立します。 |
+| `viWrite` | **話しかける** | コマンド（命令）を計測器へ送信します。 |
+| `viRead` | **返事を聞く** | 計測器からの応答データを受信します。 |
+| `viQueryf` | **質問して答えを聞く** | `viWrite`と`viRead`を連続して実行する**便利な機能**です。 |
+| `viClose` | **さよならする** | 接続を終了します。 |
 
 ---
 
-## 📦 VISAアドレスの例
+## 📄 SCPI（スキッピ）との関係
 
-| アドレス形式 | 意味 |
-|--------------|------|
-| `GPIB0::5::INSTR` | GPIBバスの5番ポート |
-| `USB0::0x1234::0x5678::INSTR` | USB接続の機器（Vendor/Product ID） |
-| `TCPIP0::192.168.0.10::INSTR` | LAN接続の機器 |
+VISAとよく混同されますが、これらは役割が違います。
+
+* **VISA:** 「**手紙の届け方**（郵送、メール、宅配便）」を統一する仕組み。
+* **SCPI** (Standard Commands for Programmable Instruments): 「**手紙の中身**（命令や用件）」を標準化する仕組み。
+
+例えば、`*IDN?` というSCPIコマンドは「あなたは誰ですか？」という意味で、メーカー名や型番などを返します。**VISAを使えば、この`*IDN?`という同じ命令を、USBでもLANでも同じように送れるのです。**
 
 ---
 
-## 🧭 補助ツール
+## 📦 VISAアドレスの例: 計測器の「住所」
 
-- **NI MAX (Measurement & Automation Explorer)**  
-  VISAアドレスの確認、接続テスト、デバッグに便利なGUIツール。
+VISAは、接続方法に関わらず計測器に一意の「住所」を割り当てます。
+
+| アドレス形式 | 意味 | 構成要素の解説 |
+| :--- | :--- | :--- |
+| `GPIB0::5::INSTR` | GPIBバスの5番ポート | `GPIB0`: バスの番号。`5`: 計測器の番地。`INSTR`: リソースタイプ（計測器）。 |
+| `USB0::0x1234::INSTR` | USB接続の機器 | `USB0`: USBインターフェース。`0x1234`: ベンダー/プロダクトIDなど。 |
+| `TCPIP0::192.168.0.10::INSTR`| LAN接続の機器 | `TCPIP0`: TCP/IPインターフェース。`192.168.0.10`: IPアドレス。 |
+
+---
+
+## 🧭 補助ツール: NI MAX
+
+* **NI MAX (Measurement & Automation Explorer)**
+    VISAを提供するNI社が提供するGUIツール。接続した計測器の**VISAアドレスの確認**、**接続テスト**、デバッグに非常に便利です。VISAを導入したら、まずこのツールで機器が認識されているか確認するのが一般的です。
 
 ---
 
 ## 🧠 まとめ
 
-VISAは、計測器制御の世界で欠かせない共通言語のような存在です。複雑な通信方式を隠蔽し、統一されたAPIで機器を扱えるため、開発効率と保守性が大幅に向上します。
+VISAは、現代の計測器制御において**必須の共通言語**です。複雑な通信方式の壁を取り払い、統一されたシンプルな手順（API）で機器を扱えるようにすることで、開発効率と保守性を大幅に向上させています。
 
-## 最小のサンプルプログラム
+---
+
+## 最小のサンプルプログラム（C言語によるイメージ）
+
+このC言語のサンプルは、VISAが**内部でどのような手順を踏んでいるか**を示すものです。PythonやMATLABなど、他の言語でも同様の手順で制御を行います。
+
 ```cpp
 // このサンプルは、USB接続されたSCPI対応機器に対して識別情報を取得する最小構成の例です。
 // "USB0::????????::INSTR" の部分は、NI MAXで確認した実際のアドレスに置き換えてください。
 
-#pragma comment(lib, "visa64.lib")
 #include <visa.h>
 #include <stdio.h>
 
@@ -85,14 +97,21 @@ int main() {
     ViSession defaultRM, instr;
     char buffer[256] = {0};
 
-    viOpenDefaultRM(&defaultRM); // VISAリソースマネージャを初期化
-    viOpen(defaultRM, "USB0::????????::INSTR", VI_NULL, VI_NULL, &instr); // 計測器に接続
-    viPrintf(instr, "*IDN?\n"); // SCPIコマンド送信
-    viScanf(instr, "%255t", buffer); // 応答受信
+    // 1. オフィスに入る（リソースマネージャ初期化）
+    viOpenDefaultRM(&defaultRM); 
+
+    // 2. ドアを開ける（計測器に接続）
+    viOpen(defaultRM, "USB0::????????::INSTR", VI_NULL, VI_NULL, &instr); 
+    
+    // 3. 質問して答えを聞く（SCPIコマンド送信と応答受信を同時に実行）
+    viQueryf(instr, "*IDN?\n", "%t", buffer); 
+    
     printf("Instrument ID: %s\n", buffer); // 結果表示
 
-    viClose(instr); // 接続を閉じる
+    // 4. さよならする（接続を閉じる）
+    viClose(instr); 
     viClose(defaultRM);
+    
     return 0;
 }
 ```
