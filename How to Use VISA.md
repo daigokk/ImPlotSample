@@ -2,7 +2,7 @@
 
 ## 概要
 
-VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコンピュータの間の通信を抽象化するためのソフトウェアインターフェースです。National Instruments（NI）によって開発され、現在では多くのベンダーがサポートしています。
+VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコンピュータの間の通信を抽象化するためのソフトウェアインターフェースです。NI(National Instruments）によって開発され、現在では多くのベンダーがサポートしています。
 
 ---
 
