@@ -70,9 +70,9 @@ VISAは、計測器制御の世界で欠かせない共通言語のような存�
 
 ## 最小のサンプルプログラム
 ```cpp
+#pragma comment(lib, "visa64.lib")
 #include <visa.h>
-#include <iostream>
-#include <string>
+#include <stdio.h>
 
 int main() {
     ViSession defaultRM, instr;
