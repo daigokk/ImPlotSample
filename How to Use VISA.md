@@ -57,6 +57,8 @@ VISAとよく混同されますが、これらは役割が違います。
 
 例えば、`*IDN?` というSCPIコマンドは「あなたは誰ですか？」という意味で、メーカー名や型番などを返します。**VISAを使えば、この`*IDN?`という同じ命令を、USBでもLANでも同じように送れるのです。**
 
+* [NF WF1973のSCPI](https://www.nfcorp.co.jp/files/WF1973_74_InstructionManual_ExternalControl_Jp.pdf)
+
 ---
 
 ## 📦 VISAアドレスの例: 計測器の「住所」
