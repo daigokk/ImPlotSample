@@ -105,12 +105,15 @@ int main() {
     // 2. ドアを開ける（計測器に接続）
     viOpen(defaultRM, "USB0::????????::INSTR", VI_NULL, VI_NULL, &instr); 
     
-    // 3. 質問して答えを聞く（SCPIコマンド送信と応答受信を同時に実行）
-    viQueryf(instr, "*IDN?\n", "%t", buffer); 
+    // 3. 質問する（SCPIコマンド送信）
+    viPrintf(instr, "*IDN?\n");
+    
+    // 4. 答えを聞く（SCPIコマンド受信）
+    viScanf(instr, "%255t", buffer);
     
     printf("Instrument ID: %s\n", buffer); // 結果表示
-
-    // 4. さよならする（接続を閉じる）
+    
+    // 5. さよならする（接続を閉じる）
     viClose(instr); 
     viClose(defaultRM);
     
