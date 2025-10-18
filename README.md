@@ -1,10 +1,13 @@
 # ImPlotSample
   ![Hard copy](./docs/images/HardCopy.png)
 
-- このソフトウェアは[ImPlot](https://github.com/epezent/implot)をVisual Studioで利用するためのひな型です。ImPlotを使うためには、環境に合わせたいくつかの作業が必要になり、それをショートカットするために用意しました。ご自身で0から環境構築をしたい場合、以下のリンク先から情報収集してください。プログラム開発のためのとてもよい経験になると思います。
-- このソフトウェアは[Dear ImGui](https://github.com/ocornut/imgui)とImPlotに依存しています。
-- ImGuiとは、直感的かつ簡潔なコードでGUIを作成することを目的としたC++用ライブラリです。
+- このリポジトリは[ImPlot](https://github.com/epezent/implot)をVisual Studioで利用するためのひな型です。ImPlotを使うためには、環境に合わせたいくつかの作業が必要になり、それをショートカットするために用意しました。ご自身で0から環境構築をしたい場合、以下のリンク先から情報収集してください。プログラム開発のためのとてもよい経験になると思います。
+- このリポジトリは[GLFW](https://www.glfw.org/)、[Dear ImGui](https://github.com/ocornut/imgui)、ImPlot、及びVisual Studioに依存しています。
+- GLFWとは、有名な3Dプログラムを作りやすくするためのライブラリです。
+- ImGuiとは、GLFW等を用いた3Dプログラム上で直感的かつ簡潔なコードによってGUIを作成することを目的としたC++用ライブラリです。
 - ImPlotとは、データをリアルタイムで視覚化したり、インタラクティブなプロットを作成することを目的としたImGuiを利用したライブラリです。
+- Visual StudioはC言語やC++言語をWindows上で開発することができる統合開発環境です。
+- つまり、計測したデータを視覚化するImPlotを使うためには、ImGuiとGLFWとの依存関係をVisual Studio上で正しく解決する必要があり、それは初学者にとってやや複雑なので、それらを行ったこのリポジトリを用意した次第です。
 - [職業能力開発総合大学校 電気工学専攻](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)の「自動計測実習」で用います。
   - [Visual Studioの使い方](./docs/VisualStudio.md)
   - [計測器の共通言語！VISAとは？](./docs/VISA.md)
