@@ -1,7 +1,7 @@
 # Visual Studioの使い方
 
 1. Visual Studio 起動する
-   - スタートメニューから「Visual Studio 2019」を選択
+   - スタートメニューから「Visual Studio」を選択
    - 起動画面が表示される
   ![起動画面](./images/vs_01.png)
   
