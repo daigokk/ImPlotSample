@@ -1,7 +1,8 @@
 # ImPlotSample
+このリポジトリは[ImPlot](https://github.com/epezent/implot)をVisual Studioで利用するためのひな型です。ImPlotを使うためには、環境に合わせたいくつかの作業が必要になり、それをショートカットするために用意しました。ご自身で0から環境構築をしたい場合、以下のリンク先から情報収集してください。プログラム開発のためのとてもよい経験になると思います。
+
   ![Hard copy](./docs/images/HardCopy.png)
 
-- このリポジトリは[ImPlot](https://github.com/epezent/implot)をVisual Studioで利用するためのひな型です。ImPlotを使うためには、環境に合わせたいくつかの作業が必要になり、それをショートカットするために用意しました。ご自身で0から環境構築をしたい場合、以下のリンク先から情報収集してください。プログラム開発のためのとてもよい経験になると思います。
 - このリポジトリは[GLFW](https://www.glfw.org/)、[Dear ImGui](https://github.com/ocornut/imgui)、ImPlot、及びVisual Studioに依存しています。
 - GLFWとは、有名な3Dプログラムを作りやすくするためのライブラリです。
 - ImGuiとは、GLFW等を用いた3Dプログラム上で直感的かつ簡潔なコードによってGUIを作成することを目的としたC++用ライブラリです。
