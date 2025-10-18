@@ -2,15 +2,24 @@
 
 ## 概要: 万能アダプターとしてのVISA
 
-VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコンピュータをつなぐための**万能アダプター**や**翻訳家**のような役割を果たすソフトウェアインターフェースです。
+VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコンピュータをつなぐための**万能アダプター**や**翻訳家**のような役割を果たすソフトウェアインターフェース規格です。
 
 もしVISAがなければ、USB機器、LAN機器、または古いGPIB機器を制御するために**それぞれ異なる通信方式専用のコード**を書く必要がありました。
 
-VISAは、異なる通信方法の違いを気にせず、**同じ操作方法**でどのメーカーの、どの通信方式の機器でも統一的に操作できるようにします。IVI Foundationで制定され、現在は多くの計測器メーカーが採用している業界標準です。
-* VISAの実装例
+VISAは、異なる通信方法の違いを気にせず、**同じ操作方法**でどのメーカーの、どの通信方式の機器でも統一的に操作できるようにします。[計測機業界の主要メンバー](https://www.ivifoundation.org/About-the-Foundation/Current-Members.html#sponsor-members)で構成された[IVI Foundation](https://www.ivifoundation.org/)で制定され、現在は多くの計測器メーカーが採用している業界標準です。
+* VISAの実装(ソフトウェア)の例
   - [NI-VISA](https://www.ni.com/ja/support/downloads/drivers/download.ni-visa.html)
   - [KeySight VISA](https://www.keysight.com/jp/ja/lib/software-detail/computer-software/io-libraries-suite-downloads-2175637.html)
   - [KI-VISA](https://kikusui.co.jp/dri-fir-upd/ki-visa/)
+* VISAに対応している計測器メーカー
+  - Keysight Technologies
+  - NI
+  - Tektronix
+  - 菊水電子工業(株)
+  - (株)エヌエフ回路設計ブロック
+  - 横河計測(株)
+  - その他多数
+
 ---
 
 ## 🎯 VISAの目的（なぜ必要？）
