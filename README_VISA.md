@@ -6,7 +6,7 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 
 もしVISAがなければ、USB機器、LAN機器、または古いGPIB機器を制御するために**それぞれ異なる通信方式専用のコード**を書く必要がありました。
 
-VISAは、異なる通信方法の違いを気にせず、**同じ操作方法 (API)**でどのメーカーの、どの通信方式の機器でも統一的に操作できるようにします。[計測機業界の主要メンバー](https://www.ivifoundation.org/About-the-Foundation/Current-Members.html#sponsor-members)で構成された[IVI Foundation](https://www.ivifoundation.org/)で制定され、現在は多くの計測器メーカーが採用している業界標準です。
+VISAは、異なる通信方法の違いを気にせず、**同じ操作方法**でどのメーカーの、どの通信方式の機器でも統一的に操作できるようにします。[計測機業界の主要メンバー](https://www.ivifoundation.org/About-the-Foundation/Current-Members.html#sponsor-members)で構成された[IVI Foundation](https://www.ivifoundation.org/)で制定され、現在は多くの計測器メーカーが採用している業界標準です。
 * VISAの実装(ソフトウェア)の例
   - [NI-VISA](https://www.ni.com/ja/support/downloads/drivers/download.ni-visa.html)
   - [KeySight VISA](https://www.keysight.com/jp/ja/lib/software-detail/computer-software/io-libraries-suite-downloads-2175637.html)
