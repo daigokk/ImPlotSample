@@ -27,7 +27,7 @@
      ![新しい項目の追加](./images/vs_06.png)
 1. コードを書く
    - `main.c`に以下のコードを記入
-   ```cpp
+   ```c
    #include <stdio.h>
    int main() {
      printf("Hello world\n");
