@@ -23,7 +23,7 @@
    ```cpp
    #include <stdio.h>
    int main() {
-     printf("Hello wordl\n");
+     printf("Hello world\n");
      return 0;
    }
    ```
