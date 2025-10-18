@@ -4,9 +4,9 @@
   ![Hard copy](./docs/images/HardCopy.png)
 
 - このリポジトリは[GLFW](https://www.glfw.org/)、[Dear ImGui](https://github.com/ocornut/imgui)、ImPlot、及び[Visual Studio](https://visualstudio.microsoft.com/ja/vs/community/)に依存しています。
-- GLFWとは、3Dプログラムを作りやすくするためのライブラリです。
-- ImGuiとは、GLFW等を用いた3Dプログラム上で直感的かつ簡潔なコードによってGUIを作成することを目的としたC++用ライブラリです。
 - ImPlotとは、データをリアルタイムで視覚化したり、インタラクティブなプロットを作成することを目的としたImGuiを利用したライブラリです。
+- ImGuiとは、GLFW等を用いた3Dプログラム上で直感的かつ簡潔なコードによってGUIを作成することを目的としたC++用ライブラリです。
+- GLFWとは、3Dプログラムを作りやすくするためのC,C++言語用ライブラリです。
 - Visual StudioはC言語やC++言語をWindows上で開発することができる統合開発環境です。
 - つまり、計測したデータを視覚化するImPlotを使うためには、ImGuiとGLFWとの依存関係をVisual Studio上で正しく解決する必要があり、それは初学者にとってやや複雑なので、それらを行ったこのリポジトリを用意した次第です。
 - [職業能力開発総合大学校 電気工学専攻](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)の「自動計測実習」で用います。
