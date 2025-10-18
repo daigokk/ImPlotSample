@@ -38,7 +38,11 @@
 
 ```cpp
 ImGui::Begin("Window title");
-ImGui::Text("Hello world.");
+static std::string text;
+if (ImGui::Button("View text")) {
+  text += "Hello!\n";
+}
+ImGui::Text(text.c_str());
 ImGui::End();
 ```
 
