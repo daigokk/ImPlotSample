@@ -6,8 +6,11 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 
 もしVISAがなければ、USB機器、LAN機器、または古いGPIB機器を制御するために**それぞれ異なる通信方式専用のコード**を書く必要がありました。
 
-VISAは、異なる通信方法の違いを気にせず、**同じ操作方法**でどのメーカーの、どの通信方式の機器でも統一的に操作できるようにします。NI（National Instruments）社が開発し、現在は多くの計測器メーカーが採用している業界標準です。
-
+VISAは、異なる通信方法の違いを気にせず、**同じ操作方法**でどのメーカーの、どの通信方式の機器でも統一的に操作できるようにします。IVI Foundationで制定され、現在は多くの計測器メーカーが採用している業界標準です。
+* 実装例
+  - [NI-VISA](https://www.ni.com/ja/support/downloads/drivers/download.ni-visa.html)
+  - [KeySight VISA](https://www.keysight.com/jp/ja/lib/software-detail/computer-software/io-libraries-suite-downloads-2175637.html)
+  - [KI-VISA](https://kikusui.co.jp/dri-fir-upd/ki-visa/)
 ---
 
 ## 🎯 VISAの目的（なぜ必要？）
@@ -91,7 +94,7 @@ VISAは、接続方法に関わらず計測器に一意の「住所」を割り�
 ## 🧭 補助ツール: NI MAX
 
   * **NI MAX (Measurement & Automation Explorer)**
-    NI社が提供するVISAのためのGUIツール。接続された計測器の**VISAアドレスの確認**、**接続テスト**、デバッグに非常に便利です。VISAを導入したら、まずこのツールで機器が認識されているか確認するのが一般的です。
+    Emerson社のNI(旧Natinal Instruments社)が提供するVISAのためのGUIツール。接続された計測器の**VISAアドレスの確認**、**接続テスト**、デバッグに非常に便利です。VISAを導入したら、まずこのツールで機器が認識されているか確認するのが一般的です。
 
   * 以下は接続された計測器を列挙するプログラムです。NI MAXも内部で以下のようにVISAを使っています。
   ```cpp
