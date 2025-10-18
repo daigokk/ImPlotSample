@@ -1,4 +1,4 @@
-# 🧪 計測器の共通言語！VISAとは？（Virtual Instrument Software Architecture）
+# 🧪 計測器の共通言語！VISAとは？
 
 ## 概要: 万能アダプターとしてのVISA
 
