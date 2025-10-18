@@ -146,10 +146,12 @@ VISAは、接続方法に関わらず計測器に一意の「住所」を割り�
 
 ## 🔧 最小のサンプルプログラム
 
-このC言語のサンプルは、**VISAによる通信がどのような手順を踏んでいるか**を示すものです。ビルドするにはVISAと同時にインストールされる`visa.h`、`visatype.h`及び`visa32.lib`(または`visa64.lib`)が必要です。'C:\Program Files\IVI Foundation\VISA\WinNT'フォルダの中にあります。
+このC言語のサンプルは、**VISAによる通信がどのような手順を踏んでいるか**を示すものです。
 
 ```cpp
 // このサンプルは、いずれかの通信方式で接続されたSCPI対応機器に対して識別情報を取得する最小構成の例です。
+// ビルドするにはVISAと同時にインストールされる`visa.h`、`visatype.h`及び`visa64.lib`(または`visa32.lib`)が必要です。
+// 'C:\Program Files\IVI Foundation\VISA\WinNT'フォルダの中にあります。
 // "USB0::????????::INSTR" の部分は、NI MAXで確認した実際のアドレスに置き換えてください。
 
 #pragma comment(lib, "visa64.lib")
