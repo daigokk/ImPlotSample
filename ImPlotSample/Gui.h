@@ -15,6 +15,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+static bool MyKnob(const char* label, float* p_value, float v_min, float v_max);
+static bool MyKnobInt(const char* label, int* p_value, int v_min, int v_max); 
+
+
 class Gui {
 public:
     static void Initialize(
