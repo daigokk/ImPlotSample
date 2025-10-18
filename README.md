@@ -1,13 +1,18 @@
 # ImPlotSample
   ![Hard copy](./docs/images/HardCopy.png)
 
-- このソフトウェアは[ImPlot](https://github.com/epezent/implot)をVisual Studioで利用するためのひな型です。
-- [Dear ImGui](https://github.com/ocornut/imgui)とImPlotに依存しています。
+- このソフトウェアは[ImPlot](https://github.com/epezent/implot)をVisual Studioで利用するためのひな型です。ImPlotを使うためには、環境に合わせたいくつかの作業が必要になり、それをショートカットするために用意しました。ご自身で0から環境構築をしたい場合、以下のリンク先から情報収集してください。プログラム開発のためのとてもよい経験になると思います。
+- このソフトウェアは[Dear ImGui](https://github.com/ocornut/imgui)とImPlotに依存しています。
 - ImGuiとは、直感的かつ簡潔なコードでGUIを作成することを目的としたC++用ライブラリです。
 - ImPlotとは、データをリアルタイムで視覚化したり、インタラクティブなプロットを作成することを目的としたImGuiを利用したライブラリです。
 - [職業能力開発総合大学校 電気工学専攻](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)の「自動計測実習」で用います。
   - [Visual Studioの使い方](./docs/VisualStudio.md)
   - [計測器の共通言語！VISAとは？](./docs/VISA.md)
+
+## 使い方
+- `https://github.com/daigokk/ImPlotSample/tree/master`右上の緑のボタン「<>Code▽」をクリックし、現れたメニューの一番下`Download Zip`をクリック。するとダウンロードが始まる。
+- ダウンロードされた`ImPlotSample-master.zip`を「すべて展開」し、任意の場所(学校ではZドライブを推奨)に保存する。
+- `ImPlotSample.sln`ファイルをダブルクリックするとVisual Studioが起動する。
 
 # 🧱 ImGui ウィジェット使用例チートシート
 
