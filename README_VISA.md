@@ -10,11 +10,13 @@ VISAは、異なる通信方法の違いを気にせず、**同じ操作方法**
 * VISAの実装(ソフトウェア)の例
   - [NI-VISA](https://www.ni.com/ja/support/downloads/drivers/download.ni-visa.html)
   - [KeySight VISA](https://www.keysight.com/jp/ja/lib/software-detail/computer-software/io-libraries-suite-downloads-2175637.html)
+  - [TekVISA](https://www.tek.com/ja/manual/tekvisa-programmer-manual)
   - [KI-VISA](https://kikusui.co.jp/dri-fir-upd/ki-visa/)
 * VISAに対応している計測器メーカー
   - Keysight Technologies
   - NI
   - Tektronix
+  - RIGOL
   - 菊水電子工業(株)
   - (株)エヌエフ回路設計ブロック
   - 横河計測(株)
