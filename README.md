@@ -3,7 +3,7 @@
 
   ![Hard copy](./docs/images/HardCopy.png)
 
-- このリポジトリは[GLFW](https://www.glfw.org/)、[Dear ImGui](https://github.com/ocornut/imgui)、ImPlot、及びVisual Studioに依存しています。
+- このリポジトリは[GLFW](https://www.glfw.org/)、[Dear ImGui](https://github.com/ocornut/imgui)、ImPlot、及び[Visual Studio](https://visualstudio.microsoft.com/ja/vs/community/)に依存しています。
 - GLFWとは、有名な3Dプログラムを作りやすくするためのライブラリです。
 - ImGuiとは、GLFW等を用いた3Dプログラム上で直感的かつ簡潔なコードによってGUIを作成することを目的としたC++用ライブラリです。
 - ImPlotとは、データをリアルタイムで視覚化したり、インタラクティブなプロットを作成することを目的としたImGuiを利用したライブラリです。
@@ -16,7 +16,7 @@
 ## 使い方
 - `https://github.com/daigokk/ImPlotSample/tree/master`右上の緑のボタン「<>Code▽」をクリックし、現れたメニューの一番下`Download Zip`をクリック。するとダウンロードが始まる。
 - ダウンロードされた`ImPlotSample-master.zip`を「すべて展開」し、任意の場所(学校ではZドライブを推奨)に保存する。
-- `ImPlotSample.sln`ファイルをダブルクリックするとVisual Studioが起動する。
+- `ImPlotSample.sln`ファイルをダブルクリックするとVisual Studioが起動する。もちろんVisual Studioがインストールされている必要があります。
 
 # 🧱 ImGui ウィジェット使用例チートシート
 
