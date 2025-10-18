@@ -3,6 +3,9 @@
 
   ![Hard copy](./docs/images/HardCopy.png)
 
+---
+
+## 概要
 - このリポジトリは[GLFW](https://www.glfw.org/)、[Dear ImGui](https://github.com/ocornut/imgui)、ImPlot、及び[Visual Studio](https://visualstudio.microsoft.com/ja/vs/community/)に依存しています。
 - ImPlotとは、データをリアルタイムで視覚化したり、インタラクティブなプロットを作成することを目的としたImGuiを利用したライブラリです。
 - ImGuiとは、GLFW等を用いた3Dプログラム上で直感的かつ簡潔なコードによってGUIを作成することを目的としたC++用ライブラリです。
@@ -12,6 +15,8 @@
 - [職業能力開発総合大学校 電気工学専攻](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)の「自動計測実習」で用います。
   - [Visual Studioの使い方](./docs/VisualStudio.md)
   - [計測器の共通言語！VISAとは？](./docs/VISA.md)
+
+---
 
 ## 使い方
 - `https://github.com/daigokk/ImPlotSample/tree/master`右上の緑のボタン「<>Code▽」をクリックし、現れたメニューの一番下`Download Zip`をクリック。するとダウンロードが始まる。
