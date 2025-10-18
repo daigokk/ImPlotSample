@@ -73,7 +73,7 @@ VISA関数は、計測器を操作する際の「手順」を**身近な動作**
 
 SCPIコマンドを使えば、異なる計測器メーカーでも同じ結果が期待できます。**しかしながら計測器メーカーごとに方言が存在するのでマニュアルを確認することが必要です。**
 
-* 異なる計測器メーカでも同じ結果が期待できるSCPI`*IDN?`の使用例:
+* 異なる計測器メーカーでも同じ結果が期待できるSCPI`*IDN?`の使用例:
   ```cpp
   char ret[256];
   viQueryf(vi, "%s", "%255t", "*IDN?\n", ret);
@@ -83,7 +83,7 @@ SCPIコマンドを使えば、異なる計測器メーカーでも同じ結果�
   * 横河計測 DLM2022: `TIMebase:TDIV?`
   ```cpp
   char ret[256];
-  viQueryf(vi, "%s", "%255t", ":TIMebase:TDIV?\n", ret);
+  viQueryf(vi, "%s", "%255t", "TIMebase:TDIV?\n", ret);
   printf("Time/div: %f", atof(ret));
   ```
   * [マニュアル](https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf)
@@ -187,7 +187,7 @@ int main() {
 
 C言語と同様の手順を、近年よく使われるPythonで行う例です。`pyvisa`というライブラリを使うと、よりシンプルに記述できます。
 
-```python
+```Python
 # pip install pyvisa-py でライブラリをインストールしておく必要があります
 # "USB0::????????::INSTR" の部分は、NI MAXで確認した実際のアドレスに置き換えてください。
 
@@ -206,7 +206,7 @@ with rm.open_resource("USB0::????????::INSTR") as instr:
     
     print(f"Instrument ID: {response.strip()}") # 結果表示
 
-# 5. さよならする (with構文を使ったため、このブロックを抜ける際に自動で接続が閉じられます)
+# 5. さよならする (with構文を使ったため、withブロックを抜ける際に自動で接続が閉じられます)
 print("接続を終了しました。")
 
 ```
