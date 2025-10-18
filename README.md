@@ -4,7 +4,7 @@
   ![Hard copy](./docs/images/HardCopy.png)
 
 - このリポジトリは[GLFW](https://www.glfw.org/)、[Dear ImGui](https://github.com/ocornut/imgui)、ImPlot、及び[Visual Studio](https://visualstudio.microsoft.com/ja/vs/community/)に依存しています。
-- GLFWとは、有名な3Dプログラムを作りやすくするためのライブラリです。
+- GLFWとは、3Dプログラムを作りやすくするためのライブラリです。
 - ImGuiとは、GLFW等を用いた3Dプログラム上で直感的かつ簡潔なコードによってGUIを作成することを目的としたC++用ライブラリです。
 - ImPlotとは、データをリアルタイムで視覚化したり、インタラクティブなプロットを作成することを目的としたImGuiを利用したライブラリです。
 - Visual StudioはC言語やC++言語をWindows上で開発することができる統合開発環境です。
