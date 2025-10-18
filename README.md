@@ -6,6 +6,8 @@
 - ImGuiとは、直感的かつ簡潔なコードでGUIを作成することを目的としたC++用ライブラリです。
 - ImPlotとは、データをリアルタイムで視覚化したり、インタラクティブなプロットを作成することを目的としたImGuiを利用したライブラリです。
 - [職業能力開発総合大学校 電気工学専攻](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)の「自動計測実習」で用います。
+  - [Visual Studioの使い方](./docs/VisualStudio.md)
+  - [計測器の共通言語！VISAとは？](./docs/VISA.md)
 
 # 🧱 ImGui ウィジェット使用例チートシート
 
