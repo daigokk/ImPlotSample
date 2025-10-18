@@ -64,10 +64,10 @@ VISA関数は、計測器を操作する際の「手順」を**身近な動作**
 
 ## 📄 SCPI（スキッピ）との関係
 
-[SCPI](https://www.ivifoundation.org/About-IVI/scpi.html)はVISAと同じくIVI Foundationによって管理されているプログラマブルな試験機・計測機の制御に用いる文法の標準です。VISAとよく混同されますが、これらは役割が違います。
+[SCPI](https://www.ivifoundation.org/About-IVI/scpi.html)(Standard Commands for Programmable Instruments)はVISAと同じくIVI Foundationによって管理されているプログラマブルな試験機・計測機の制御に用いる文法の標準です。VISAとよく混同されますが、これらは役割が違います。
 
 * **VISA:** 「**手紙の届け方**（郵送、宅配便、電子メール）」を統一する仕組み。
-* **SCPI** (Standard Commands for Programmable Instruments): 「**手紙の中身**（命令や用件）」を標準化する仕組み。
+* **SCPI** : 「**手紙の中身**（命令や用件）」を標準化する仕組み。
 
 例えば、`*IDN?` というSCPIコマンドは「あなたは誰ですか？」という意味で、メーカー名や型番などを返します。**VISA(例えばviQueryf関数)を使えば、SCPIコマンド(例えば`*IDN?`)を、USBでもLANでも同じように送れるのです。**
 
