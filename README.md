@@ -1,19 +1,19 @@
 # ImPlotSample
-このリポジトリは[ImPlot](https://github.com/epezent/implot)をVisual Studioで利用するためのひな型です。ImPlotを使うためには、環境に合わせたいくつかの作業が必要になり、それをショートカットするために用意しました。ご自身で0から環境構築をしたい場合、本ページ内のリンク先から情報収集してください。プログラム開発のためのとてもよい経験になると思います。
+このリポジトリ(ソースコードやファイルを一元的に管理する場所)が管理しているプログラムは[ImPlot](https://github.com/epezent/implot)をVisual Studioで利用するためのひな型です。ImPlotを使うためには、環境に合わせたいくつかの作業が必要になり、それをショートカットするために用意しました。ご自身で0から環境構築をしたい場合、本ページ内のリンク先から情報収集してください。プログラム開発のためのとてもよい経験になると思います。
 
   ![Hard copy](./docs/images/HardCopy.png)
 
 ## 概要
 - このリポジトリは[GLFW](https://www.glfw.org/)、[Dear ImGui](https://github.com/ocornut/imgui)、ImPlot、及び[Visual Studio](https://visualstudio.microsoft.com/ja/vs/community/)に依存しています。
 - ImPlotとは、データをリアルタイムで視覚化したり、インタラクティブなプロットを作成することを目的としたImGuiを利用したライブラリです。
-- ImGuiとは、GLFW等を用いた3Dプログラム上で直感的かつ簡潔なコードによってGUIを作成することを目的としたC++用ライブラリです。
+- ImGuiとは、GLFW等を用いた3Dプログラム上で直感的かつ簡潔なコードによってGUIを作成することを目的としたC++言語用ライブラリです。
 - GLFWとは、3Dプログラムを作りやすくするためのC,C++言語用ライブラリです。
 - Visual StudioはC言語やC++言語をWindows上で開発することができる統合開発環境です。
 - つまり、計測したデータを視覚化するImPlotを使うためには、ImGuiとGLFWとの依存関係をVisual Studio上で正しく解決する必要があり、それは初学者にとってやや複雑なので、それらを行ったこのリポジトリを用意した次第です。
 - [職業能力開発総合大学校 電気工学専攻](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)の「[自動計測実習](https://daigokk.github.io/ImPlotSample/)」で用います。
 
 ## 使い方
-- `https://github.com/daigokk/ImPlotSample/tree/master`右上の緑のボタン「<>Code▽」をクリックし、現れたメニューの一番下`Download Zip`をクリック。するとダウンロードが始まる。
+- [`https://github.com/daigokk/ImPlotSample/tree/master`](https://github.com/daigokk/ImPlotSample/tree/master)右上の緑のボタン「<>Code▽」をクリックし、現れたメニューの一番下`Download Zip`をクリック。すると[ダウンロード](https://github.com/daigokk/ImPlotSample/archive/refs/heads/master.zip)が始まる。
 - ダウンロードされた`ImPlotSample-master.zip`を「すべて展開」し、任意の場所(学校ではZドライブを推奨)に保存する。
 - `ImPlotSample.sln`ファイルをダブルクリックするとVisual Studioが起動する。もちろんVisual Studioがインストールされている必要があります。
 
