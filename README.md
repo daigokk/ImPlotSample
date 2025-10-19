@@ -3,8 +3,6 @@
 
   ![Hard copy](./docs/images/HardCopy.png)
 
----
-
 ## 概要
 - このリポジトリは[GLFW](https://www.glfw.org/)、[Dear ImGui](https://github.com/ocornut/imgui)、ImPlot、及び[Visual Studio](https://visualstudio.microsoft.com/ja/vs/community/)に依存しています。
 - ImPlotとは、データをリアルタイムで視覚化したり、インタラクティブなプロットを作成することを目的としたImGuiを利用したライブラリです。
@@ -14,12 +12,12 @@
 - つまり、計測したデータを視覚化するImPlotを使うためには、ImGuiとGLFWとの依存関係をVisual Studio上で正しく解決する必要があり、それは初学者にとってやや複雑なので、それらを行ったこのリポジトリを用意した次第です。
 - [職業能力開発総合大学校 電気工学専攻](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)の「[自動計測実習](https://daigokk.github.io/ImPlotSample/)」で用います。
 
----
-
 ## 使い方
 - `https://github.com/daigokk/ImPlotSample/tree/master`右上の緑のボタン「<>Code▽」をクリックし、現れたメニューの一番下`Download Zip`をクリック。するとダウンロードが始まる。
 - ダウンロードされた`ImPlotSample-master.zip`を「すべて展開」し、任意の場所(学校ではZドライブを推奨)に保存する。
 - `ImPlotSample.sln`ファイルをダブルクリックするとVisual Studioが起動する。もちろんVisual Studioがインストールされている必要があります。
+
+---
 
 # 🧱 ImGui ウィジェット使用例チートシート
 
