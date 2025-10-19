@@ -124,9 +124,9 @@ int main() {
 int main() {
     FILE *fp = fopen("data.csv", "w");
     if (fp == NULL) return 1;
-    for (int i = 0; i < 100000; i++) {
+    for (int i = 0; i < 1000; i++) {
         double t = i * 1e-8;
-        double y = sin(2 * PI * 1000 * t);
+        double y = sin(2 * PI * 100e3 * t);
         fprintf(fp, "%e,%e\n", t, y);
     }
     fclose(fp);
