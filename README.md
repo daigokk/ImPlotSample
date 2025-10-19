@@ -1,5 +1,5 @@
 # ImPlotSample
-このリポジトリは[ImPlot](https://github.com/epezent/implot)をVisual Studioで利用するためのひな型です。ImPlotを使うためには、環境に合わせたいくつかの作業が必要になり、それをショートカットするために用意しました。ご自身で0から環境構築をしたい場合、以下のリンク先から情報収集してください。プログラム開発のためのとてもよい経験になると思います。
+このリポジトリは[ImPlot](https://github.com/epezent/implot)をVisual Studioで利用するためのひな型です。ImPlotを使うためには、環境に合わせたいくつかの作業が必要になり、それをショートカットするために用意しました。ご自身で0から環境構築をしたい場合、本ページ内のリンク先から情報収集してください。プログラム開発のためのとてもよい経験になると思います。
 
   ![Hard copy](./docs/images/HardCopy.png)
 
@@ -12,9 +12,7 @@
 - GLFWとは、3Dプログラムを作りやすくするためのC,C++言語用ライブラリです。
 - Visual StudioはC言語やC++言語をWindows上で開発することができる統合開発環境です。
 - つまり、計測したデータを視覚化するImPlotを使うためには、ImGuiとGLFWとの依存関係をVisual Studio上で正しく解決する必要があり、それは初学者にとってやや複雑なので、それらを行ったこのリポジトリを用意した次第です。
-- [職業能力開発総合大学校 電気工学専攻](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)の「自動計測実習」で用います。
-  - [Visual Studioの使い方](./docs/VisualStudio.md)
-  - [計測器の共通言語！VISAとは？](./docs/VISA.md)
+- [職業能力開発総合大学校 電気工学専攻](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)の「[自動計測実習](https://daigokk.github.io/ImPlotSample/)」で用います。
 
 ---
 
