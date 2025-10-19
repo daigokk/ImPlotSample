@@ -143,7 +143,7 @@ int main() {
 ### 10. モンテカルロ法で円周率（Lv.8）
 ```c
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> // for srand, rand
 #include <time.h>
 #include <math.h>
 #define PI acos(-1)
