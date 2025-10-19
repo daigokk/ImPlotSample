@@ -128,9 +128,9 @@ public:
     static char* cviQueryf(const ViSession instrument, const char* filename, const int line, const char* format, ...);
 };
 
-ViSession CVisa::resourceManager;
+ViSession CppVisa::resourceManager;
 
-bool CVisa::OpenRM(const char* filename, const int line) {
+bool CppVisa::OpenRM(const char* filename, const int line) {
     ViStatus status = viOpenDefaultRM(&resourceManager);
     if (status < VI_SUCCESS) {
         vi_checkError(status, filename, line);
@@ -139,7 +139,7 @@ bool CVisa::OpenRM(const char* filename, const int line) {
     return true;
 }
 
-ViSession CVisa::OpenInstrument(const char address[], const char* filename, const int line) {
+ViSession CppVisa::OpenInstrument(const char address[], const char* filename, const int line) {
     ViSession instrument = VI_NULL;
     ViStatus status = viOpen(resourceManager, address, VI_NULL, VI_NULL, &instrument);
     if (status < VI_SUCCESS) {
@@ -156,20 +156,20 @@ ViSession CVisa::OpenInstrument(const char address[], const char* filename, cons
     return instrument;
 }
 
-void CVisa::CloseRM() {
+void CppVisa::CloseRM() {
     if (resourceManager) {
         viClose(resourceManager);
         resourceManager = VI_NULL;
     }
 }
 
-void CVisa::CloseInstrument(ViSession instrument) {
+void CppVisa::CloseInstrument(ViSession instrument) {
     if (instrument) {
         viClose(instrument);
     }
 }
 
-bool CVisa::cviPrintf(const ViSession instrument, const char* filename, const int line, const char* format, ...) {
+bool CppVisa::cviPrintf(const ViSession instrument, const char* filename, const int line, const char* format, ...) {
     va_list args;
     va_start(args, format);
     ViStatus status = viPrintf(instrument, format, args);
@@ -183,7 +183,7 @@ bool CVisa::cviPrintf(const ViSession instrument, const char* filename, const in
 }
 
 // cviScanfにおいてformatで用いる文字列は%tを使う。%sを使うと空白で区切られた最初の単語しか読み取れない。
-bool CVisa::cviScanf(const ViSession instrument, const char* filename, int line, const char* format, void* output) {
+bool CppVisa::cviScanf(const ViSession instrument, const char* filename, int line, const char* format, void* output) {
     ViStatus status = viScanf(instrument, format, output);
     if (status < VI_SUCCESS) {
         vi_checkError(status, filename, line);
@@ -192,7 +192,7 @@ bool CVisa::cviScanf(const ViSession instrument, const char* filename, int line,
     return true;
 }
 
-char* CVisa::cviQueryf(const ViSession instrument, const char* filename, const int line, const char* format, ...) {
+char* CppVisa::cviQueryf(const ViSession instrument, const char* filename, const int line, const char* format, ...) {
     static char ret[256];
     va_list args;
 
@@ -308,9 +308,9 @@ void scope_get_Waveform(const ViSession vi, int ch, double voltages[]) {
     vi_checkError(viPrintf(vi, "WAVeform:TRACe %d\n", ch), __FILE__, __LINE__);
     vi_checkError(viPrintf(vi, "WAVeform:FORMat RBYTe\n"), __FILE__, __LINE__);
 
-    double position = atof(CVisa::cviQueryf(vi, __FILE__, __LINE__, "WAVeform:POSition?\n"));
-    double range = atof(CVisa::cviQueryf(vi, __FILE__, __LINE__, "WAVeform:RANGe?\n"));
-    double offset = atof(CVisa::cviQueryf(vi, __FILE__, __LINE__, "WAVeform:OFFSet?\n"));
+    double position = atof(CppVisa::cviQueryf(vi, __FILE__, __LINE__, "WAVeform:POSition?\n"));
+    double range = atof(CppVisa::cviQueryf(vi, __FILE__, __LINE__, "WAVeform:RANGe?\n"));
+    double offset = atof(CppVisa::cviQueryf(vi, __FILE__, __LINE__, "WAVeform:OFFSet?\n"));
 
     vi_checkError(viPrintf(vi, "WAVeform:SEND?\n"), __FILE__, __LINE__);
 
