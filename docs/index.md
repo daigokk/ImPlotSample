@@ -68,7 +68,7 @@
 
 ## 参考資料
 ### [Visual Studioの使い方](./VisualStudio.md)
-### [C言語 復習資料](./Clang.md)
+### [C言語 課題解決チートシート](./Clang.md)
 
 ---
 
