@@ -131,16 +131,21 @@ VISAは、接続方法に関わらず計測器に一意の「住所」を割り�
         
         viOpenDefaultRM(&defaultRM);
         // 接続されている計測器を検索（例: GPIB, USB, TCPIPなど）
-        viFindRsrc(resourceManager, "?*INSTR", &findList, &numInstrs, instrDesc);
+        viFindRsrc(defaultRM, "?*INSTR", &findList, &numInstrs, instrDesc);
         printf("見つかった計測器の数: %d\n", numInstrs);
+        if(numInstrs == 0) {
+            std::cout << "計測器が見つかりませんでした。" << std::endl;
+            return;
+        }
+        
         // 最初の計測器を表示
-        vi_getIdn(resourceManager, instrDesc, ret);
+        vi_getIdn(defaultRM, instrDesc, ret);
         printf("1: %s, %s\n", instrDesc, ret);
     
         // 残りの計測器を取得
         for (ViUInt32 i = 1; i < numInstrs; ++i) {
             if (viFindNext(findList, instrDesc) < VI_SUCCESS) break;
-            vi_getIdn(resourceManager, instrDesc, ret);
+            vi_getIdn(defaultRM, instrDesc, ret);
             printf("%d: %s, %s\n", i + 1, instrDesc, ret);
         }
         
