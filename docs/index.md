@@ -64,7 +64,7 @@
    - 上記の結果を`data.csv`ファイルに出力する。
 1. 外部ライブラリを用いたデータの可視化(Lv. 100、200分、評価基準: グラフが正しく表示され、ラベル・軸が適切に設定されている)
    - `data.csv`の値を[ImPlot](https://github.com/epezent/implot)を用いてグラフにして表示する。
-   - [これ](https://github.com/daigokk/ImPlotSample/tree/master)を使えばLv. 50くらいになります。
+   - [これ](https://github.com/daigokk/ImPlotSample/tree/master)を使えばLv.100からLv. 50くらい簡単になります。
 
 ## 参考資料
 ### [Visual Studioの使い方](./VisualStudio.md)
