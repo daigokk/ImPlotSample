@@ -100,10 +100,10 @@ void sort(int length, double *arr) {
 #define PI acos(-1)
 int main() {
     double amp, phase_deg;
-    double omega = 2 * PI * 1000;
+    double omega = 2 * PI * 100e3;
     scanf("%lf %lf", &amp, &phase_deg);
     double phase_rad = phase_deg / 180.0 * PI;
-    for (int i = 0; i < 100000; i++) {
+    for (int i = 0; i < 5000; i++) {
         double t = i * 1e-8;
         double y = amp * sin(omega * t + phase_rad);
         printf("%e,%e\n", t, y);
@@ -124,7 +124,7 @@ int main() {
 int main() {
     FILE *fp = fopen("data.csv", "w");
     if (fp == NULL) return 1;
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 5000; i++) {
         double t = i * 1e-8;
         double y = sin(2 * PI * 100e3 * t);
         fprintf(fp, "%e,%e\n", t, y);
