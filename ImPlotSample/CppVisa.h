@@ -80,6 +80,11 @@ void vi_FindRsrc(const ViSession resourceManager) {
         return;
     }
     std::cout << "見つかった計測器の数: " << numInstrs << std::endl;
+    if(numInstrs == 0) {
+        std::cout << "計測器が見つかりませんでした。" << std::endl;
+        return;
+	}
+	// 最初の計測器を取得
     vi_getIdn(resourceManager, instrDesc, ret);
     std::cout << "1: " << instrDesc << ", " << ret << std::endl;
 
@@ -95,7 +100,7 @@ void vi_FindRsrc(const ViSession resourceManager) {
 }
 
 
-class CVisa {
+class CppVisa {
 private:
     static ViSession resourceManager;
 

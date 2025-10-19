@@ -8,7 +8,7 @@
 
 //#define VISA
 #ifdef VISA
-    #include "CVisa.h"
+    #include "CppVisa.h"
 #endif // VISA
 
 
