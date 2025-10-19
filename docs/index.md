@@ -1,17 +1,6 @@
-<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js">
-</script>
-<script type="text/x-mathjax-config">
- MathJax.Hub.Config({
- tex2jax: {
- inlineMath: [['$', '$'] ],
- displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
- }
- });
-</script>
-
 # 課題
 
-## C言語の復習
+## C言語の復習$\sqrt{3x-1}+(1+x)^2$
 
 「コンピュータプログラミング実習」、「コンピュータプログラミン」で習得した内容を確認します。
 
