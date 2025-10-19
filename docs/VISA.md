@@ -115,33 +115,42 @@ VISAは、接続方法に関わらず計測器に一意の「住所」を割り�
 
   * 以下は接続された計測器を列挙するプログラムです。NI MAXも内部で以下のようにVISAを使っています。
     ```cpp
-    void vi_FindRsrc(const ViSession resourceManager) {
-        // 接続されている計測器を検索（例: GPIB, USB, TCPIPなど）
-        ViStatus status;
+    void vi_getIdn(const ViSession resourceManager, const ViChar* instrDesc, char* ret) {
+        ViSession instrument;
+        viOpen(resourceManager, instrDesc, VI_NULL, VI_NULL, &instrument);
+        viQueryf(instrument, "%s", "%255t", "*IDN?\n", ret);
+        viClose(instrument);
+    }
+    
+    void vi_FindRsrc() {
+        // 接続されている計測器のアドレスとメーカ名等を列挙する
+        ViSession defaultRM;
         ViFindList findList;
         ViUInt32 numInstrs;
         ViChar instrDesc[256], ret[256];
-        status = viFindRsrc(resourceManager, "?*INSTR", &findList, &numInstrs, instrDesc);
-        if (status < VI_SUCCESS) {
-            printf("計測器の検索に失敗しました。\n");
-            return;
-        }
+        
+        viOpenDefaultRM(&defaultRM);
+        // 接続されている計測器を検索（例: GPIB, USB, TCPIPなど）
+        viFindRsrc(resourceManager, "?*INSTR", &findList, &numInstrs, instrDesc);
         printf("見つかった計測器の数: %d\n", numInstrs);
+        // 最初の計測器を表示
         vi_getIdn(resourceManager, instrDesc, ret);
         printf("1: %s, %s\n", instrDesc, ret);
     
         // 残りの計測器を取得
         for (ViUInt32 i = 1; i < numInstrs; ++i) {
-            status = viFindNext(findList, instrDesc);
-            if (status < VI_SUCCESS) break;
+            if (viFindNext(findList, instrDesc) < VI_SUCCESS) break;
             vi_getIdn(resourceManager, instrDesc, ret);
             printf("%d: %s, %s\n", i + 1, instrDesc, ret);
         }
-    
+        
         viClose(findList);
+        viClose(defaultRM);
     }
     ```
-
+    - `findList`: 検索結果（アドレスリスト）全体を管理するための**識別子（ハンドル）**が格納されます。残りの計測器のアドレスを取得するために、後続のviFindNext関数に渡されます。
+    - `numInstrs`: 検索条件に一致した計測器の総数が格納されます。この値に基づいてviFindNextのループ回数を決定します。
+    - `instrDesc`: 検索で見つかった**最初の計測器のVISAアドレス（リソース記述子）**が格納されます。
 -----
 
 ## 🔧 最小のサンプルプログラム
