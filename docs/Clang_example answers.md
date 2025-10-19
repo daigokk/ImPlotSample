@@ -136,21 +136,29 @@ int main() {
 - `fprintf()`でCSV形式に出力。
 
 ---
+### 9. ImPlot
+- 省略
+---
 
-### 9. モンテカルロ法で円周率（Lv.8）
+### 10. モンテカルロ法で円周率（Lv.8）
 ```c
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
+#define PI acos(-1)
 int main() {
     int N = 1000000, count = 0;
+    double pi;
     srand(time(NULL));
     for (int i = 0; i < N; i++) {
         double x = (double)rand() / RAND_MAX * 2 - 1;
         double y = (double)rand() / RAND_MAX * 2 - 1;
         if (x*x + y*y <= 1) count++;
+        pi = 4.0 * count / (i + 1);
+        if (fabs(pi - PI) < 1e-5) break;
+        printf("%d: %f\n", i+1, pi);
     }
-    double pi = 4.0 * count / N;
     printf("π ≒ %.6f\n", pi);
     return 0;
 }
