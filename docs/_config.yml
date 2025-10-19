@@ -1,4 +1,4 @@
-theme: jekyll-theme-minimal
+theme: jekyll-theme-cayman
 markdown: kramdown
 highlighter: rouge
 title: 自動計測実習
