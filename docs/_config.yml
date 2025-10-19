@@ -1,4 +1,6 @@
 theme: jekyll-theme-minimal
+markdown: kramdown
+highlighter: rouge
 title: 自動計測実習
 description: 参考資料置き場
 show_downloads: true
