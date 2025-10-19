@@ -71,10 +71,10 @@
    - 上記を$`N`$回実施し半径1mの円(面積$`\pi \rm m^2`$)の中にある点の数$`k`$回と一辺が2mの正方形(面積$`4 \rm m^2`$)の中にある点の数$`N`$の比から得られる式$`\pi/4=k/N`$を用いて円周率$`\pi`$を求める。
    - 検算には`math.h`を用いてもよい。
 
-## 参考資料
-### [Visual Studioの使い方](./VisualStudio.md)
-### [C言語onColab](https://colab.research.google.com/drive/1fewkHpqIm40EXWWdZ9eu6EUIN9MWQNO4)
-### [C言語 課題解決チートシート](./Clang.md)
+### 参考資料
+- [Visual Studioの使い方](./VisualStudio.md)
+- [C言語onColab](https://colab.research.google.com/drive/1fewkHpqIm40EXWWdZ9eu6EUIN9MWQNO4)
+- [C言語 課題解決チートシート](./Clang.md)
 
 ---
 
@@ -91,8 +91,8 @@
 1. VISA、SCPIの理解
 2. 計測器（オシロスコープやファンクションジェネレータなど）への設定の書き込み、及び読み込み
 
-# 参考資料
-## [計測器の共通言語！VISAとは？](./VISA.md)
+### 参考資料
+- [計測器の共通言語！VISAとは？](./VISA.md)
 
 ---
 
