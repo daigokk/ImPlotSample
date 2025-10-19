@@ -92,6 +92,8 @@ ImGui::End();
 | `GetMousePos()` | マウス座標取得 | `ImVec2 pos = ImGui::GetMousePos();` |
 | `GetIO()` | 入力状態取得 | `ImGuiIO& io = ImGui::GetIO(); if (io.MouseDown[0]) { /* 左クリック中 */ }` |
 
+---
+
 # 📊 ImPlot 使用例チートシート
 
 ## 🟦 基本プロット関数
@@ -104,8 +106,6 @@ ImGui::End();
 | `ImPlot::PlotBarsH()` | 棒グラフ（横） | `ImPlot::PlotBarsH("BarH", values, 10);` |
 | `ImPlot::PlotHistogram()` | ヒストグラム | `ImPlot::PlotHistogram("Hist", data, 50);` |
 | `ImPlot::PlotDigital()` | デジタル信号 | `ImPlot::PlotDigital("Signal", x, y, 100);` |
-
----
 
 ## 🟩 プロットの開始・終了
 
@@ -170,6 +170,7 @@ ImGui::End();
 - 軸やスタイルは `SetupAxis` や `PushStyleVar` で柔軟に設定可能
 - `SetNextAxesToFit()` を使えば自動スケーリングが有効になる
 
+---
 
 # ⚙️ Dependencies
 - [GLFW](https://www.glfw.org/)
