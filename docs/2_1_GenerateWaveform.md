@@ -73,7 +73,6 @@
 	        FILE* fp = fopen(FILENAME, "r");
 	        char buf[256];
 	        if (fp != NULL) {
-	            // 1行目は無視する
 	            fgets(buf, sizeof(buf), fp);  // 1行目を読み飛ばす
 	            for (int i = 0; i < SIZE; i++) {
 	                fscanf(fp, "%lf,%lf", &times[i], &waveform[i]);
