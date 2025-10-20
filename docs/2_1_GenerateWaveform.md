@@ -12,8 +12,7 @@
 	    static double amplitude = 1.0;
 	    static double phase_deg = 0.0, phase_rad = 0.0;
 	    static double waveform[SIZE];
-	    static double noize = 0.0; // 追加
-		static double fft[SIZE];
+ 	    static double noize = 0.0; // 追加
 	    // ウィンドウ開始
 	    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 	    ImGui::SetNextWindowSize(ImVec2(800, 200), ImGuiCond_FirstUseEver);
@@ -35,26 +34,26 @@
 	            waveform[i] = amplitude * std::sin(2 * PI * frequency * i * DT + phase_rad);
 	            waveform[i] += (double)rand() / RAND_MAX * 2 * noize - noize; // 追加
 	        }
-
-        // 保存
-        FILE* fp = fopen(FILENAME, "w");
-        if (fp != NULL) {
-            fprintf(fp, "# Time (s), Voltage (V)\n");
-            for (int i = 0; i < SIZE; ++i) {
-                fprintf(fp, "%e, %e\n", i * DT, waveform[i]);
-            }
-            fclose(fp);
-            text = "Success.\n";
-        }
-        else {
-            text = "[Error] Failed to open file for writing\n";
-        }
-		/*** ここまで *************************************************/
-    }
-    ImGui::SameLine();
-    ImGui::Text(text.c_str());
-    // ウィンドウ終了
-    ImGui::End();
+ 		
+	        // 保存
+	        FILE* fp = fopen(FILENAME, "w");
+	        if (fp != NULL) {
+	            fprintf(fp, "# Time (s), Voltage (V)\n");
+	            for (int i = 0; i < SIZE; ++i) {
+	                fprintf(fp, "%e, %e\n", i * DT, waveform[i]);
+	            }
+	            fclose(fp);
+	            text = "Success.\n";
+	        }
+	        else {
+	            text = "[Error] Failed to open file for writing\n";
+	        }
+	        /*** ここまで *************************************************/
+	    }
+	    ImGui::SameLine();
+	    ImGui::Text(text.c_str());
+	    // ウィンドウ終了
+	    ImGui::End();
 	}
 	```
 - View waveform window
@@ -74,7 +73,6 @@
 	        FILE* fp = fopen(FILENAME, "r");
 	        char buf[256];
 	        if (fp != NULL) {
-	            // 1行目は無視する
 	            fgets(buf, sizeof(buf), fp);  // 1行目を読み飛ばす
 	            for (int i = 0; i < SIZE; i++) {
 	                fscanf(fp, "%lf,%lf", &times[i], &waveform[i]);
@@ -85,7 +83,7 @@
 	        else {
 	            text = "[Error] Failed to open file for reading\n";
 	        }
- 			ImPlot::SetNextAxesToFit();
+	        ImPlot::SetNextAxesToFit();
 	        /*** ここまで *************************************************/
 	    }
 	    ImGui::SameLine();
