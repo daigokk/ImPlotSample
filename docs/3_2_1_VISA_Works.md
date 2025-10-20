@@ -35,12 +35,12 @@
 * D. コマンド（命令）を計測器へ送信する。（話しかける）
 
 ### Q6. 「計測器の世界で長く使われてきたとても太いケーブルを用いる接続規格」として説明され、堅牢な接続性が求められる機器で今も使われている通信方式は何ですか。
-* A. USBTMC
+* A. USB
 * B. GPIB
 * C. PXI/VXI
 * D. RS-232
 
-### Q7. SCPIコマンドの$\texttt{*IDN?}$が計測器に対して要求している標準的な情報は、資料の使用例から判断してどのような内容ですか。
+### Q7. SCPIコマンドの`*IDN?`が計測器に対して要求している標準的な情報は、資料の使用例から判断してどのような内容ですか。
 * A. 計測器の現在の測定値。
 * B. 計測器のメーカー名や型番などの識別情報。
 * C. 計測器の電源オンからの稼働時間。
@@ -58,8 +58,8 @@
 * C. `TCPIP0::192.168.0.10::INSTR`
 * D. `PXI::3::INSTR`
 
-### Q10. Emerson社のNI（旧National Instruments社）が提供する、接続された計測器の**VISAアドレスの確認**や**接続テスト**に使われるGUIツールは何ですか。
-* A. IVI Explorer
-* B. TekVISA Manager
-* C. SCPI Viewer
-* D. NI MAX (Measurement & Automation Explorer)
+### Q10. Emerson社のNI（旧National Instruments社）が提供するNI MAX (Measurement & Automation Explorer)の主な役割として正しいものはどれですか。
+* A. C言語をコンパイルする
+* B. PCのOSの種類を調べる
+* C. 計測器を校正する
+* D. 接続された計測器のVISAアドレスの確認や接続テストをする
