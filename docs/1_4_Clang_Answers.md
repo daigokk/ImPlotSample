@@ -129,7 +129,7 @@ int main() {
     return 0;
 }
 ```
-- 1kHzの波形を1周期分生成。
+- 100kHzの波形を5周期分生成。
 - DegreeからRadianに変換してから`sin`関数に入れる。
 
 ---
