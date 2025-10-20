@@ -7,7 +7,7 @@ void ShowWindow1(const char title[]) {
     static double amplitude = 1.0;
 	static double phase_deg = 0.0, phase_rad=0.0;
 	static double waveform[5000];
-    static double noize = 0.0;
+    static double noize = 0.0; // 追加
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(800, 200), ImGuiCond_FirstUseEver);
@@ -18,7 +18,7 @@ void ShowWindow1(const char title[]) {
     if (ImGui::InputDouble("Phase (Deg.)", &phase_deg, 0.1, 1.0, "%.2f")) {
 		phase_rad = phase_deg * PI / 180.0f;
     }
-    ImGui::InputDouble("Noize (V)", &noize, 0.1, 1.0, "%.2f");
+    ImGui::InputDouble("Noize (V)", &noize, 0.1, 1.0, "%.2f"); // 追加
     if (ImGui::Button("Save")) {
         // ボタンが押されたらここが実行される
         /*** ここから *************************************************/
@@ -27,7 +27,7 @@ void ShowWindow1(const char title[]) {
         srand(time(NULL));
         for (int i = 0; i < SIZE; i++) {
             waveform[i] = amplitude * std::sin(2 * PI * frequency * i * DT + phase_rad);
-            waveform[i] += (double)rand() / RAND_MAX * 2 * noize - noize;
+            waveform[i] += (double)rand() / RAND_MAX * 2 * noize - noize; // 追加
         }
 
         // 保存
