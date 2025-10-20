@@ -1,5 +1,7 @@
 # 2.1. `rand`関数による雑音を含んだ模擬測定データの作成
 
+![完成イメージ](./images/signal_01.png)
+
 ```cpp
 void ShowWindow1(const char title[]) {
 	static std::string text = "";
