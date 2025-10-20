@@ -4,6 +4,9 @@
 
 ## 2. バターワースフィルタ
 ```cpp
+#include <cmath>
+#define PI acos(-1)
+
 class ButterworthStage {
 public:
     ButterworthStage(double cutoffFreq, double sampleRate) {
