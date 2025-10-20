@@ -8,7 +8,9 @@
 - 偶然誤差としての雑音の例: $v(t)=A \sin(\omega t + \theta) \pm noize$
 - 系統誤差としての雑音の例: $v(t)=A \sin(\omega t + \theta) + noize\sin(\omega_{50Hz}t+\theta)$
 
+---
 
+## 2. サンプルプログラム
 - Generate waveform window
 	```cpp
 	void ShowWindow1(const char title[]) {
