@@ -12,30 +12,31 @@ FFTWは、**高速フーリエ変換（FFT）**を行うためのC言語ライ�
 ```c
 #include <fftw3.h>
 #include <stdio.h>
+#include <math.h>
 
 int main() {
-    int N = 1024;
+    int N = 1024;               // サンプル数
+    double Fs = 1000.0;         // サンプリング周波数（Hz）
     double in[N];
     fftw_complex out[N];
     fftw_plan p;
 
-    // 入力信号の初期化
+    // 入力信号（例：50Hzのサイン波）
     for (int i = 0; i < N; i++) {
-        in[i] = sin(2 * M_PI * i / N); // 例：サイン波
+        in[i] = sin(2 * M_PI * 50 * i / Fs);
     }
 
-    // FFTプランの作成
+    // FFTプラン作成
     p = fftw_plan_dft_r2c_1d(N, in, out, FFTW_ESTIMATE);
-
-    // FFTの実行
     fftw_execute(p);
 
-    // 結果の表示（前半だけ）
+    // 周波数配列の作成と振幅表示
     for (int i = 0; i < N/2; i++) {
-        printf("%d: %f + %fi\n", i, out[i][0], out[i][1]);
+        double freq = i * Fs / N; // 周波数軸
+        double mag = sqrt(out[i][0]*out[i][0] + out[i][1]*out[i][1]);
+        printf("Freq: %6.2f Hz, Magnitude: %f\n", freq, mag);
     }
 
-    // 後処理
     fftw_destroy_plan(p);
     fftw_cleanup();
     return 0;
