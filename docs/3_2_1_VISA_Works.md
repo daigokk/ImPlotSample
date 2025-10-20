@@ -10,11 +10,11 @@
 * C. 計測器内部のハードウェア設計規格
 * D. 高速データ処理のためのOS規格
 
-### Q2. 資料に記載されているVISAが対応する主な通信方式の中で、GPIB, USB, TCP/IPと並んで挙げられているものとして**不適切**なものはどれですか。
-* A. RS-232
-* B. HDMI
-* C. PXI/VXI
-* D. GPIB
+### Q2. 資料に記載されているVISAが対応する主な通信方式の中で、RS-232, GPIB, PXI/VXIと並んで挙げられているものとして適切なものはどれですか。
+* A. HDMI
+* B. USB
+* C. DisplayPort
+* D. AC adaputer
 
 ### Q3. VISAとSCPI（Standard Commands for Programmable Instruments）の役割の違いを、資料にある比喩（手紙）を使って説明しているものとして最も適切なものはどれですか。
 * A. VISAは「手紙の中身」、SCPIは「手紙の届け方」。
