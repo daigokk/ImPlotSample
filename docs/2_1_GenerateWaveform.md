@@ -12,8 +12,8 @@
 	    static double amplitude = 1.0;
 	    static double phase_deg = 0.0, phase_rad = 0.0;
 	    static double waveform[SIZE];
-	    static double noize = 0.0; // 追加
-		static double fft[SIZE];
+ 	    static double noize = 0.0; // 追加
+ 		static double fft[SIZE];
 	    // ウィンドウ開始
 	    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 	    ImGui::SetNextWindowSize(ImVec2(800, 200), ImGuiCond_FirstUseEver);
