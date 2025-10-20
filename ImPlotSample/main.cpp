@@ -50,9 +50,9 @@ int main() {
 // ウィンドウの定義
 void ShowWindow1(const char title[]) {
 	static std::string text = "";
-	static double frequency = 100e3f;
-	static double amplitude = 1.0f;
-	static double phase_deg = 0.0f, phase_rad=0.0f;
+	static double frequency = 100e3;
+    static double amplitude = 1.0;
+	static double phase_deg = 0.0, phase_rad=0.0;
 	static double waveform[5000];
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
@@ -60,7 +60,8 @@ void ShowWindow1(const char title[]) {
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     ImGui::InputDouble("Frequency (Hz)", &frequency, 100.0f, 1000.0f, "%.1f");
-	ImGui::InputDouble("Amplitude (V)", &amplitude, 0.1f, 1.0f, "%.2f");
+    ImGui::InputDouble("Amplitude (V)", &amplitude, 0.1f, 1.0f, "%.2f");
+    ImGui::InputDouble("Amplitude (V)", &amplitude, 0.1f, 1.0f, "%.2f");
     if (ImGui::InputDouble("Phase (Deg.)", &phase_deg, 0.1f, 1.0f, "%.2f")) {
 		phase_rad = phase_deg * PI / 180.0f;
     }
@@ -79,9 +80,6 @@ void ShowWindow1(const char title[]) {
 
 void ShowWindow2(const char title[]) {
     static std::string text = "";
-    static double frequency = 100e3f;
-    static double amplitude = 1.0f;
-    static double phase_deg = 0.0f, phase_rad = 0.0f;
     static double times[5000], waveform[5000];
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(0, 200), ImGuiCond_FirstUseEver);
