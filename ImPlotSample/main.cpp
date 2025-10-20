@@ -5,6 +5,7 @@
 #include <vector>
 #include <complex> // for FFT
 #include "Gui.h"
+#include "ButterworthLPF.h"
 
 #define PI acos(-1)
 #define FILENAME "data.csv"
