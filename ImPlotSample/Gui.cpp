@@ -56,7 +56,7 @@ void Gui::Initialize(
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.FontGlobalScale = 1.f; // 全体のフォントスケールを変更
-    ImFont* myFont = io.Fonts->AddFontFromFileTTF("C:/Windows/Fonts/Lucon.ttf", 32.0f);
+    ImFont* myFont = io.Fonts->AddFontFromFileTTF("C:/Windows/Fonts/Lucon.ttf", 24.0f);
     ImGui::PushFont(myFont);
 
     // Setup scaling
