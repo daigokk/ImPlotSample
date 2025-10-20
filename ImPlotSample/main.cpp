@@ -72,7 +72,7 @@ void ShowWindow1(const char title[]) {
 
         /*** ここまで *************************************************/
     }
-    ImGui::SameLine(); 
+    ImGui::SameLine();
     ImGui::Text(text.c_str());
     // ウィンドウ終了
     ImGui::End();
