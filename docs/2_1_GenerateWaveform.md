@@ -35,26 +35,26 @@
 	            waveform[i] = amplitude * std::sin(2 * PI * frequency * i * DT + phase_rad);
 	            waveform[i] += (double)rand() / RAND_MAX * 2 * noize - noize; // 追加
 	        }
-
-        // 保存
-        FILE* fp = fopen(FILENAME, "w");
-        if (fp != NULL) {
-            fprintf(fp, "# Time (s), Voltage (V)\n");
-            for (int i = 0; i < SIZE; ++i) {
-                fprintf(fp, "%e, %e\n", i * DT, waveform[i]);
-            }
-            fclose(fp);
-            text = "Success.\n";
-        }
-        else {
-            text = "[Error] Failed to open file for writing\n";
-        }
-		/*** ここまで *************************************************/
-    }
-    ImGui::SameLine();
-    ImGui::Text(text.c_str());
-    // ウィンドウ終了
-    ImGui::End();
+ 		
+	        // 保存
+	        FILE* fp = fopen(FILENAME, "w");
+	        if (fp != NULL) {
+	            fprintf(fp, "# Time (s), Voltage (V)\n");
+	            for (int i = 0; i < SIZE; ++i) {
+	                fprintf(fp, "%e, %e\n", i * DT, waveform[i]);
+	            }
+	            fclose(fp);
+	            text = "Success.\n";
+	        }
+	        else {
+	            text = "[Error] Failed to open file for writing\n";
+	        }
+			/*** ここまで *************************************************/
+	    }
+	    ImGui::SameLine();
+	    ImGui::Text(text.c_str());
+	    // ウィンドウ終了
+	    ImGui::End();
 	}
 	```
 - View waveform window
