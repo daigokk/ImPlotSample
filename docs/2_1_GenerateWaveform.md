@@ -2,8 +2,7 @@
 
 ![完成イメージ](./images/signal_01.png)
 
-- 雑音の定義
-  $v(t)=A \sin(\omega t + \theta) + noize \times rand()$
+- 雑音の定義: $v(t)=A \sin(\omega t + \theta) + noize \times rand()$
 
 ```cpp
 void ShowWindow1(const char title[]) {
