@@ -88,6 +88,6 @@
    - 検算には`math.h`を用いてもよい。
 
 ### 参考資料
-- [Visual Studioの使い方](./VisualStudio.md)
+- [Visual Studioの使い方](./1_3_VisualStudio.md)
 - [C言語 on Colab](https://colab.research.google.com/drive/1fewkHpqIm40EXWWdZ9eu6EUIN9MWQNO4)
 - [C言語 課題解決チートシート](./1_2_Clang_CheatSheet.md)
