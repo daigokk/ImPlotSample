@@ -1,6 +1,6 @@
 ## 🧠 C言語復習課題 模範コード＆解説
 
-### 1. Hello World（Lv.1）
+### 1. Hello World（Lv. 1）
 ```c
 #include <stdio.h>
 int main() {
@@ -12,7 +12,7 @@ int main() {
 
 ---
 
-### 2. scanfとprintf（Lv.1）
+### 2. scanfとprintf（Lv. 1）
 ```c
 #include <stdio.h>
 int main() {
@@ -26,7 +26,7 @@ int main() {
 
 ---
 
-### 3. if文で奇数・偶数判定（Lv.2）
+### 3. if文で奇数・偶数判定（Lv. 2）
 ```c
 #include <stdio.h>
 int main(void) {
@@ -44,7 +44,7 @@ int main(void) {
 
 ---
 
-### 4. for文で文字列整形（Lv.3）
+### 4. for文で文字列整形（Lv. 3）
 ```c
 #include <stdio.h>
 int main() {
@@ -62,7 +62,7 @@ int main() {
 
 ---
 
-### 5. if文とfor文と文字配列（大文字変換）
+### 5. if文とfor文と文字配列（大文字変換）（Lv. 4）
 ```c
 #include <stdio.h>
 int main(void) {
@@ -79,7 +79,7 @@ int main(void) {
     return 0;
 }
 ```
-### 6. minimax関数（Lv.4）
+### 6. minimax関数（Lv. 4）
 ```c
 void minimax(int length, double *arr, double *minimum, double *maximum) {
     *minimum = *maximum = arr[0];
@@ -93,7 +93,7 @@ void minimax(int length, double *arr, double *minimum, double *maximum) {
 
 ---
 
-### 7. sort関数（Lv.5）
+### 7. sort関数（Lv. 5）
 ```c
 void sort(int length, double *arr) {
     for (int i = 0; i < length - 1; i++) {
@@ -111,7 +111,7 @@ void sort(int length, double *arr) {
 
 ---
 
-### 8. sin波形生成（Lv.3）
+### 8. sin波形生成（Lv. 3）
 ```c
 #include <stdio.h>
 #include <math.h>
@@ -134,7 +134,7 @@ int main() {
 
 ---
 
-### 9. CSV出力（Lv.5）
+### 9. CSV出力（Lv. 5）
 ```c
 #include <stdio.h>
 #include <math.h>
@@ -154,11 +154,11 @@ int main() {
 - `fprintf()`でCSV形式に出力。
 
 ---
-### 10. ImPlot
+### 10. ImPlot（Lv. 100）
 - 省略
 ---
 
-### 11. モンテカルロ法で円周率（Lv.8）
+### 11. モンテカルロ法で円周率（Lv. 8）
 ```c
 #include <stdio.h>
 #include <stdlib.h> // for srand, rand
