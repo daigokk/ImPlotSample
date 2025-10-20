@@ -4,6 +4,7 @@
 
 - 雑音の定義: $v(t)=A \sin(\omega t + \theta) + noize$
 
+- Generate waveform window
 ```cpp
 void ShowWindow1(const char title[]) {
 	static std::string text = "";
@@ -55,4 +56,49 @@ void ShowWindow1(const char title[]) {
     ImGui::End();
 }
 ```
+- View waveform window
+```cpp
+void ShowWindow2(const char title[]) {
+    static std::string text = "";
+    static double times[5000], waveform[5000];
+    // ウィンドウ開始
+    ImGui::SetNextWindowPos(ImVec2(0, 200), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(640, 480), ImGuiCond_FirstUseEver);
+    ImGui::Begin(title);
+    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
+    if (ImGui::Button("View")) {
+        // ボタンが押されたらここが実行される
+        /*** ここから *************************************************/
+        // 波形データ読み込み
+        FILE* fp = fopen(FILENAME, "r");
+        char buf[256];
+        if (fp != NULL) {
+            // 1行目は無視する
+            fgets(buf, sizeof(buf), fp);  // 1行目を読み飛ばす
+            for (int i = 0; i < SIZE; i++) {
+                fscanf(fp, "%lf,%lf", &times[i], &waveform[i]);
+            }
+            fclose(fp);
+            text = "Success.\n";
+        }
+        else {
+            text = "[Error] Failed to open file for reading\n";
+        }
+        /*** ここまで *************************************************/
+    }
+    ImGui::SameLine();
+    ImGui::Text(text.c_str());
 
+    // プロット描画
+    ImPlot::SetNextAxesToFit();
+    if (ImPlot::BeginPlot("Plot title", ImVec2(-1, -1))) {
+        ImPlot::SetupAxis(ImAxis_X1, "Time (s)");
+        ImPlot::SetupAxis(ImAxis_Y1, "v (V)");
+        ImPlot::PlotLine("Ch1", times, waveform, SIZE);
+        ImPlot::EndPlot();
+    }
+    
+    // ウィンドウ終了
+    ImGui::End();
+}
+```
