@@ -163,8 +163,8 @@ int main(void){
 
 int main() {
     srand(time(NULL)); // 乱数の種を初期化
-    int r = rand() % 100; // 0〜99の乱数
-    printf("乱数: %d\n", r);
+    double r = (double)rand() / RAND_MAX * 2 - 1; // -1〜1の乱数
+    printf("乱数: %f\n", r);
     return 0;
 }
 ```
