@@ -59,10 +59,10 @@ void ShowWindow1(const char title[]) {
     ImGui::SetNextWindowSize(ImVec2(800, 200), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
-    ImGui::InputDouble("Frequency (Hz)", &frequency, 100.0f, 1000.0f, "%.1f");
-    ImGui::InputDouble("Amplitude (V)", &amplitude, 0.1f, 1.0f, "%.2f");
-    ImGui::InputDouble("Amplitude (V)", &amplitude, 0.1f, 1.0f, "%.2f");
-    if (ImGui::InputDouble("Phase (Deg.)", &phase_deg, 0.1f, 1.0f, "%.2f")) {
+    ImGui::InputDouble("Frequency (Hz)", &frequency, 100.0, 1000.0, "%.1f");
+    ImGui::InputDouble("Amplitude (V)", &amplitude, 0.1, 1.0, "%.2f");
+    ImGui::InputDouble("Amplitude (V)", &amplitude, 0.1, 1.0, "%.2f");
+    if (ImGui::InputDouble("Phase (Deg.)", &phase_deg, 0.1, 1.0, "%.2f")) {
 		phase_rad = phase_deg * PI / 180.0f;
     }
     if (ImGui::Button("Save")) {
