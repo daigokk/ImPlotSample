@@ -101,12 +101,36 @@ public:
 private:
     std::vector<ButterworthStage> stages;
 };
+
+// 疑似的なハイパスフィルタ
+class MockHPF {
+public:
+    MockHPF(int order, double cutoffFreq, double sampleRate) {
+        for (int i = 0; i < order; ++i) {
+            stages.emplace_back(cutoffFreq, sampleRate);
+        }
+    }
+
+    double process(double input) {
+        double output = input;
+        for (auto& stage : stages) {
+            output = stage.process(output);
+        }
+        // 元の値からローパスフィルタの値を引く
+        return input - output;
+    }
+
+private:
+    std::vector<ButterworthStage> stages;
+};
 ```
 
 
 ## 3. 特徴
-- order は偶数
-- リップルがない
+- order は偶数: ButterworthLPFは1次ステージを直列に並べて構成しているため、偶数次で設計すると対称性が保たれ、安定した特性が得られます。
+- リップルがない: バターワースフィルタは通過域にリップル（波打ち）がなく、滑らかな減衰特性を持ちます。これはチェビシェフフィルタとの大きな違いです。
+- 元の波形からローパスフィルタのアウトプットを引くと、疑似的なハイパスフィルタが得られます。
 
 ## 4. レポート課題
-
+1. 異なる次数での周波数特性の違いを比較し、グラフで示せ。(二つ以上の次数のグラフを作成する事)
+2. カットオフ周波数を変えて信号の通過具合を観察せよ。(二つ以上の買ったオフ周波数を用いてグラフを作成する事)
