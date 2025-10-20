@@ -154,6 +154,7 @@ int main() {
 - `fprintf()`でCSV形式に出力。
 ---
 ### 10. ImPlot（Lv. 100）
+- 波形データ保存
 ```c
 // 波形データ生成
 for (int i = 0; i < SIZE; i++) {
@@ -174,6 +175,7 @@ else {
     text = "[Error] Failed to open file for writing\n";
 }
 ```
+- 波形データ読み込み
 ```c
 // 波形データの読み込み
 FILE* fp = fopen(FILENAME, "r");
