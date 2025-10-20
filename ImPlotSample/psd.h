@@ -9,8 +9,8 @@ void psd(const double arr[], const double freq, const double dt, const int size,
     // 掛け算
     for (int i = 0; i < size; i++) {
         double wt = 2 * PI * freq * dt * i;
-        *pX += arr[i] * sin(wt);
-        *pY += arr[i] * cos(wt);
+        *pX += arr[i] * 2 * sin(wt);
+        *pY += arr[i] * 2 * cos(wt);
     }
     // ローパスフィルタの代わりに平均を用いる
     *pX /= size;
