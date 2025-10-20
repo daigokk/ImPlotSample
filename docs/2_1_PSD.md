@@ -20,11 +20,24 @@ void psd(const double arr[], const double freq, const double dt, const int size,
     // 掛け算
     for (int i = 0; i < size; i++) {
         double wt = 2 * PI * freq * dt * i;
-        *pX += arr[i] * sin(wt);
-        *pY += arr[i] * cos(wt);
+        *pX += arr[i] * 2 * sin(wt);
+        *pY += arr[i] * 2 * cos(wt);
     }
     // ローパスフィルタの代わりに平均を用いる
     *pX /= size;
     *pY /= size;
 }
 ```
+
+- `arr[]`: 入力信号（測定波形）
+- `freq`: 検出したい周波数（Hz）
+- `dt`: サンプリング間隔（秒）
+- `size`: サンプル数
+- `pX`, `pY`: 出力される直交成分のポインタ
+- 平均を取ることで高周波成分($2\omega$)が打ち消され、ローパスフィルタの代替として機能します。
+
+## 3. 注意点
+- ローパスフィルタを平均で代用する場合、検波周波数の1/2周期の整数倍の時間で平均しなければ大きな誤差が生じる場合がある。
+  
+## 4. 課題
+- 「2.1. rand関数による雑音を含んだ模擬測定データの作成」で作った波形に対してPSDを適用し、振幅と位相を表示する。
