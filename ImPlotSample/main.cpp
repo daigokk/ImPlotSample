@@ -22,7 +22,7 @@ void fft(std::vector<std::complex<double>>& a);
 
 int main() {
     // GUI初期化
-    Gui::Initialize("ImPlot sample", 0, 24, 1024, 720);
+    Gui::Initialize("ImPlot sample");
     if (Gui::GetWindow() == nullptr) {
         std::cerr << "[Error] Failed to initialize GUI\n";
         return -1;

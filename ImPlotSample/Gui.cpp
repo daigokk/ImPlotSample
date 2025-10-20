@@ -1,4 +1,5 @@
 ﻿#include "Gui.h"
+#include "IniWrapper.h"
 
 // static メンバー定義 一度しか実行してはいけないため、基本的にはソースコード(.cpp)ファイルに記述
 GLFWwindow* Gui::window_ = nullptr;
@@ -6,6 +7,7 @@ float Gui::monitorScale = 1.0f;
 int Gui::monitorWidth = 0;
 int Gui::monitorHeight = 0;
 int Gui::windowFlag = 4; // ImGuiCond_FirstUseEver
+Gui::WindowCfg Gui::window;
 
 // ESCキーでウィンドウを閉じるコールバック
 void HandleKeyInput(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -14,13 +16,19 @@ void HandleKeyInput(GLFWwindow* window, int key, int scancode, int action, int m
     }
 }
 
-
 // 初期化処理
 void Gui::Initialize(
     const char title[],
     const int windowPosX, const int windowPosY,
     const int windowWidth, const int windowHeight
 ) {
+    IniWrapper ini;
+    ini.load("config.ini");
+    int windowPosX_ = ini.get<int>("Window", "PosX", windowPosX);
+    int windowPosY_ = ini.get<int>("Window", "PosY", windowPosY);
+    int windowWidth_ = ini.get<int>("Window", "Width", windowWidth);
+    int windowHeight_ = ini.get<int>("Window", "Height", windowHeight);
+	// GLFW 初期化
     if (!glfwInit()) {
         std::cerr << "[Error] Failed to initialize GLFW\n";
         return;
@@ -30,20 +38,21 @@ void Gui::Initialize(
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_POSITION_X, windowPosX);
-    glfwWindowHint(GLFW_POSITION_Y, windowPosY);
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
     int xpos, ypos;
     glfwGetMonitorWorkarea(monitor, &xpos, &ypos, &monitorWidth, &monitorHeight);
     //std::cout << std::format("Monitor w:{}, h:{}", monitorWidth, monitorHeight) << std::endl;
 
     monitorScale = ImGui_ImplGlfw_GetContentScaleForMonitor(monitor); // Valid on GLFW 3.3+ only
-        
+    
     window_ = glfwCreateWindow(
-        (int)(windowWidth * monitorScale),
-        (int)(windowHeight * monitorScale),
+        (int)(windowWidth_ * monitorScale),
+        (int)(windowHeight_ * monitorScale),
         title, NULL, NULL
     );
+    if (window_) {
+        glfwSetWindowPos(window_, windowPosX_, windowPosY_);
+    }
     
     glfwMakeContextCurrent(window_);
     glfwSwapInterval(1); // VSync 有効化
@@ -79,6 +88,14 @@ void Gui::Shutdown() {
     ImGui_ImplGlfw_Shutdown();
     ImPlot::DestroyContext();
     ImGui::DestroyContext();
+    glfwGetWindowSize(window_, &(window.size.x), &(window.size.y));
+    glfwGetWindowPos(window_, &(window.pos.x), &(window.pos.y));
+	IniWrapper ini;
+	ini.set("Window", "Width", window.size.x);
+	ini.set("Window", "Height", window.size.y);
+	ini.set("Window", "PosX", window.pos.x);
+	ini.set("Window", "PosY", window.pos.y);
+	ini.save("config.ini");
 
     if (window_) {
         glfwDestroyWindow(window_);

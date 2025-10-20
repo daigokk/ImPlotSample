@@ -23,8 +23,8 @@ class Gui {
 public:
     static void Initialize(
         const char title[],
-        const int windowPosX, const int windowPosY,
-        const int windowWidth, const int windowHeight
+        const int windowPosX = 0, const int windowPosY = 30,
+        const int windowWidth = 1024, const int windowHeight = 720
     );
     static void Shutdown();
     static void BeginFrame();
@@ -42,4 +42,14 @@ private:
     static int monitorWidth;
     static int monitorHeight;
     static int windowFlag;
+    // --- Grouped Configuration Structs ---
+    struct WindowCfg {
+        struct XYint {
+            int x, y;
+        };
+        XYint size = { 1024, 720 };
+        XYint pos = { 0, 30 };
+        float monitorScale = 1.0f; // <<< ‚±‚±‚ÉÄ“x’Ç‰Á‚µ‚Ü‚·
+    };
+    static WindowCfg window;
 };

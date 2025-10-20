@@ -152,6 +152,7 @@
     <ClInclude Include="ButterworthLPF.h" />
     <ClInclude Include="Gui.h" />
     <ClInclude Include="CppVisa.h" />
+    <ClInclude Include="IniWrapper.h" />
     <ClInclude Include="psd.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
