@@ -54,3 +54,36 @@ void fft(std::vector<std::complex<double>>& a) {
 ### 1. FFTした結果を再度FFTするとどうなるでしょうか？逆FFTとの違いも調べてみてください。
 ### 2. 入力データの両端の値が不連続(入力データが測定波形の周期で割り切れない)場合、どのような影響(どのようなノイズ)が出るでしょうか？またそれを軽減するWindow関数について調べてみてください。
 ### 3. 入力データのサイズを2のべき乗に限定せず、任意とするための方法を提案してください。
+
+- 逆FFT
+    ```cpp
+    void ifft(std::vector<std::complex<double>>& a) {
+        int N = a.size();
+        if (N <= 1) return;
+    
+        // 偶数・奇数に分割
+        std::vector<std::complex<double>> even(N / 2), odd(N / 2);
+        for (int i = 0; i < N / 2; ++i) {
+            even[i] = a[i * 2];
+            odd[i]  = a[i * 2 + 1];
+        }
+    
+        // 再帰呼び出し
+        ifft(even);
+        ifft(odd);
+    
+        // 合成（回転因子の符号が正）
+        for (int k = 0; k < N / 2; ++k) {
+            std::complex<double> t = std::polar(1.0, 2 * PI * k / N) * odd[k];
+            a[k]       = even[k] + t;
+            a[k + N/2] = even[k] - t;
+        }
+    
+        // スケーリング（1/N）
+        if (N == a.size()) {
+            for (int i = 0; i < N; ++i) {
+                a[i] /= N;
+            }
+        }
+    }
+    ```
