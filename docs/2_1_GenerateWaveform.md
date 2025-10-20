@@ -2,7 +2,12 @@
 
 ![完成イメージ](./images/signal_01.png)
 
-- 雑音の定義: $v(t)=A \sin(\omega t + \theta) \pm noize$
+---
+
+## 1. 雑音とは？
+- 偶然誤差としての雑音の例: $v(t)=A \sin(\omega t + \theta) \pm noize$
+- 系統誤差としての雑音の例: $v(t)=A \sin(\omega t + \theta) + noize\sin(\omega_{50Hz}t+\theta)$
+
 
 - Generate waveform window
 	```cpp
