@@ -34,4 +34,4 @@ void psd(const double arr[], const double freq, const double dt, const int size,
 - `dt`: サンプリング間隔（秒）
 - `size`: サンプル数
 - `pX`, `pY`: 出力される直交成分のポインタ
-- 平均を取ることで高周波成分($2\omega$)が打ち消され、目的の周波数成分だけが残るため、ローパスフィルタの代替として機能します。
+- 平均を取ることで高周波成分($2\omega$)が打ち消され、ローパスフィルタの代替として機能します。
