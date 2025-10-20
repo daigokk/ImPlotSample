@@ -152,10 +152,45 @@ int main() {
 }
 ```
 - `fprintf()`でCSV形式に出力。
-
 ---
 ### 10. ImPlot（Lv. 100）
-- 省略
+```c
+// 波形データ生成
+for (int i = 0; i < SIZE; i++) {
+    waveform[i] = amplitude * std::sin(2 * PI * frequency * i * DT + phase_rad);
+}
+
+// ファイル保存
+FILE* fp = fopen(FILENAME, "w");
+if (fp != NULL) {
+    fprintf(fp, "# Time (s), Voltage (V)\n");
+    for (int i = 0; i < SIZE; ++i) {
+        fprintf(fp, "%e, %e\n", i * DT, waveform[i]);
+    }
+    fclose(fp);
+    text = "Success.\n";
+}
+else {
+    text = "[Error] Failed to open file for writing\n";
+}
+```
+```c
+// 波形データの読み込み
+FILE* fp = fopen(FILENAME, "r");
+char buf[256];
+if (fp != NULL) {
+    // 1行目は無視する
+    fgets(buf, sizeof(buf), fp);  // 1行目を読み飛ばす
+    for (int i = 0; i < SIZE; i++) {
+        fscanf(fp, "%lf,%lf", &times[i], &waveform[i]);
+    }
+    fclose(fp);
+    text = "Success.\n";
+}
+else {
+    text = "[Error] Failed to open file for reading\n";
+}
+```
 ---
 
 ### 11. モンテカルロ法で円周率（Lv. 8）
