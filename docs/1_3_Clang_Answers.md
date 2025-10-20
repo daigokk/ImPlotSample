@@ -29,13 +29,14 @@ int main() {
 ### 3. if文で奇数・偶数判定（Lv.2）
 ```c
 #include <stdio.h>
-int main() {
-    int x;
-    scanf("%d", &x);
-    if (x % 2 == 0)
-        printf("偶数です\n");
+int main(void) {
+    int num;
+    printf("Input> ");
+    scanf("%d", &num);
+    if (num % 2 == 0)
+        printf("Output> Even number\n");
     else
-        printf("奇数です\n");
+        printf("Output> Odd number\n");
     return 0;
 }
 ```
@@ -61,7 +62,24 @@ int main() {
 
 ---
 
-### 5. minimax関数（Lv.4）
+### 5. if文とfor文と文字配列（大文字変換）
+```c
+#include <stdio.h>
+int main(void) {
+    char str[256], def = 'A' - 'a';
+    printf("Input> ");
+    scanf("%255s", str);
+    printf("Output> ");
+    for (int i = 0; str[i] != '\0'; i++) {
+        if('a' <= str[i] && str[i] <= 'z') {
+            str[i] -= def;
+        }
+    }
+    printf("%s\n", str);
+    return 0;
+}
+```
+### 6. minimax関数（Lv.4）
 ```c
 void minimax(int length, double *arr, double *minimum, double *maximum) {
     *minimum = *maximum = arr[0];
@@ -75,7 +93,7 @@ void minimax(int length, double *arr, double *minimum, double *maximum) {
 
 ---
 
-### 6. sort関数（Lv.5）
+### 7. sort関数（Lv.5）
 ```c
 void sort(int length, double *arr) {
     for (int i = 0; i < length - 1; i++) {
@@ -93,7 +111,7 @@ void sort(int length, double *arr) {
 
 ---
 
-### 7. sin波形生成（Lv.3）
+### 8. sin波形生成（Lv.3）
 ```c
 #include <stdio.h>
 #include <math.h>
@@ -116,7 +134,7 @@ int main() {
 
 ---
 
-### 8. CSV出力（Lv.5）
+### 9. CSV出力（Lv.5）
 ```c
 #include <stdio.h>
 #include <math.h>
@@ -136,11 +154,11 @@ int main() {
 - `fprintf()`でCSV形式に出力。
 
 ---
-### 9. ImPlot
+### 10. ImPlot
 - 省略
 ---
 
-### 10. モンテカルロ法で円周率（Lv.8）
+### 11. モンテカルロ法で円周率（Lv.8）
 ```c
 #include <stdio.h>
 #include <stdlib.h> // for srand, rand
