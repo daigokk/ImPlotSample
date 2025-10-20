@@ -89,7 +89,7 @@
 
 ### 参考資料
 - [Visual Studioの使い方](./VisualStudio.md)
-- [C言語onColab](https://colab.research.google.com/drive/1fewkHpqIm40EXWWdZ9eu6EUIN9MWQNO4)
+- [C言語 on Colab](https://colab.research.google.com/drive/1fewkHpqIm40EXWWdZ9eu6EUIN9MWQNO4)
 - [C言語 課題解決チートシート](./1_2_Clang_CheatSheet.md)
 
 ## 2. 信号処理
