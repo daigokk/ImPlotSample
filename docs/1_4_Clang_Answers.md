@@ -156,12 +156,12 @@ int main() {
 ### 10. ImPlot（Lv. 100）
 - 波形データ保存
 ```c
-// 波形データ生成
+// 生成
 for (int i = 0; i < SIZE; i++) {
     waveform[i] = amplitude * std::sin(2 * PI * frequency * i * DT + phase_rad);
 }
 
-// ファイル保存
+// 保存
 FILE* fp = fopen(FILENAME, "w");
 if (fp != NULL) {
     fprintf(fp, "# Time (s), Voltage (V)\n");
@@ -177,7 +177,6 @@ else {
 ```
 - 波形データ読み込み
 ```c
-// 波形データの読み込み
 FILE* fp = fopen(FILENAME, "r");
 char buf[256];
 if (fp != NULL) {
