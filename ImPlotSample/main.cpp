@@ -61,7 +61,6 @@ void ShowWindow1(const char title[]) {
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     ImGui::InputDouble("Frequency (Hz)", &frequency, 100.0, 1000.0, "%.1f");
     ImGui::InputDouble("Amplitude (V)", &amplitude, 0.1, 1.0, "%.2f");
-    ImGui::InputDouble("Amplitude (V)", &amplitude, 0.1, 1.0, "%.2f");
     if (ImGui::InputDouble("Phase (Deg.)", &phase_deg, 0.1, 1.0, "%.2f")) {
 		phase_rad = phase_deg * PI / 180.0f;
     }
