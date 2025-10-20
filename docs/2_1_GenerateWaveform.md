@@ -48,7 +48,7 @@
 	        else {
 	            text = "[Error] Failed to open file for writing\n";
 	        }
-			/*** ここまで *************************************************/
+ 			/*** ここまで *************************************************/
 	    }
 	    ImGui::SameLine();
 	    ImGui::Text(text.c_str());
