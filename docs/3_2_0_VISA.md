@@ -1,4 +1,4 @@
-# [home](./index.md)
+# [Home](./index.md)
 ## 🧪 3.2. 計測器の共通言語！VISAとは？
 
 ## 概要: 万能アダプターとしてのVISA
