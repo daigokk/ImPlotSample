@@ -24,7 +24,7 @@ public:
     static void Initialize(
         const char title[],
         const int windowPosX = 0, const int windowPosY = 30,
-        const int windowWidth = 1024, const int windowHeight = 720
+        const int windowWidth = 1100, const int windowHeight = 720
     );
     static void Shutdown();
     static void BeginFrame();

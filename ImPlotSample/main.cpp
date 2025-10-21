@@ -63,7 +63,7 @@ void ShowWindow1(const char title[]) {
 	static double fft[SIZE];
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(800, 200), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(660, 220), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     ImGui::InputDouble("Frequency (Hz)", &frequency, 100.0, 1000.0, "%.1f");
@@ -107,12 +107,15 @@ void ShowWindow1(const char title[]) {
 void ShowWindow2(const char title[]) {
     static std::string text = "";
     static double times[SIZE], waveform[SIZE];
-	static double freq[SIZE], amp[SIZE];
+    static double freqs[SIZE], amps[SIZE];
+    static double freq = 100e3, x = 0, y = 0;
     // ウィンドウ開始
-    ImGui::SetNextWindowPos(ImVec2(0, 200), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(640, 480), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(660, 0), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(425, 700), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
+    ImGui::SetNextItemWidth(200.0f);
+    ImGui::InputDouble("Freq. (Hz)", &freq, 100.0, 1000.0, "%.1f");
     if (ImGui::Button("View")) {
         // ボタンが押されたらここが実行される
         /*** ここから *************************************************/
@@ -138,14 +141,24 @@ void ShowWindow2(const char title[]) {
         }
         fft(data);
         for (int i = 0; i < SIZE; ++i) {
-            freq[i] = (double)i / (DT * SIZE); // 周波数軸に変換
-            amp[i] = std::abs(data[i]) / SIZE; // 振幅スペクトルに変換
+            freqs[i] = (double)i / (DT * SIZE); // 周波数軸に変換
+            amps[i] = std::abs(data[i]) / SIZE; // 振幅スペクトルに変換
 		}
         ImPlot::SetNextAxesToFit();
+        // PSD
+    //    double amp_ = 0;
+    //    for (int i = 0; i < SIZE / 2; i++) {
+    //        if (amp_ < amps[i]) {
+    //            amp_ = amps[i];
+				//maxFreq = freqs[i];
+    //        }
+    //    }
+        psd(waveform, freq, times[1] - times[0], SIZE, &x, &y);
         /*** ここまで *************************************************/
     }
     ImGui::SameLine();
     ImGui::Text(text.c_str());
+    ImGui::Text("X: %5.3f, Y: %5.3f", x, y);
 
     // プロット描画
     if (ImPlot::BeginPlot("Raw", ImVec2(-1, 300))) {
@@ -159,7 +172,7 @@ void ShowWindow2(const char title[]) {
         ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0, 1.0, ImPlotCond_Once);
         ImPlot::SetupAxis(ImAxis_X1, "Frequency (Hz)");
         ImPlot::SetupAxis(ImAxis_Y1, "v (V)");
-        ImPlot::PlotLine("Ch1", freq, amp, SIZE);
+        ImPlot::PlotLine("Ch1", freqs, amps, SIZE);
         ImPlot::EndPlot();
     }
     // ウィンドウ終了
@@ -168,8 +181,8 @@ void ShowWindow2(const char title[]) {
 
 void ShowWindow3(const char title[]) {
     // ウィンドウ開始
-    ImGui::SetNextWindowPos(ImVec2(600, 400), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(0, 250), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(640, 460), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     // https://github.com/ocornut/imgui
