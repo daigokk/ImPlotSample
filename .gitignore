@@ -365,3 +365,4 @@ FodyWeavers.xsd
 # ImGui
 /ImPlotSample/imgui.ini
 *.csv
+/ImPlotSample/config.ini
