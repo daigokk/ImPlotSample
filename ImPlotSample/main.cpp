@@ -63,7 +63,7 @@ void ShowWindow1(const char title[]) {
 	static double fft[SIZE];
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(660, 220), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     ImGui::InputDouble("Frequency (Hz)", &frequency, 100.0, 1000.0, "%.1f");
@@ -110,11 +110,11 @@ void ShowWindow2(const char title[]) {
     static double freqs[SIZE], amps[SIZE];
     static double freq = 100e3, x = 0, y = 0;
     // ウィンドウ開始
-    ImGui::SetNextWindowPos(ImVec2(660, 0), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(425, 700), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(660 * Gui::monitorScale, 0), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(425 * Gui::monitorScale, 700 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
-    ImGui::SetNextItemWidth(200.0f);
+    ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
     ImGui::InputDouble("Freq. (Hz)", &freq, 100.0, 1000.0, "%.1f");
     if (ImGui::Button("View")) {
         // ボタンが押されたらここが実行される
@@ -161,13 +161,13 @@ void ShowWindow2(const char title[]) {
     ImGui::Text("X: %5.3f, Y: %5.3f", x, y);
 
     // プロット描画
-    if (ImPlot::BeginPlot("Raw", ImVec2(-1, 300))) {
+    if (ImPlot::BeginPlot("Raw", ImVec2(-1, 300 * Gui::monitorScale))) {
         ImPlot::SetupAxis(ImAxis_X1, "Time (s)");
         ImPlot::SetupAxis(ImAxis_Y1, "v (V)");
         ImPlot::PlotLine("Ch1", times, waveform, SIZE);
         ImPlot::EndPlot();
     }
-    if (ImPlot::BeginPlot("FFT", ImVec2(-1, 300))) {
+    if (ImPlot::BeginPlot("FFT", ImVec2(-1, 300 * Gui::monitorScale))) {
         ImPlot::SetupAxisLimits(ImAxis_X1, 0.0, 1.0 / DT, ImPlotCond_Once);
         ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0, 1.0, ImPlotCond_Once);
         ImPlot::SetupAxis(ImAxis_X1, "Frequency (Hz)");
@@ -181,8 +181,8 @@ void ShowWindow2(const char title[]) {
 
 void ShowWindow3(const char title[]) {
     // ウィンドウ開始
-    ImGui::SetNextWindowPos(ImVec2(0, 250), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(640, 460), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(0, 250 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(640 * Gui::monitorScale, 460 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     // https://github.com/ocornut/imgui
