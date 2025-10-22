@@ -110,9 +110,10 @@ void ShowWindow1(const char title[]) {
 void ShowWindow2(const char title[]) {
     static std::string text = "";
     static double times[SIZE], waveform[SIZE], lpwf[SIZE];
-	static double freqs[SIZE], amps[SIZE], ampslpf[SIZE];
+    static double freqs[SIZE], amps[SIZE], ampslpf[SIZE];
     static double freq = 100e3, x = 0, y = 0;
-    
+    static int order = 2;
+
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(660 * Gui::monitorScale, 0), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(440 * Gui::monitorScale, 750 * Gui::monitorScale), ImGuiCond_FirstUseEver);
@@ -120,6 +121,9 @@ void ShowWindow2(const char title[]) {
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
     ImGui::InputDouble("Freq. (Hz)", &freq, 100.0, 1000.0, "%.1f");
+    if (ImGui::InputInt("Order", &order, 1, 10)) {
+        if (order < 1) order = 1;
+    }
     if (ImGui::Button("View")) {
         // ボタンが押されたらここが実行される
         /*** ここから *************************************************/
@@ -157,8 +161,8 @@ void ShowWindow2(const char title[]) {
     ImGui::Text(text.c_str());
     ImGui::Text("X: %5.3f, Y: %5.3f", x, y);
     static float lpfreq = 1e4;
-    if (ImGui::SliderFloat("LPF", &lpfreq, 1e4, 5e6, "%.0fHz")) {
-        ButterworthLPF lpf(2, lpfreq, 1.0 / DT);
+    if (ImGui::SliderFloat("LPF", &lpfreq, 1e4, 0.5e6, "%.0fHz")) {
+        ButterworthLPF lpf(order, lpfreq, 1.0 / DT);
         for (int i = 0; i < SIZE; i++)
         {
             lpwf[i] = lpf.process(waveform[i]);
