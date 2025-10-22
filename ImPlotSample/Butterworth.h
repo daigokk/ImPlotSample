@@ -51,22 +51,3 @@ private:
     std::vector<ButterworthStage> stages;
 };
 
-class ButterworthHPF {
-public:
-    ButterworthHPF(int order, double cutoffFreq, double sampleRate) {
-        for (int i = 0; i < order; ++i) {
-            stages.emplace_back(cutoffFreq, sampleRate);
-        }
-    }
-
-    double process(double input) {
-        double output = input;
-        for (auto& stage : stages) {
-            output = stage.process(output);
-        }
-        return input - output;
-    }
-
-private:
-    std::vector<ButterworthStage> stages;
-};

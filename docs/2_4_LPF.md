@@ -51,6 +51,9 @@ $$
 ---
 
 ## 2. サンプルプログラム
+
+![Hard copy LPF](./images/signal_lpf_01.png)
+
 ```cpp
 #include <cmath>
 #define PI acos(-1)

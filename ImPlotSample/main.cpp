@@ -6,7 +6,7 @@
 #include <complex> // for FFT
 #include "Gui.h"
 #include "psd.h"
-#include "ButterworthLPF.h"
+#include "Butterworth.h"
 
 #define PI acos(-1)
 #define FILENAME "data.csv"
@@ -109,12 +109,13 @@ void ShowWindow1(const char title[]) {
 
 void ShowWindow2(const char title[]) {
     static std::string text = "";
-    static double times[SIZE], waveform[SIZE];
-    static double freqs[SIZE], amps[SIZE];
+    static double times[SIZE], waveform[SIZE], lpwf[SIZE];
+	static double freqs[SIZE], amps[SIZE], ampslpf[SIZE];
     static double freq = 100e3, x = 0, y = 0;
+    
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(660 * Gui::monitorScale, 0), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(425 * Gui::monitorScale, 750 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(440 * Gui::monitorScale, 750 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
@@ -155,20 +156,39 @@ void ShowWindow2(const char title[]) {
     ImGui::SameLine();
     ImGui::Text(text.c_str());
     ImGui::Text("X: %5.3f, Y: %5.3f", x, y);
-
+    static float lpfreq = 1e4;
+    if (ImGui::SliderFloat("LPF", &lpfreq, 1e4, 5e6, "%.0fHz")) {
+        ButterworthLPF lpf(2, lpfreq, 1.0 / DT);
+        for (int i = 0; i < SIZE; i++)
+        {
+            lpwf[i] = lpf.process(waveform[i]);
+        }
+		// FFT計算
+        std::vector<std::complex<double>> data(SIZE);
+        for (int i = 0; i < SIZE; ++i) {
+            data[i] = std::complex<double>(lpwf[i], 0.0);
+        }
+        fft(data);
+        for (int i = 0; i < SIZE; ++i) {
+            ampslpf[i] = std::abs(data[i]) / SIZE; // 振幅スペクトルに変換
+        }
+    }
+    
     // プロット描画
-    if (ImPlot::BeginPlot("Raw", ImVec2(-1, 300 * Gui::monitorScale))) {
+    if (ImPlot::BeginPlot("Raw", ImVec2(-1, 250 * Gui::monitorScale))) {
         ImPlot::SetupAxis(ImAxis_X1, "Time (s)");
         ImPlot::SetupAxis(ImAxis_Y1, "v (V)");
         ImPlot::PlotLine("Ch1", times, waveform, SIZE);
+        ImPlot::PlotLine("LPF", times, lpwf, SIZE);
         ImPlot::EndPlot();
     }
-    if (ImPlot::BeginPlot("FFT", ImVec2(-1, 300 * Gui::monitorScale))) {
+    if (ImPlot::BeginPlot("FFT", ImVec2(-1, 250 * Gui::monitorScale))) {
         ImPlot::SetupAxisLimits(ImAxis_X1, 0.0, 1.0 / DT, ImPlotCond_Once);
         ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0, 1.0, ImPlotCond_Once);
         ImPlot::SetupAxis(ImAxis_X1, "Frequency (Hz)");
         ImPlot::SetupAxis(ImAxis_Y1, "v (V)");
         ImPlot::PlotLine("Ch1", freqs, amps, SIZE);
+        ImPlot::PlotLine("LPF", freqs, ampslpf, SIZE);
         ImPlot::EndPlot();
     }
     // ウィンドウ終了
@@ -177,8 +197,8 @@ void ShowWindow2(const char title[]) {
 
 void ShowWindow3(const char title[]) {
     // ウィンドウ開始
-    ImGui::SetNextWindowPos(ImVec2(0, 250 * Gui::monitorScale), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(640 * Gui::monitorScale, 460 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(0, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 530 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     // https://github.com/ocornut/imgui

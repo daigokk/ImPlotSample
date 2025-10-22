@@ -149,7 +149,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ButterworthLPF.h" />
+    <ClInclude Include="Butterworth.h" />
     <ClInclude Include="Gui.h" />
     <ClInclude Include="CppVisa.h" />
     <ClInclude Include="IniWrapper.h" />
