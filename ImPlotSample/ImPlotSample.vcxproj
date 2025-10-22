@@ -150,10 +150,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Butterworth.h" />
+    <ClInclude Include="Commands.h" />
     <ClInclude Include="Gui.h" />
     <ClInclude Include="CppVisa.h" />
     <ClInclude Include="IniWrapper.h" />
-    <ClInclude Include="psd.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="fft.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

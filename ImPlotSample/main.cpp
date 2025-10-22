@@ -3,10 +3,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <complex> // for FFT
 #include "Gui.h"
-#include "psd.h"
-#include "Butterworth.h"
+
+#include "Commands.h"
 
 #define PI acos(-1)
 #define FILENAME "data.csv"
@@ -79,26 +78,22 @@ void ShowWindow1(const char title[]) {
         // ボタンが押されたらここが実行される
         /*** ここから *************************************************/
         // 波形データ保存
-        // 生成
-        srand(time(NULL));
-        for (int i = 0; i < SIZE; i++) {
-            waveform[i] = amplitude * std::sin(2 * PI * frequency * i * DT + phase_rad);
-            waveform[i] += (double)rand() / RAND_MAX * 2 * noize - noize; // 追加
-        }
+        Commands::WaveformParams wfp;
+		wfp.amplitude = amplitude;
+		wfp.dt = DT;
+		wfp.frequency = frequency;
+		wfp.noize = noize;
+		wfp.phase_deg = phase_deg;
+		wfp.size = SIZE;
+		Commands::getWaveform(&wfp, waveform);
 
         // 保存
-        FILE* fp = fopen(FILENAME, "w");
-        if (fp != NULL) {
-            fprintf(fp, "# Time (s), Voltage (V)\n");
-            for (int i = 0; i < SIZE; ++i) {
-                fprintf(fp, "%e, %e\n", i * DT, waveform[i]);
-            }
-            fclose(fp);
+        if (Commands::saveWaveform(&wfp, FILENAME, waveform)) {
             text = "Success.\n";
         }
         else {
-            text = "[Error] Failed to open file for writing\n";
-        }
+            text = "[Error] Failed to open file for writing.\n";
+		}
 		/*** ここまで *************************************************/
     }
     ImGui::SameLine();
@@ -109,10 +104,11 @@ void ShowWindow1(const char title[]) {
 
 void ShowWindow2(const char title[]) {
     static std::string text = "";
-    static double times[SIZE], waveform[SIZE], lpwf[SIZE];
-    static double freqs[SIZE], amps[SIZE], ampslpf[SIZE];
+    static double times[SIZE], wf_raw[SIZE], wf_lpf[SIZE];
+    static double freqs[SIZE], amps_raw[SIZE], amps_lpf[SIZE];
     static double freq = 100e3, x = 0, y = 0;
     static int order = 2;
+    static float lpfreq = 1e4;
 
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(660 * Gui::monitorScale, 0), ImGuiCond_FirstUseEver);
@@ -121,70 +117,55 @@ void ShowWindow2(const char title[]) {
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
     ImGui::InputDouble("Freq. (Hz)", &freq, 100.0, 1000.0, "%.1f");
+    ImGui::Text("X: %5.3f, Y: %5.3f", x, y);
     ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
     if (ImGui::InputInt("Order", &order, 1, 10)) {
         if (order < 1) order = 1;
+        Commands::WaveformParams wfp;
+        wfp.dt = DT;
+        wfp.size = SIZE;
+        Commands::runLpf(&wfp, order, lpfreq, wf_raw, wf_lpf);
+        Commands::runFft(&wfp, wf_lpf, freqs, amps_lpf);
     }
     if (ImGui::Button("View")) {
         // ボタンが押されたらここが実行される
         /*** ここから *************************************************/
         // 波形データ読み込み
-        FILE* fp = fopen(FILENAME, "r");
-        char buf[256];
-        if (fp != NULL) {
-            // 1行目は無視する
-            fgets(buf, sizeof(buf), fp);  // 1行目を読み飛ばす
-            for (int i = 0; i < SIZE; i++) {
-                fscanf(fp, "%lf,%lf", &times[i], &waveform[i]);
-            }
-            fclose(fp);
+        Commands::WaveformParams wfp;
+        wfp.size = SIZE;
+		wfp.dt = DT;
+		wfp.frequency = freq;
+        if(Commands::loadWaveform(&wfp, FILENAME, times, wf_raw)) {
             text = "Success.\n";
         }
         else {
             text = "[Error] Failed to open file for reading.\n";
-        }
-        // FFT計算
-        std::vector<std::complex<double>> data(SIZE);
-        for (int i = 0; i < SIZE; ++i) {
-            data[i] = std::complex<double>(waveform[i], 0.0);
-        }
-        fft(data);
-        for (int i = 0; i < SIZE; ++i) {
-            freqs[i] = (double)i / (DT * SIZE); // 周波数軸に変換
-            amps[i] = std::abs(data[i]) / SIZE; // 振幅スペクトルに変換
 		}
-        ImPlot::SetNextAxesToFit();
         // PSD
-        psd(waveform, freq, times[1] - times[0], SIZE, &x, &y);
+        Commands::psd(&wfp, wf_raw, &x, &y);
+        // FFT計算
+        Commands::runFft(&wfp, wf_raw, freqs, amps_raw);
+        Commands::runFft(&wfp, wf_lpf, freqs, amps_lpf);
         /*** ここまで *************************************************/
     }
     ImGui::SameLine();
     ImGui::Text(text.c_str());
-    ImGui::Text("X: %5.3f, Y: %5.3f", x, y);
-    static float lpfreq = 1e4;
+    
     if (ImGui::SliderFloat("LPF", &lpfreq, 1e4, 0.5e6, "%.0fHz")) {
-        ButterworthLPF lpf(order, lpfreq, 1.0 / DT);
-        for (int i = 0; i < SIZE; i++)
-        {
-            lpwf[i] = lpf.process(waveform[i]);
-        }
+        Commands::WaveformParams wfp;
+		wfp.dt = DT;
+        wfp.size = SIZE;
+        Commands::runLpf(&wfp, order, lpfreq, wf_raw, wf_lpf);
 		// FFT計算
-        std::vector<std::complex<double>> data(SIZE);
-        for (int i = 0; i < SIZE; ++i) {
-            data[i] = std::complex<double>(lpwf[i], 0.0);
-        }
-        fft(data);
-        for (int i = 0; i < SIZE; ++i) {
-            ampslpf[i] = std::abs(data[i]) / SIZE; // 振幅スペクトルに変換
-        }
+        Commands::runFft(&wfp, wf_lpf, freqs, amps_lpf);
     }
     
     // プロット描画
-    if (ImPlot::BeginPlot("Raw", ImVec2(-1, 250 * Gui::monitorScale))) {
+    if (ImPlot::BeginPlot("Waveform", ImVec2(-1, 250 * Gui::monitorScale))) {
         ImPlot::SetupAxis(ImAxis_X1, "Time (s)");
         ImPlot::SetupAxis(ImAxis_Y1, "v (V)");
-        ImPlot::PlotLine("Ch1", times, waveform, SIZE);
-        ImPlot::PlotLine("LPF", times, lpwf, SIZE);
+        ImPlot::PlotLine("Ch1", times, wf_raw, SIZE);
+        ImPlot::PlotLine("LPF", times, wf_lpf, SIZE);
         ImPlot::EndPlot();
     }
     if (ImPlot::BeginPlot("FFT", ImVec2(-1, 250 * Gui::monitorScale))) {
@@ -192,8 +173,8 @@ void ShowWindow2(const char title[]) {
         ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0, 1.0, ImPlotCond_Once);
         ImPlot::SetupAxis(ImAxis_X1, "Frequency (Hz)");
         ImPlot::SetupAxis(ImAxis_Y1, "v (V)");
-        ImPlot::PlotLine("Ch1", freqs, amps, SIZE);
-        ImPlot::PlotLine("LPF", freqs, ampslpf, SIZE);
+        ImPlot::PlotLine("Ch1", freqs, amps_raw, SIZE);
+        ImPlot::PlotLine("LPF", freqs, amps_lpf, SIZE);
         ImPlot::EndPlot();
     }
     // ウィンドウ終了
@@ -218,25 +199,3 @@ void ShowWindow3(const char title[]) {
 }
 
 
-void fft(std::vector<std::complex<double>>& a) {
-    int N = a.size();
-    if (N <= 1) return;
-
-    // 偶数・奇数に分割 配列のサイズが半分になる！！！
-    std::vector<std::complex<double>> even(N / 2), odd(N / 2);
-    for (int i = 0; i < N / 2; ++i) {
-        even[i] = a[i * 2];
-        odd[i] = a[i * 2 + 1];
-    }
-
-    // 再帰呼び出し
-    fft(even);
-    fft(odd);
-
-    // 合成
-    for (int k = 0; k < N / 2; ++k) {
-        std::complex<double> t = std::polar(1.0, -2 * PI * k / N) * odd[k];
-        a[k] = even[k] + t;
-        a[k + N / 2] = even[k] - t;
-    }
-}
