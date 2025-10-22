@@ -121,6 +121,7 @@ void ShowWindow2(const char title[]) {
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
     ImGui::InputDouble("Freq. (Hz)", &freq, 100.0, 1000.0, "%.1f");
+    ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
     if (ImGui::InputInt("Order", &order, 1, 10)) {
         if (order < 1) order = 1;
     }
