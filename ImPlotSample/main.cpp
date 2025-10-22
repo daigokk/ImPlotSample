@@ -22,7 +22,10 @@ void fft(std::vector<std::complex<double>>& a);
 
 int main() {
     // GUI初期化
-    Gui::Initialize("ImPlot sample");
+    Gui::Initialize(
+        "ImPlot sample",
+        0, 30, 1100, 750
+    );
     if (Gui::GetWindow() == nullptr) {
         std::cerr << "[Error] Failed to initialize GUI\n";
         return -1;
@@ -111,7 +114,7 @@ void ShowWindow2(const char title[]) {
     static double freq = 100e3, x = 0, y = 0;
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(660 * Gui::monitorScale, 0), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(425 * Gui::monitorScale, 700 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(425 * Gui::monitorScale, 750 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
@@ -146,13 +149,6 @@ void ShowWindow2(const char title[]) {
 		}
         ImPlot::SetNextAxesToFit();
         // PSD
-    //    double amp_ = 0;
-    //    for (int i = 0; i < SIZE / 2; i++) {
-    //        if (amp_ < amps[i]) {
-    //            amp_ = amps[i];
-				//maxFreq = freqs[i];
-    //        }
-    //    }
         psd(waveform, freq, times[1] - times[0], SIZE, &x, &y);
         /*** ここまで *************************************************/
     }
