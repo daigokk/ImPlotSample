@@ -8,23 +8,31 @@
 class Commands {
 public:
     typedef struct WaveformParams {
-        double amplitude; // 振幅
-        double phase_deg; // 位相（度）
-        double noize;     // ノイズ振幅
-        double dt;        // サンプリング間隔
-        double frequency; // 周波数
-        int size;         // データ点数
+        double amplitude = 0; // 振幅
+        double phase_deg = 0; // 位相（度）
+        double noize = 0;     // ノイズ振幅
+        double dt = 0;        // サンプリング間隔
+        double frequency = 0; // 周波数
+        int size = 0;         // データ点数
     };
     static void getWaveform(WaveformParams* pWaveformParams, double* waveform) {
+		if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
+		if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
+		if (pWaveformParams->frequency < 0) throw std::runtime_error("frequencyに0以上の値を代入してください。");
+        /*** ここから *************************************************/
         double phase_rad = pWaveformParams->phase_deg * PI / 180.0;
         srand(time(NULL));
         for (int i = 0; i < pWaveformParams->size; i++) {
             waveform[i] = pWaveformParams->amplitude * std::sin(2 * PI * pWaveformParams->frequency * i * pWaveformParams->dt + phase_rad);
             waveform[i] += (double)rand() / RAND_MAX * 2 * pWaveformParams->noize - pWaveformParams->noize; // 追加
         }
+        /*** ここまで *************************************************/
     }
 
     static bool saveWaveform(WaveformParams* pWaveformParams, const char* filename, const double* waveform) {
+        if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
+        if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
+        /*** ここから *************************************************/
         FILE* fp = fopen(filename, "w");
         if (fp != NULL) {
             fprintf(fp, "# Time (s), Voltage (V)\n");
@@ -34,12 +42,13 @@ public:
             fclose(fp);
             return true;
         }
-        else {
-            return false;
-        }
+        /*** ここまで *************************************************/
+        return false;
     }
 
     static bool loadWaveform(WaveformParams* pWaveformParams, const char* filename, double* times, double* waveform) {
+        if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
+        /*** ここから *************************************************/
         FILE* fp = fopen(filename, "r");
         char buf[256];
         if (fp != NULL) {
@@ -51,13 +60,16 @@ public:
             fclose(fp);
             return true;
         }
-        else {
-            return false;
-        }
+        /*** ここまで *************************************************/
+        return false;
     }
 
     static void psd(WaveformParams* pWaveformParams, const double* waveform, double* pX, double* pY) {
+        if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
+        if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
+        if (pWaveformParams->frequency < 0) throw std::runtime_error("frequencyに0以上の値を代入してください。");
         *pX = 0; *pY = 0;
+        /*** ここから *************************************************/
         // 掛け算
         for (int i = 0; i < pWaveformParams->size; i++) {
             double wt = 2 * PI * pWaveformParams->frequency * pWaveformParams->dt * i;
@@ -67,10 +79,14 @@ public:
         // ローパスフィルタの代わりに平均を用いる
         *pX /= pWaveformParams->size;
         *pY /= pWaveformParams->size;
+        /*** ここまで *************************************************/
     }
 
     static void runFft(WaveformParams* pWaveformParams, double* waveform, double* freqs, double* amps) {
+        if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
+        if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
         // FFT処理をここに実装
+        /*** ここから *************************************************/
         std::vector<std::complex<double>> data(pWaveformParams->size);
         for (int i = 0; i < pWaveformParams->size; ++i) {
             data[i] = std::complex<double>(waveform[i], 0.0);
@@ -81,12 +97,17 @@ public:
             amps[i] = std::abs(data[i]) / pWaveformParams->size; // 振幅スペクトルに変換
         }
         ImPlot::SetNextAxesToFit();
+        /*** ここまで *************************************************/
     }
 
     static void runLpf(WaveformParams* pWaveformParams, int order, double cutoffFreq, const double* input, double* output) {
+        if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
+        if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
+        /*** ここから *************************************************/
         ButterworthLPF lpf(order, cutoffFreq, 1.0 / pWaveformParams->dt);
         for (int i = 0; i < pWaveformParams->size; i++) {
             output[i] = lpf.process(input[i]);
         }
+        /*** ここまで *************************************************/
     }
 };
