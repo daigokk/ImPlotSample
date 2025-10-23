@@ -109,7 +109,7 @@ void Commands::runFft(WaveformParams* pWaveformParams, double* waveform, double*
     /*** ここまで *************************************************/
 }
 
- void Commands::runLpf(WaveformParams* pWaveformParams, int order, double cutoffFreq, const double* input, double* output) {
+void Commands::runLpf(WaveformParams* pWaveformParams, int order, double cutoffFreq, const double* input, double* output) {
     if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
     if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
     /*** ここから *************************************************/
@@ -130,3 +130,17 @@ void Commands::runFft(WaveformParams* pWaveformParams, double* waveform, double*
  //    }
  //    /*** ここまで *************************************************/
  //}
+
+ void Commands::makeRanges(const int size, double start, double* ranges) {
+	 ranges[0] = start;
+     for (int i = 1; i < size; ++i) {
+         int prev = ranges[i - 1];
+
+         if (i % 2 == 1) {
+             ranges[i] = ranges[i - 1] * 2;
+         }
+         else {
+             ranges[i] = ranges[i - 1] * 2.5;
+         }
+     }
+ }

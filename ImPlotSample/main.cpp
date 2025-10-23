@@ -8,7 +8,10 @@
 #include "Commands.h"
 
 #define PI acos(-1)
-#define FILENAME_RAW "raw.csv"
+#define FILENAME_RAW "01_raw.csv"
+#define FILENAME_LPF "02_lpf.csv"
+#define FILENAME_BODE_GAIN "03_bode_gain.csv"
+#define FILENAME_BODE_PHASE "04_bode_phase.csv"
 #define SIZE 1024 // 2^10
 #define DT (10.0/100e3/SIZE)
 
@@ -107,7 +110,7 @@ void ShowWindow2(const char title[]) {
     static std::string text1 = "", text2 = "";
     static double times[SIZE] = { 0 }, wf_raw[SIZE] = { 0 }, wf_lpf[SIZE] = { 0 };
     static double freqs[SIZE] = { 0 }, amps_raw[SIZE] = { 0 }, amps_lpf[SIZE] = { 0 };
-    static double freq = 100e3, x = 0, y = 0;
+    static double freq = 100e3, x = 0, y = 0, x_lpf = 0, y_lpf = 0;
     static int order = 2;
     static float lpfreq = 1e4;
     static Commands::WaveformParams wfp;
@@ -118,15 +121,17 @@ void ShowWindow2(const char title[]) {
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
     ImGui::InputDouble("Freq. (Hz)", &freq, 100.0, 1000.0, "%.1f");
-    ImGui::Text("X: %5.3f, Y: %5.3f", x, y);
     ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
     if (ImGui::InputInt("Order", &order, 1, 10)) {
         if (order < 1) order = 1;
         Commands::WaveformParams wfp;
         wfp.dt = DT;
         wfp.size = SIZE;
+		wfp.frequency = freq;
         Commands::runLpf(&wfp, order, lpfreq, wf_raw, wf_lpf);
         Commands::runFft(&wfp, wf_lpf, freqs, amps_lpf);
+        wfp.size = 1.0 / wfp.frequency / wfp.dt;
+        Commands::runPsd(&wfp, &wf_lpf[SIZE - wfp.size], &x_lpf, &y_lpf);
     }
     if (ImGui::Button("View")) {
         // ボタンが押されたらここが実行される
@@ -148,6 +153,8 @@ void ShowWindow2(const char title[]) {
 		// ローパスフィルタ処理とFFT計算
         Commands::runLpf(&wfp, order, lpfreq, wf_raw, wf_lpf);
         Commands::runFft(&wfp, wf_lpf, freqs, amps_lpf);
+        wfp.size = 1.0 / wfp.frequency / wfp.dt;
+        Commands::runPsd(&wfp, &wf_lpf[SIZE - wfp.size], &x_lpf, &y_lpf);
         /*** ここまで *************************************************/
         ImPlot::SetNextAxesToFit();
     }
@@ -156,7 +163,7 @@ void ShowWindow2(const char title[]) {
     if (text1 == "Success.") {
         ImGui::SameLine();
         if (ImGui::Button("Save")) {
-            if (Commands::saveWaveform(&wfp, "lpf.csv", wf_lpf)) {
+            if (Commands::saveWaveform(&wfp, FILENAME_LPF, wf_lpf)) {
                 text2 = "Success.";
             }
             else {
@@ -170,11 +177,15 @@ void ShowWindow2(const char title[]) {
         Commands::WaveformParams wfp;
 		wfp.dt = DT;
         wfp.size = SIZE;
+		wfp.frequency = freq;
         Commands::runLpf(&wfp, order, lpfreq, wf_raw, wf_lpf);
 		// FFT計算
         Commands::runFft(&wfp, wf_lpf, freqs, amps_lpf);
+        wfp.size = 1.0 / wfp.frequency / wfp.dt;
+        Commands::runPsd(&wfp, &wf_lpf[SIZE - wfp.size], &x_lpf, &y_lpf);
     }
-    
+    ImGui::Text("RAW X: %5.3f, Y: %5.3f", x, y);
+    ImGui::Text("LPF X: %5.3f, Y: %5.3f", x_lpf, y_lpf);
     // プロット描画
     if (ImPlot::BeginPlot("Waveform", ImVec2(-1, 250 * Gui::monitorScale))) {
         ImPlot::SetupAxis(ImAxis_X1, "Time (s)");
@@ -212,6 +223,7 @@ void ShowWindow3(const char title[]) {
         wfp.dt = DT;
         wfp.size = SIZE;
         wfp.frequency = 10e3;
+
         // 周波数特性
         for (int j = 0; j < 3; j++) {
             wfp.frequency = 10e3;
@@ -229,8 +241,8 @@ void ShowWindow3(const char title[]) {
         }
         text = "[Error] Failed to open file for writing.";
         wfp.size = 1000;
-        if (Commands::saveWaveforms(&wfp, "bode_gain.csv", freqs, gains[0], gains[1], gains[2])) {
-            if (Commands::saveWaveforms(&wfp, "bode_phase.csv", freqs, phases[0], phases[1], phases[2])) {
+        if (Commands::saveWaveforms(&wfp, FILENAME_BODE_GAIN, freqs, gains[0], gains[1], gains[2])) {
+            if (Commands::saveWaveforms(&wfp, FILENAME_BODE_PHASE, freqs, phases[0], phases[1], phases[2])) {
                 text = "Success.";
             }
         }
