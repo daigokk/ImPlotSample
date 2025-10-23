@@ -98,5 +98,76 @@ private:
 - 元の波形からローパスフィルタのアウトプットを引くと、疑似的なハイパスフィルタが得られます。
 
 ## 4. レポート課題
-1. 異なる次数での周波数特性の違いを比較し、グラフで示せ。(二つ以上の曲線が含まれている事)
-2. カットオフ周波数を変えて信号の通過具合を観察せよ。(二つ以上の曲線が含まれている事)
+1. カットオフ周波数100kHzとして、10kHzから1000kHzまでの周波数特性をボード線図(Gainと位相)で示せ。
+   ```cpp
+   void ShowWindow3(const char title[]) {
+    // ウィンドウ開始
+    ImGui::SetNextWindowPos(ImVec2(0, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 530 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::Begin(title);
+    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
+    static double freqs[1000] = { 0 }, gains[3][1000] = { 0 }, phases[3][1000];
+    static Commands::WaveformParams wfp;
+    static std::string text = "";
+    if (ImGui::Button("Run")) {
+        // ボタンが押されたらここが実行される
+        /*** 適切なコードを入力 ***************************************/
+        wfp.amplitude = 1;
+        wfp.dt = DT;
+        wfp.size = SIZE;
+        wfp.frequency = 10e3;
+        // 周波数特性
+        for (int j = 0; j < 3; j++) {
+            wfp.frequency = 10e3;
+            for (int i = 0; i < 1000; i++) {
+                double waveform[SIZE] = { 0 };
+                double x = 0, y = 0, wf_lpf[SIZE];
+                Commands::getWaveform(&wfp, waveform);
+                Commands::runLpf(&wfp, j+1, 100e3, waveform, wf_lpf);
+                freqs[i] = wfp.frequency;
+                gains[j][i] = 20.0 * log10(Commands::runPsd(&wfp, wf_lpf, &x, &y) / wfp.amplitude);
+                phases[j][i] = atan2(y, x) / PI * 180;
+                if (phases[j][i] > 0) phases[j][i] -= 360;
+                wfp.frequency += 1e3;
+            }
+        }
+        text = "[Error] Failed to open file for writing.";
+        wfp.size = 1000;
+        if (Commands::saveWaveforms(&wfp, "bode_gain.csv", freqs, gains[0], gains[1], gains[2])) {
+            if (Commands::saveWaveforms(&wfp, "bode_phase.csv", freqs, phases[0], phases[1], phases[2])) {
+                text = "Success.";
+            }
+        }
+        /*** ここまで *************************************************/
+    }
+    ImGui::SameLine();
+    ImGui::Text(text.c_str());
+    ImPlot::SetNextAxesToFit();
+    if (ImPlot::BeginPlot("Gain", ImVec2(-1, 225 * Gui::monitorScale))) {
+        ImPlot::SetupAxisScale(ImAxis_X1, ImPlotScale_Log10);
+        ImPlot::SetupAxis(ImAxis_X1, "Frequency (Hz)");
+        ImPlot::SetupAxis(ImAxis_Y1, "Gain (dB)");
+        for (int j = 0; j < 3; j++) {
+            std::string label = "Order " + std::to_string(j + 1);
+            ImPlot::PlotLine(label.c_str(), freqs, gains[j], 1000);
+        }
+        ImPlot::EndPlot();
+    }
+    ImPlot::SetNextAxesToFit();
+    if (ImPlot::BeginPlot("Phase", ImVec2(-1, 225 * Gui::monitorScale))) {
+        ImPlot::SetupAxisScale(ImAxis_X1, ImPlotScale_Log10);
+        ImPlot::SetupAxis(ImAxis_X1, "Frequency (Hz)");
+        ImPlot::SetupAxis(ImAxis_Y1, "Phase (Deg.)");
+        for (int j = 0; j < 3; j++) {
+            std::string label = "Order " + std::to_string(j + 1);
+            ImPlot::PlotLine(label.c_str(), freqs, phases[j], 1000);
+        }
+        ImPlot::EndPlot();
+    }
+    // ウィンドウ終了
+    ImGui::End();
+   }
+   ```
+   ![Hard copy](./images/HardCopy.png)
+3. 異なる次数での周波数特性の違いを比較し、グラフで示せ。(二つ以上の曲線が含まれている事)
+4. カットオフ周波数を変えて信号の通過具合を観察せよ。(二つ以上の曲線が含まれている事)
