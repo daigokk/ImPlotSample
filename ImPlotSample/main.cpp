@@ -78,8 +78,8 @@ void ShowWindow1(const char title[]) {
     ImGui::InputDouble("Noize (V)", &noize, 0.1, 1.0, "%.2f"); // 追加
     if (ImGui::Button("Save")) {
         // ボタンが押されたらここが実行される
-        /*** ここから *************************************************/
-        // 波形データ保存
+        // 波形データ生成
+        /*** 適切なコードを入力 ***************************************/
         Commands::WaveformParams wfp;
 		wfp.amplitude = amplitude;
 		wfp.dt = DT;
@@ -88,15 +88,16 @@ void ShowWindow1(const char title[]) {
 		wfp.phase_deg = phase_deg;
 		wfp.size = SIZE;
 		Commands::getWaveform(&wfp, waveform);
-
+        /*** ここまで *************************************************/
         // 保存
+        /*** 適切なコードを入力 ***************************************/
         if (Commands::saveWaveform(&wfp, FILENAME_RAW, waveform)) {
             text = "Success.\n";
         }
         else {
             text = "[Error] Failed to open file for writing.\n";
 		}
-		/*** ここまで *************************************************/
+        /*** ここまで *************************************************/
     }
     ImGui::SameLine();
     ImGui::Text(text.c_str());
@@ -131,8 +132,8 @@ void ShowWindow2(const char title[]) {
     }
     if (ImGui::Button("View")) {
         // ボタンが押されたらここが実行される
-        /*** ここから *************************************************/
         // 波形データ読み込み
+        /*** 適切なコードを入力 ***************************************/
         wfp.size = SIZE;
 		wfp.dt = DT;
 		wfp.frequency = freq;
@@ -202,13 +203,12 @@ void ShowWindow3(const char title[]) {
     ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 530 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
-    /*** ここから *************************************************/
     static double freqs[1000] = { 0 }, gains[3][1000] = { 0 }, phases[3][1000];
     static Commands::WaveformParams wfp;
     static std::string text = "";
     if (ImGui::Button("Run")) {
         // ボタンが押されたらここが実行される
-        /*** ここから *************************************************/        
+        /*** 適切なコードを入力 ***************************************/
         wfp.amplitude = 1;
         wfp.dt = DT;
         wfp.size = SIZE;
@@ -261,7 +261,6 @@ void ShowWindow3(const char title[]) {
         }
         ImPlot::EndPlot();
     }
-    /*** ここまで *************************************************/
     // ウィンドウ終了
     ImGui::End();
 }
