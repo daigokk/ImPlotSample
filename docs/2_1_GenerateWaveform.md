@@ -36,16 +36,16 @@
 	    ImGui::InputDouble("Noize (V)", &noize, 0.1, 1.0, "%.2f");
 	    if (ImGui::Button("Save")) {
 	        // ボタンが押されたらここが実行される
-	        /*** ここから *************************************************/
-	        // 波形データ保存
-	        // 生成
+	        // 波形データ生成
+ 			/*** 適切なコードを入力 *************************************************/
 	        srand(time(NULL));
 	        for (int i = 0; i < SIZE; i++) {
 	            waveform[i] = amplitude * std::sin(2 * PI * frequency * i * DT + phase_rad);
 	            waveform[i] += (double)rand() / RAND_MAX * 2 * noize - noize;
 	        }
- 		
+ 			/*** ここまで *************************************************/
 	        // 保存
+ 			/*** 適切なコードを入力 *************************************************/
 	        FILE* fp = fopen(FILENAME, "w");
 	        if (fp != NULL) {
 	            fprintf(fp, "# Time (s), Voltage (V)\n");
@@ -58,7 +58,7 @@
 	        else {
 	            text = "[Error] Failed to open file for writing\n";
 	        }
-	        /*** ここまで *************************************************/
+ 			/*** ここまで *************************************************/
 	    }
 	    ImGui::SameLine();
 	    ImGui::Text(text.c_str());
@@ -78,8 +78,8 @@
 	    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
 	    if (ImGui::Button("View")) {
 	        // ボタンが押されたらここが実行される
-	        /*** ここから *************************************************/
-	        // 波形データ読み込み
+ 			// 波形データ読み込み
+	        /*** 適切なコードを入力 *************************************************/
 	        FILE* fp = fopen(FILENAME, "r");
 	        char buf[256];
 	        if (fp != NULL) {
