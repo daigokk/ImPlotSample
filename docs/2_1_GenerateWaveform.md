@@ -13,7 +13,7 @@
 ## 2. サンプルプログラム
 - ここでは雑音を含んだ信号を以下のように定義する:
   - $v(t)=A \sin(\omega t + \theta) + noize$
-  - ただし、 $noize$ は 「$\pm$ 任意の値」のランダムな実数とする。
+  - ただし、 $noize$ は「 $\pm$ 任意の値」のランダムな実数とする。
 - Generate waveform window
 	```cpp
 	void ShowWindow1(const char title[]) {
