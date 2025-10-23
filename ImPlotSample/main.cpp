@@ -8,7 +8,7 @@
 #include "Commands.h"
 
 #define PI acos(-1)
-#define FILENAME "data.csv"
+#define FILENAME_RAW "raw.csv"
 #define SIZE 1024 // 2^10
 #define DT (10.0/100e3/SIZE)
 
@@ -16,6 +16,7 @@
 void ShowWindow1(const char title[]);
 void ShowWindow2(const char title[]);
 void ShowWindow3(const char title[]);
+void ShowWindow4(const char title[]);
 
 void fft(std::vector<std::complex<double>>& a);
 
@@ -40,7 +41,8 @@ int main() {
         /*** ここから **********************************/
         ShowWindow1("Generate waveform");
         ShowWindow2("View waveform");
-        ShowWindow3("Window title 3");
+        ShowWindow3("Bode plots");
+        //ShowWindow4("Window title 4");
 
 
         /*** ここまで **********************************/
@@ -60,9 +62,9 @@ void ShowWindow1(const char title[]) {
     static double frequency = 100e3;
     static double amplitude = 1.0;
     static double phase_deg = 0.0, phase_rad = 0.0;
-    static double waveform[SIZE];
+    static double waveform[SIZE] = { 0 };
     static double noize = 0.0; // 追加
-	static double fft[SIZE];
+	static double fft[SIZE] = { 0 };
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
@@ -88,7 +90,7 @@ void ShowWindow1(const char title[]) {
 		Commands::getWaveform(&wfp, waveform);
 
         // 保存
-        if (Commands::saveWaveform(&wfp, FILENAME, waveform)) {
+        if (Commands::saveWaveform(&wfp, FILENAME_RAW, waveform)) {
             text = "Success.\n";
         }
         else {
@@ -103,13 +105,13 @@ void ShowWindow1(const char title[]) {
 }
 
 void ShowWindow2(const char title[]) {
-    static std::string text = "";
-    static double times[SIZE], wf_raw[SIZE], wf_lpf[SIZE];
-    static double freqs[SIZE], amps_raw[SIZE], amps_lpf[SIZE];
+    static std::string text1 = "", text2 = "";
+    static double times[SIZE] = { 0 }, wf_raw[SIZE] = { 0 }, wf_lpf[SIZE] = { 0 };
+    static double freqs[SIZE] = { 0 }, amps_raw[SIZE] = { 0 }, amps_lpf[SIZE] = { 0 };
     static double freq = 100e3, x = 0, y = 0;
     static int order = 2;
     static float lpfreq = 1e4;
-
+    static Commands::WaveformParams wfp;
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(660 * Gui::monitorScale, 0), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(440 * Gui::monitorScale, 750 * Gui::monitorScale), ImGuiCond_FirstUseEver);
@@ -131,26 +133,39 @@ void ShowWindow2(const char title[]) {
         // ボタンが押されたらここが実行される
         /*** ここから *************************************************/
         // 波形データ読み込み
-        Commands::WaveformParams wfp;
         wfp.size = SIZE;
 		wfp.dt = DT;
 		wfp.frequency = freq;
-        if(Commands::loadWaveform(&wfp, FILENAME, times, wf_raw)) {
-            text = "Success.\n";
+        if(Commands::loadWaveform(&wfp, FILENAME_RAW, times, wf_raw)) {
+            text1 = "Success.";
         }
         else {
-            text = "[Error] Failed to open file for reading.\n";
+            text1 = "[Error] Failed to open file for reading.";
 		}
         // PSD
-        Commands::psd(&wfp, wf_raw, &x, &y);
-        // FFT計算
+        Commands::runPsd(&wfp, wf_raw, &x, &y);
+        // Raw波形のFFT計算
         Commands::runFft(&wfp, wf_raw, freqs, amps_raw);
+		// ローパスフィルタ処理とFFT計算
+        Commands::runLpf(&wfp, order, lpfreq, wf_raw, wf_lpf);
         Commands::runFft(&wfp, wf_lpf, freqs, amps_lpf);
         /*** ここまで *************************************************/
     }
     ImGui::SameLine();
-    ImGui::Text(text.c_str());
-    
+    ImGui::Text(text1.c_str());
+    if (text1 == "Success.") {
+        ImGui::SameLine();
+        if (ImGui::Button("Save")) {
+            if (Commands::saveWaveform(&wfp, "lpf.csv", wf_lpf)) {
+                text2 = "Success.";
+            }
+            else {
+                text2 = "[Error] Failed to open file for writing.";
+            }
+        }
+        ImGui::SameLine();
+        ImGui::Text(text2.c_str());
+    }
     if (ImGui::SliderFloat("LPF", &lpfreq, 1e4, 0.5e6, "%.0fHz")) {
         Commands::WaveformParams wfp;
 		wfp.dt = DT;
@@ -183,7 +198,76 @@ void ShowWindow2(const char title[]) {
 
 void ShowWindow3(const char title[]) {
     // ウィンドウ開始
-    ImGui::SetNextWindowPos(ImVec2(10, 250 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(0, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 530 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::Begin(title);
+    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
+    /*** ここから *************************************************/
+    static double freqs[1000] = { 0 }, gains[3][1000] = { 0 }, phases[3][1000];
+    static Commands::WaveformParams wfp;
+    static std::string text = "";
+    if (ImGui::Button("Run")) {
+        // ボタンが押されたらここが実行される
+        /*** ここから *************************************************/        
+        wfp.amplitude = 1;
+        wfp.dt = DT;
+        wfp.size = SIZE;
+        wfp.frequency = 10e3;
+        // 周波数特性
+        for (int j = 0; j < 3; j++) {
+            wfp.frequency = 10e3;
+            for (int i = 0; i < 1000; i++) {
+                double waveform[SIZE] = { 0 };
+                double x = 0, y = 0, wf_lpf[SIZE];
+                Commands::getWaveform(&wfp, waveform);
+                Commands::runLpf(&wfp, j+1, 100e3, waveform, wf_lpf);
+                freqs[i] = wfp.frequency;
+                gains[j][i] = 20.0 * log10(Commands::runPsd(&wfp, wf_lpf, &x, &y) / wfp.amplitude);
+                phases[j][i] = atan2(y, x) / PI * 180;
+				if (phases[j][i] > 0) phases[j][i] -= 360;
+                wfp.frequency += 1e3;
+            }
+        }
+        text = "[Error] Failed to open file for writing.";
+        wfp.size = 1000;
+        if (Commands::saveWaveforms(&wfp, "bode_gain.csv", freqs, gains[0], gains[1], gains[2])) {
+            if (Commands::saveWaveforms(&wfp, "bode_phase.csv", freqs, phases[0], phases[1], phases[2])) {
+                text = "Success.";
+            }
+        }
+        /*** ここまで *************************************************/
+    }
+    ImGui::SameLine();
+    ImGui::Text(text.c_str());
+    ImPlot::SetNextAxesToFit();
+    if (ImPlot::BeginPlot("Gain", ImVec2(-1, 225 * Gui::monitorScale))) {
+        ImPlot::SetupAxisScale(ImAxis_X1, ImPlotScale_Log10);
+        ImPlot::SetupAxis(ImAxis_X1, "Frequency (Hz)");
+        ImPlot::SetupAxis(ImAxis_Y1, "Gain (dB)");
+        for (int j = 0; j < 3; j++) {
+            std::string label = "Order " + std::to_string(j + 1);
+            ImPlot::PlotLine(label.c_str(), freqs, gains[j], 1000);
+        }
+        ImPlot::EndPlot();
+    }
+    ImPlot::SetNextAxesToFit();
+    if (ImPlot::BeginPlot("Phase", ImVec2(-1, 225 * Gui::monitorScale))) {
+        ImPlot::SetupAxisScale(ImAxis_X1, ImPlotScale_Log10);
+        ImPlot::SetupAxis(ImAxis_X1, "Frequency (Hz)");
+        ImPlot::SetupAxis(ImAxis_Y1, "Phase (Deg.)");
+        for (int j = 0; j < 3; j++) {
+            std::string label = "Order " + std::to_string(j + 1);
+            ImPlot::PlotLine(label.c_str(), freqs, phases[j], 1000);
+        }
+        ImPlot::EndPlot();
+    }
+    /*** ここまで *************************************************/
+    // ウィンドウ終了
+    ImGui::End();
+}
+
+void ShowWindow4(const char title[]) {
+    // ウィンドウ開始
     ImGui::SetNextWindowSize(ImVec2(600 * Gui::monitorScale, 450 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
@@ -191,11 +275,9 @@ void ShowWindow3(const char title[]) {
     // https://github.com/epezent/implot
     // https://github.com/daigokk/ImPlotSample
     /*** ここから *************************************************/
-	
+    
 
     /*** ここまで *************************************************/
     // ウィンドウ終了
     ImGui::End();
 }
-
-
