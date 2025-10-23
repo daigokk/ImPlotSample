@@ -11,6 +11,9 @@
 ---
 
 ## 2. サンプルプログラム
+- ここでは雑音を含んだ信号を以下のように定義する:
+  - $v(t)=A \sin(\omega t + \theta) + noize$
+  - ただし、 $noize$ は「 $\pm$ 任意の値」のランダムな実数とする。
 - Generate waveform window
 	```cpp
 	void ShowWindow1(const char title[]) {
@@ -19,7 +22,7 @@
 	    static double amplitude = 1.0;
 	    static double phase_deg = 0.0, phase_rad = 0.0;
 	    static double waveform[SIZE];
- 	    static double noize = 0.0; // 追加
+ 	    static double noize = 0.0;
 	    // ウィンドウ開始
 	    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 	    ImGui::SetNextWindowSize(ImVec2(800, 200), ImGuiCond_FirstUseEver);
@@ -30,19 +33,19 @@
 	    if (ImGui::InputDouble("Phase (Deg.)", &phase_deg, 0.1, 1.0, "%.2f")) {
 	        phase_rad = phase_deg * PI / 180.0f;
 	    }
-	    ImGui::InputDouble("Noize (V)", &noize, 0.1, 1.0, "%.2f"); // 追加
+	    ImGui::InputDouble("Noize (V)", &noize, 0.1, 1.0, "%.2f");
 	    if (ImGui::Button("Save")) {
 	        // ボタンが押されたらここが実行される
-	        /*** ここから *************************************************/
-	        // 波形データ保存
-	        // 生成
+	        // 波形データ生成
+ 			/*** 適切なコードを入力 *************************************************/
 	        srand(time(NULL));
 	        for (int i = 0; i < SIZE; i++) {
 	            waveform[i] = amplitude * std::sin(2 * PI * frequency * i * DT + phase_rad);
-	            waveform[i] += (double)rand() / RAND_MAX * 2 * noize - noize; // 追加
+	            waveform[i] += (double)rand() / RAND_MAX * 2 * noize - noize;
 	        }
- 		
+ 			/*** ここまで *************************************************/
 	        // 保存
+ 			/*** 適切なコードを入力 *************************************************/
 	        FILE* fp = fopen(FILENAME, "w");
 	        if (fp != NULL) {
 	            fprintf(fp, "# Time (s), Voltage (V)\n");
@@ -55,7 +58,7 @@
 	        else {
 	            text = "[Error] Failed to open file for writing\n";
 	        }
-	        /*** ここまで *************************************************/
+ 			/*** ここまで *************************************************/
 	    }
 	    ImGui::SameLine();
 	    ImGui::Text(text.c_str());
@@ -75,8 +78,8 @@
 	    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
 	    if (ImGui::Button("View")) {
 	        // ボタンが押されたらここが実行される
-	        /*** ここから *************************************************/
-	        // 波形データ読み込み
+ 			// 波形データ読み込み
+	        /*** 適切なコードを入力 *************************************************/
 	        FILE* fp = fopen(FILENAME, "r");
 	        char buf[256];
 	        if (fp != NULL) {
