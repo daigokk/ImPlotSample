@@ -18,8 +18,6 @@ void ShowWindow2(const char title[]);
 void ShowWindow3(const char title[]);
 void ShowWindow4(const char title[]);
 
-void fft(std::vector<std::complex<double>>& a);
-
 int main() {
     // GUI初期化
     Gui::Initialize(
@@ -151,6 +149,7 @@ void ShowWindow2(const char title[]) {
         Commands::runLpf(&wfp, order, lpfreq, wf_raw, wf_lpf);
         Commands::runFft(&wfp, wf_lpf, freqs, amps_lpf);
         /*** ここまで *************************************************/
+        ImPlot::SetNextAxesToFit();
     }
     ImGui::SameLine();
     ImGui::Text(text1.c_str());
