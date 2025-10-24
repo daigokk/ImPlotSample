@@ -120,17 +120,6 @@ void Commands::runLpf(WaveformParams* pWaveformParams, int order, double cutoffF
     /*** ここまで *************************************************/
 }
 
- //void Commands::runLpf(WaveformParams* pWaveformParams, int order, double cutoffFreq, const double* input, double* output) {
- //    if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
- //    if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
- //    /*** ここから *************************************************/
- //    ChebyshevLPF lpf(order, cutoffFreq, 1.0 / pWaveformParams->dt, 0.5);
- //    for (int i = 0; i < pWaveformParams->size; i++) {
- //        output[i] = lpf.process(input[i]);
- //    }
- //    /*** ここまで *************************************************/
- //}
-
  void Commands::makeRanges(const int size, double start, double* ranges) {
 	 ranges[0] = start;
      for (int i = 1; i < size; ++i) {

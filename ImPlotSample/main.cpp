@@ -135,8 +135,8 @@ void ShowWindow2(const char title[]) {
     }
     if (ImGui::Button("View")) {
         // ボタンが押されたらここが実行される
-        // 波形データ読み込み
         /*** 適切なコードを入力 ***************************************/
+        // 波形データ読み込み
         wfp.size = SIZE;
 		wfp.dt = DT;
 		wfp.frequency = freq;
@@ -208,22 +208,20 @@ void ShowWindow2(const char title[]) {
 }
 
 void ShowWindow3(const char title[]) {
+    static double freqs[1000] = { 0 }, gains[3][1000] = { 0 }, phases[3][1000];
+    static Commands::WaveformParams wfp;
+    static std::string text = "";
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(0, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 530 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
-    static double freqs[1000] = { 0 }, gains[3][1000] = { 0 }, phases[3][1000];
-    static Commands::WaveformParams wfp;
-    static std::string text = "";
     if (ImGui::Button("Run")) {
         // ボタンが押されたらここが実行される
-        /*** 適切なコードを入力 ***************************************/
         wfp.amplitude = 1;
         wfp.dt = DT;
         wfp.size = SIZE;
         wfp.frequency = 10e3;
-
         // 周波数特性
         for (int j = 0; j < 3; j++) {
             wfp.frequency = 10e3;
@@ -246,7 +244,6 @@ void ShowWindow3(const char title[]) {
                 text = "Success.";
             }
         }
-        /*** ここまで *************************************************/
     }
     ImGui::SameLine();
     ImGui::Text(text.c_str());
