@@ -13,11 +13,11 @@ public:
         double frequency = 0; // 周波数
         int size = 0;         // データ点数
     };
-    static void getWaveform(WaveformParams* pWaveformParams, double* waveform);
+    static void getWaveform(WaveformParams* pWaveformParams, double* times, double* waveform);
 
-    static bool saveWaveform(WaveformParams* pWaveformParams, const char* filename, const double* waveform);
+    static bool saveWaveform(WaveformParams* pWaveformParams, const char* filename, const double* times, const double* waveform, const char label[] = "# Time (s), Voltage (V)\n");
 
-    static bool saveWaveforms(WaveformParams* pWaveformParams, const char* filename, const double* freqs, const double ch1[1000], const double ch2[1000], const double ch3[1000]);
+    static bool saveWaveforms(WaveformParams* pWaveformParams, const char* filename, const double* freqs, const double ch1[1000], const double ch2[1000], const double ch3[1000], const char label[] = "# Freq. (Hz), ch1, ch2, ch3\n");
 
     static bool loadWaveform(WaveformParams* pWaveformParams, const char* filename, double* times, double* waveform);
 

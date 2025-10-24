@@ -9,9 +9,10 @@
 
 #define PI acos(-1)
 #define FILENAME_RAW "01_raw.csv"
-#define FILENAME_LPF "02_lpf.csv"
-#define FILENAME_BODE_GAIN "03_bode_gain.csv"
-#define FILENAME_BODE_PHASE "04_bode_phase.csv"
+#define FILENAME_FFT "02_fft.csv"
+#define FILENAME_LPF "03_lpf.csv"
+#define FILENAME_BODE_GAIN "04_bode_gain.csv"
+#define FILENAME_BODE_PHASE "05_bode_phase.csv"
 #define SIZE 1024 // 2^10
 #define DT (10.0/100e3/SIZE)
 
@@ -63,9 +64,8 @@ void ShowWindow1(const char title[]) {
     static double frequency = 100e3;
     static double amplitude = 1.0;
     static double phase_deg = 0.0, phase_rad = 0.0;
-    static double waveform[SIZE] = { 0 };
+    static double times[SIZE] = { 0 }, waveform[SIZE] = { 0 };
     static double noize = 0.0; // 追加
-	static double fft[SIZE] = { 0 };
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
@@ -88,11 +88,11 @@ void ShowWindow1(const char title[]) {
 		wfp.noize = noize;
 		wfp.phase_deg = phase_deg;
 		wfp.size = SIZE;
-		Commands::getWaveform(&wfp, waveform);
+		Commands::getWaveform(&wfp, times, waveform);
         /*** ここまで *************************************************/
         // 保存
         /*** 適切なコードを入力 ***************************************/
-        if (Commands::saveWaveform(&wfp, FILENAME_RAW, waveform)) {
+        if (Commands::saveWaveform(&wfp, FILENAME_RAW, times, waveform)) {
             text = "Success.\n";
         }
         else {
@@ -124,7 +124,6 @@ void ShowWindow2(const char title[]) {
     ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
     if (ImGui::InputInt("Order", &order, 1, 10)) {
         if (order < 1) order = 1;
-        Commands::WaveformParams wfp;
         wfp.dt = DT;
         wfp.size = SIZE;
 		wfp.frequency = freq;
@@ -155,6 +154,7 @@ void ShowWindow2(const char title[]) {
         Commands::runFft(&wfp, wf_lpf, freqs, amps_lpf);
         wfp.size = 1.0 / wfp.frequency / wfp.dt;
         Commands::runPsd(&wfp, &wf_lpf[SIZE - wfp.size], &x_lpf, &y_lpf);
+        wfp.size = SIZE;
         /*** ここまで *************************************************/
         ImPlot::SetNextAxesToFit();
     }
@@ -163,7 +163,13 @@ void ShowWindow2(const char title[]) {
     if (text1 == "Success.") {
         ImGui::SameLine();
         if (ImGui::Button("Save")) {
-            if (Commands::saveWaveform(&wfp, FILENAME_LPF, wf_lpf)) {
+            if (Commands::saveWaveform(&wfp, FILENAME_FFT, freqs, amps_raw, "# Freq. (Hz), Voltage (V)\n")) {
+                text2 = "Success.";
+            }
+            else {
+                text2 = "[Error] Failed to open file for writing.";
+            }
+            if (Commands::saveWaveform(&wfp, FILENAME_LPF, times, wf_lpf)) {
                 text2 = "Success.";
             }
             else {
@@ -226,9 +232,9 @@ void ShowWindow3(const char title[]) {
         for (int j = 0; j < 3; j++) {
             wfp.frequency = 10e3;
             for (int i = 0; i < 1000; i++) {
-                double waveform[SIZE] = { 0 };
+                double times[SIZE] = { 0 }, waveform[SIZE] = { 0 };
                 double x = 0, y = 0, wf_lpf[SIZE];
-                Commands::getWaveform(&wfp, waveform);
+                Commands::getWaveform(&wfp, times, waveform);
                 Commands::runLpf(&wfp, j+1, 100e3, waveform, wf_lpf);
                 freqs[i] = wfp.frequency;
                 gains[j][i] = 20.0 * log10(Commands::runPsd(&wfp, wf_lpf, &x, &y) / wfp.amplitude);
