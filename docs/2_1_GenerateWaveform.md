@@ -22,9 +22,8 @@
 	    static double frequency = 100e3;
 	    static double amplitude = 1.0;
 	    static double phase_deg = 0.0, phase_rad = 0.0;
-	    static double waveform[SIZE] = { 0 };
 	    static double noize = 0.0; // 追加
-		static double fft[SIZE] = { 0 };
+	    static double fft[SIZE] = { 0 };
 	    // ウィンドウ開始
 	    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 	    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
@@ -39,24 +38,33 @@
 	    if (ImGui::Button("Save")) {
 	        // ボタンが押されたらここが実行される
 	        // 波形データ生成
+	        double times[SIZE] = { 0 }, waveform[SIZE] = { 0 };
 	        /*** 適切なコードを入力 ***************************************/
-	        Commands::WaveformParams wfp;
-			wfp.amplitude = amplitude;
-			wfp.dt = DT;
-			wfp.frequency = frequency;
-			wfp.noize = noize;
-			wfp.phase_deg = phase_deg;
-			wfp.size = SIZE;
-			Commands::getWaveform(&wfp, waveform);
+	        srand(time(NULL));
+	        for (int i = 0; i < SIZE; i++) {
+	            /*** ここから *************************************************/
+	            times[i] = i * DT;
+	            waveform[i] = amplitude * std::sin(2 * PI * frequency * times[i] + phase_deg * PI / 180.0);
+	            waveform[i] += (double)rand() / RAND_MAX * 2 * noize - noize;
+	            /*** ここまで *************************************************/
+	        }
 	        /*** ここまで *************************************************/
 	        // 保存
 	        /*** 適切なコードを入力 ***************************************/
-	        if (Commands::saveWaveform(&wfp, FILENAME_RAW, waveform)) {
+	        FILE* fp = fopen(FILENAME_RAW, "w");
+	        if (fp != NULL) {
+	            fprintf(fp, "# Time (S), Voltage (V)\n");
+	            /*** ここから *************************************************/
+	            for (int i = 0; i < SIZE; ++i) {
+	                fprintf(fp, "%e, %e\n", times[i], waveform[i]);
+	            }
+	            /*** ここまで *************************************************/
+	            fclose(fp);
 	            text = "Success.\n";
 	        }
 	        else {
 	            text = "[Error] Failed to open file for writing.\n";
-			}
+	        }
 	        /*** ここまで *************************************************/
 	    }
 	    ImGui::SameLine();
