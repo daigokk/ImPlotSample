@@ -82,7 +82,7 @@ void fft(std::vector<std::complex<double>>& a) {
         ifft(even);
         ifft(odd);
     
-        // 合成（回転因子の符号が正）
+        // 合成（回転因子polarの符号が正）
         for (int k = 0; k < N / 2; ++k) {
             std::complex<double> t = std::polar(1.0, 2 * PI * k / N) * odd[k];
             a[k]       = even[k] + t;
