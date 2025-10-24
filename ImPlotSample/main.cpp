@@ -63,8 +63,7 @@ void ShowWindow1(const char title[]) {
     static std::string text = "";
     static double frequency = 100e3;
     static double amplitude = 1.0;
-    static double phase_deg = 0.0, phase_rad = 0.0;
-    static double times[SIZE] = { 0 }, waveform[SIZE] = { 0 };
+    static double phase_deg = 0.0;
     static double noize = 0.0; // 追加
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
@@ -73,13 +72,12 @@ void ShowWindow1(const char title[]) {
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     ImGui::InputDouble("Frequency (Hz)", &frequency, 100.0, 1000.0, "%.1f");
     ImGui::InputDouble("Amplitude (V)", &amplitude, 0.1, 1.0, "%.2f");
-    if (ImGui::InputDouble("Phase (Deg.)", &phase_deg, 0.1, 1.0, "%.2f")) {
-        phase_rad = phase_deg * PI / 180.0f;
-    }
+    ImGui::InputDouble("Phase (Deg.)", &phase_deg, 0.1, 1.0, "%.2f");
     ImGui::InputDouble("Noize (V)", &noize, 0.1, 1.0, "%.2f"); // 追加
     if (ImGui::Button("Save")) {
         // ボタンが押されたらここが実行される
         // 波形データ生成
+		double times[SIZE] = { 0 }, waveform[SIZE] = { 0 };
         /*** 適切なコードを入力 ***************************************/
         Commands::WaveformParams wfp;
 		wfp.amplitude = amplitude;
