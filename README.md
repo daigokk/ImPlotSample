@@ -15,7 +15,7 @@
 ## 使い方
 1. [`https://github.com/daigokk/ImPlotSample/tree/master`](https://github.com/daigokk/ImPlotSample/tree/master)右上の緑のボタン「<>Code▽」をクリックし、現れたメニューの一番下`Download Zip`をクリック。すると[ダウンロード](https://github.com/daigokk/ImPlotSample/archive/refs/heads/master.zip)が始まる。
 1. ダウンロードされた`ImPlotSample-master.zip`を「すべて展開」し、任意の場所(学校ではZドライブを推奨)に保存する。
-1. `ImPlotSample.sln`ファイルをダブルクリックするとVisual Studioが起動する。もちろんVisual Studioがインストールされている必要があります。
+1. `ImPlotSample.sln`ファイルをダブルクリックするとVisual Studioが起動する。もちろんVisual Studioがインストールされている必要があります。Visual Studio のバージョンによっては初期設定ではビルドできない場合があります。[ここ](https://github.com/daigokk/ImPlotSample/blob/master/docs/2_1_GenerateWaveform.md#%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89%E3%81%97%E3%81%9Fsln%E3%81%8C%E3%83%93%E3%83%AB%E3%83%89%E3%81%A7%E3%81%8D%E3%81%AA%E3%81%84%E5%A0%B4%E5%90%88)が問題解決の参考になるかもしれません。
 
 ---
 
