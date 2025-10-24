@@ -13,9 +13,9 @@
 - [職業能力開発総合大学校 電気工学専攻](https://www.uitec.jeed.go.jp/department/sogo/about/sogo_d_denki.html)の「[自動計測実習](https://daigokk.github.io/ImPlotSample/)」で用います。
 
 ## 使い方
-- [`https://github.com/daigokk/ImPlotSample/tree/master`](https://github.com/daigokk/ImPlotSample/tree/master)右上の緑のボタン「<>Code▽」をクリックし、現れたメニューの一番下`Download Zip`をクリック。すると[ダウンロード](https://github.com/daigokk/ImPlotSample/archive/refs/heads/master.zip)が始まる。
-- ダウンロードされた`ImPlotSample-master.zip`を「すべて展開」し、任意の場所(学校ではZドライブを推奨)に保存する。
-- `ImPlotSample.sln`ファイルをダブルクリックするとVisual Studioが起動する。もちろんVisual Studioがインストールされている必要があります。
+1. [`https://github.com/daigokk/ImPlotSample/tree/master`](https://github.com/daigokk/ImPlotSample/tree/master)右上の緑のボタン「<>Code▽」をクリックし、現れたメニューの一番下`Download Zip`をクリック。すると[ダウンロード](https://github.com/daigokk/ImPlotSample/archive/refs/heads/master.zip)が始まる。
+1. ダウンロードされた`ImPlotSample-master.zip`を「すべて展開」し、任意の場所(学校ではZドライブを推奨)に保存する。
+1. `ImPlotSample.sln`ファイルをダブルクリックするとVisual Studioが起動する。もちろんVisual Studioがインストールされている必要があります。
 
 ---
 
