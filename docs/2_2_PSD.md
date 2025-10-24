@@ -51,7 +51,7 @@ void psd(const double arr[], const double freq, const double dt, const int size,
 
 ## 4. 課題
 1. 「2.1. rand関数による雑音を含んだ模擬測定データの作成」で作った波形に対してPSDを適用し、xとyを表示する(60分)。
-  - 評価基準: 設定した振幅・位相に合わせてx,yが表示される。
-  - 加点例: 振幅と位相を表示する。
+    - 評価基準: 設定した振幅・位相に合わせてx,yが表示される。
+    - 加点例: 振幅と位相を表示する。
 
 ![Work](./images/signal_psd_01.png)
