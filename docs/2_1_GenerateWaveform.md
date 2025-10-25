@@ -10,7 +10,7 @@
 
 ---
 
-## 2. サンプルプログラム
+## 2. 課題
 - [サンプルプログラム](https://github.com/daigokk/ImPlotSample/archive/refs/heads/master.zip)をダウンロードして雑音を含んだ模擬測定データを作成するプログラムを完成させてください。
 - ここでは雑音を含んだ信号を以下のように定義する:
   - $v(t)=A \sin(\omega t + \theta) + noize$
