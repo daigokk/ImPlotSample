@@ -101,10 +101,8 @@ void vi_FindRsrc(const ViSession resourceManager) {
 
 
 class CppVisa {
-private:
-    static ViSession resourceManager;
-
 public:
+    static ViSession resourceManager;
     // リソースマネージャの初期化
     static bool OpenRM(const char* filename, const int line);
 
@@ -170,10 +168,13 @@ void CppVisa::CloseInstrument(ViSession instrument) {
 }
 
 bool CppVisa::cviPrintf(const ViSession instrument, const char* filename, const int line, const char* format, ...) {
+	char cmd[256];
     va_list args;
     va_start(args, format);
-    ViStatus status = viPrintf(instrument, format, args);
+	vsprintf(cmd, format, args);
     va_end(args);
+    std::cout << cmd; // デバッグ用出力
+    ViStatus status = viPrintf(instrument, cmd);
 
     if (status < VI_SUCCESS) {
         vi_checkError(status, filename, line);
@@ -189,23 +190,25 @@ bool CppVisa::cviScanf(const ViSession instrument, const char* filename, int lin
         vi_checkError(status, filename, line);
         return false;
     }
+	std::cout << (char*)output; // デバッグ用出力
     return true;
 }
 
 char* CppVisa::cviQueryf(const ViSession instrument, const char* filename, const int line, const char* format, ...) {
-    static char ret[256];
+    char ret[256];
     va_list args;
 
     va_start(args, format);
-    ViStatus status = viPrintf(instrument, format, args);
+    vsprintf(ret, format, args);
     va_end(args);
+    ViStatus status = cviPrintf(instrument,filename, line,  ret);
 
     if (status < VI_SUCCESS) {
         vi_checkError(status, filename, line);
         return nullptr;
     }
 
-    status = viScanf(instrument, "%255t", ret);
+    status = cviScanf(instrument, filename, line, "%255t", ret);
     if (status < VI_SUCCESS) {
         vi_checkError(status, filename, line);
         return nullptr;

@@ -1,4 +1,4 @@
-## 🧪 3.2. 計測器の共通言語！VISAとは？
+# 🧪 3.2. 計測器の共通言語！VISAとは？
 
 ## 概要: 万能アダプターとしてのVISA
 
@@ -112,6 +112,8 @@ VISAは、接続方法に関わらず計測器に一意の「住所」を割り�
 
   * **NI MAX (Measurement & Automation Explorer)**
     Emerson社のNI(旧Natinal Instruments社)が提供するVISAのためのGUIツール。接続された計測器の**VISAアドレスの確認**、**接続テスト**、デバッグに非常に便利です。VISAを導入したら、まずこのツールで機器が認識されているか確認するのが一般的です。
+
+    ![Work1](./images/visa_01.png)
 
   * 以下は接続された計測器を列挙するプログラムです。NI MAXも内部で以下のようにVISAを使っています。
     ```cpp

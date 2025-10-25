@@ -362,7 +362,7 @@ void Gui::ImGui_SetEvaTheme()
 // Implementing a simple custom widget using the public API.
 // You may also use the <imgui_internal.h> API to get raw access to more data/helpers, however the internal API isn't guaranteed to be forward compatible.
 // FIXME: Need at least proper label centering + clipping (internal functions RenderTextClipped provides both but api is flaky/temporary)
-static bool MyKnob(const char* label, float* p_value, float v_min, float v_max)
+bool MyKnob(const char* label, float* p_value, float v_min, float v_max)
 {
     ImGuiIO& io = ImGui::GetIO();
     ImGuiStyle& style = ImGui::GetStyle();
@@ -409,7 +409,7 @@ static bool MyKnob(const char* label, float* p_value, float v_min, float v_max)
     return value_changed;
 }
 
-static bool MyKnobInt(const char* label, int* p_value, int v_min, int v_max)
+bool MyKnobInt(const char* label, int* p_value, const int v_min, const int v_max)
 {
     ImGuiIO& io = ImGui::GetIO();
     ImGuiStyle& style = ImGui::GetStyle();

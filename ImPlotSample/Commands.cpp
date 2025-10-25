@@ -5,7 +5,7 @@
 #include "Butterworth.h"
 #include "Chebyshev.h"
 
-void Commands::getWaveform(WaveformParams* pWaveformParams, double* times, double* waveform) {
+void Commands::getWaveform(WaveformParams* pWaveformParams, double times[], double waveform[]) {
     if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
     if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
     if (pWaveformParams->frequency < 0) throw std::runtime_error("frequencyに0以上の値を代入してください。");
@@ -20,57 +20,45 @@ void Commands::getWaveform(WaveformParams* pWaveformParams, double* times, doubl
     }
 }
 
-bool Commands::saveWaveform(WaveformParams* pWaveformParams, const char* filename, const double* times, const double* waveform, const char label[]) {
-    if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
+bool Commands::saveWaveforms(const int size, const char* filename, const double xs[], const double* ys, const int channels, const char label[]) {
+    if (size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
     FILE* fp = fopen(filename, "w");
     if (fp != NULL) {
-        fprintf(fp, label);
-        /*** ここから *************************************************/
-        for (int i = 0; i < pWaveformParams->size; ++i) {
-            fprintf(fp, "%e, %e\n", times[i], waveform[i]);
+        fprintf(fp, "# %s, ch1", label); // 最初のチャンネル
+        for (int j = 1; j < channels; j++) {
+            fprintf(fp, ", ch%d", j + 1);// 2番目以降のチャンネル
         }
-        /*** ここまで *************************************************/
+        fprintf(fp, "\n");
+        for (int i = 0; i < size; ++i) {
+            fprintf(fp, "%e, %e", xs[i], ys[i + 0 * size]);// 最初のチャンネル
+            for (int j = 1; j < channels; j++) {
+                fprintf(fp, ", %e", ys[i + j * size]);// 2番目以降のチャンネル
+            }
+            fprintf(fp, "\n");
+        }
         fclose(fp);
         return true;
     }
     return false;
 }
 
-bool Commands::saveWaveforms(WaveformParams* pWaveformParams, const char* filename, const double* freqs, const double ch1[1000], const double ch2[1000], const double ch3[1000], const char label[]) {
-    if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
-    FILE* fp = fopen(filename, "w");
-    if (fp != NULL) {
-        fprintf(fp, label);
-        /*** ここから *************************************************/
-        for (int i = 0; i < pWaveformParams->size; ++i) {
-            fprintf(fp, "%e, %e, %e, %e\n", freqs[i], ch1[i], ch2[i], ch3[i]);
-        }
-        /*** ここまで *************************************************/
-        fclose(fp);
-        return true;
-    }
-    return false;
-}
-
-bool Commands::loadWaveform(WaveformParams* pWaveformParams, const char* filename, double* times, double* waveform) {
-    if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
+bool Commands::loadWaveform(const int size, const char* filename, double times[], double waveform[]) {
+    if (size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
     FILE* fp = fopen(filename, "r");
     char buf[256];
     if (fp != NULL) {
         // 1行目は無視する
         fgets(buf, sizeof(buf), fp);  // 1行目を読み飛ばす
-        /*** ここから *************************************************/
-        for (int i = 0; i < pWaveformParams->size; i++) {
+        for (int i = 0; i < size; i++) {
             fscanf(fp, "%lf,%lf", &times[i], &waveform[i]);
         }
-        /*** ここまで *************************************************/
         fclose(fp);
         return true;
     }
     return false;
 }
 
-double Commands::runPsd(WaveformParams* pWaveformParams, const double* waveform, double* pX, double* pY) {
+double Commands::runPsd(WaveformParams* pWaveformParams, const double waveform[], double* pX, double* pY) {
     if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
     if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
     if (pWaveformParams->frequency < 0) throw std::runtime_error("frequencyに0以上の値を代入してください。");
@@ -79,7 +67,6 @@ double Commands::runPsd(WaveformParams* pWaveformParams, const double* waveform,
     size_t halfPeriodSamples = static_cast<size_t>(1.0 / (pWaveformParams->frequency * 2 * pWaveformParams->dt));
     size_t usableSize = halfPeriodSamples * (int)(pWaveformParams->size / halfPeriodSamples);
     // 掛け算
-    /*** ここから *************************************************/
     for (int i = 0; i < usableSize; i++) {
         double wt = 2 * PI * pWaveformParams->frequency * pWaveformParams->dt * i;
         *pX += waveform[i] * 2 * sin(wt);
@@ -88,11 +75,10 @@ double Commands::runPsd(WaveformParams* pWaveformParams, const double* waveform,
     // ローパスフィルタの代わりに平均を用いる
     *pX /= usableSize;
     *pY /= usableSize;
-    /*** ここまで *************************************************/
     return sqrt((*pX) * (*pX) + (*pY) * (*pY));
 }
 
-void Commands::runFft(WaveformParams* pWaveformParams, double* waveform, double* freqs, double* amps) {
+void Commands::runFft(WaveformParams* pWaveformParams, double waveform[], double freqs[], double amps[]) {
     if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
     if ((pWaveformParams->size & (pWaveformParams->size - 1)) != 0) throw std::runtime_error("sizeに2の累乗を代入してください。");
     if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
@@ -107,7 +93,7 @@ void Commands::runFft(WaveformParams* pWaveformParams, double* waveform, double*
     }
 }
 
-void Commands::runLpf(WaveformParams* pWaveformParams, int order, double cutoffFreq, const double* input, double* output) {
+void Commands::runLpf(WaveformParams* pWaveformParams, int order, double cutoffFreq, const double input[], double output[]) {
     if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
     if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
     ButterworthLPF lpf(order, cutoffFreq, 1.0 / pWaveformParams->dt);
@@ -116,7 +102,7 @@ void Commands::runLpf(WaveformParams* pWaveformParams, int order, double cutoffF
     }
 }
 
- void Commands::makeRanges(const int size, double start, double* ranges) {
+ void Commands::makeRanges(const int size, double start, double ranges[]) {
 	 /* sizeはranges配列の要素数 */
 	 /* startは最初の値 */ 
 	 /* ranges配列に1,2,5,10,20,50,...の数列を格納する */
