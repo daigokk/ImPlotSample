@@ -3,7 +3,7 @@
 ## 1. FFTってなに？
 - **高速フーリエ変換**のこと。信号処理や周波数解析(スペクトル解析)など、電気系の分野でよく使われます。
 - **バラフライ演算**と再帰演算により、高速に周波数解析が可能です。
-- [おすすめ解説動画1](https://www.youtube.com/watch?v=fGos3wrKeHY), [おすすめ解説動画2](https://www.youtube.com/watch?v=7hzIhtbxhtM), [おすすめ解説動画3](https://www.youtube.com/watch?v=oxLfX8aRK_s)
+- [おすすめ解説動画1](https://www.youtube.com/watch?v=fGos3wrKeHY), [おすすめ解説動画2](https://www.youtube.com/watch?v=7hzIhtbxhtM), [原著論文](https://www.cs.jhu.edu/~misha/ReadingSeminar/Papers/Cooley65.pdf)
 
 ![Hard copy](./images/signal_fft_01.png)
 
@@ -60,6 +60,7 @@ void fft(std::vector<std::complex<double>>& a) {
 - 出力の振幅は元のデータより小さくなっているように見える。つまり振幅を求めるには補正が必要(どのような？)。ただしDC成分(両端)とナイキスト成分(真ん中)は補正をせずにそのまま用いる。
 - じつは入力も複素数。今回の入力は虚数成分が0の複素数を用いている。
 - FFTは信号が周期的であると仮定して解析するため、両端の値が不連続だと不備がある(どのような？)。
+- 二次元に応用すると画像を周波数成分に分解することができる。
 
 ---
 
