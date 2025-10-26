@@ -3,7 +3,7 @@
 ## 1. FFTってなに？
 - **高速フーリエ変換**のこと。信号処理や周波数解析(スペクトル解析)など、電気系の分野でよく使われます。
 - **バラフライ演算**と再帰演算により、高速に周波数解析が可能です。
-- [おすすめ解説動画1](https://www.youtube.com/watch?v=fGos3wrKeHY), [おすすめ解説動画2](https://www.youtube.com/watch?v=7hzIhtbxhtM)
+- [おすすめ解説動画1](https://www.youtube.com/watch?v=fGos3wrKeHY), [おすすめ解説動画2](https://www.youtube.com/watch?v=7hzIhtbxhtM), [おすすめ解説動画3](https://www.youtube.com/watch?v=oxLfX8aRK_s)
 
 ![Hard copy](./images/signal_fft_01.png)
 
