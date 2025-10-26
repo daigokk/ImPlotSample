@@ -44,11 +44,9 @@
 	        /*** 適切なコードを入力 ***************************************/
 	        srand(time(NULL));
 	        for (int i = 0; i < SIZE; i++) {
-	            /*** ここから *************************************************/
 	            times[i] = i * DT;
 	            waveform[i] = amplitude * std::sin(2 * PI * frequency * times[i] + phase_deg * PI / 180.0);
 	            waveform[i] += (double)rand() / RAND_MAX * 2 * noize - noize;
-	            /*** ここまで *************************************************/
 	        }
 	        /*** ここまで *************************************************/
 	        // 保存
@@ -56,11 +54,9 @@
 	        FILE* fp = fopen(FILENAME_RAW, "w");
 	        if (fp != NULL) {
 	            fprintf(fp, "# Time (S), Voltage (V)\n");
-	            /*** ここから *************************************************/
 	            for (int i = 0; i < SIZE; ++i) {
 	                fprintf(fp, "%e, %e\n", times[i], waveform[i]);
 	            }
-	            /*** ここまで *************************************************/
 	            fclose(fp);
 	            text = "Success.\n";
 	        }
