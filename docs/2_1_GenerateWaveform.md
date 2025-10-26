@@ -5,16 +5,18 @@
 ---
 
 ## 1. 雑音とは？
-- 偶然誤差としての雑音の例: $v(t)=A \sin(\omega t + \theta) \pm noize$
+- 偶然誤差としての雑音の例: $v(t)=A \sin(\omega t + \theta) + noize$
 - 系統誤差としての雑音の例: $v(t)=A \sin(\omega t + \theta) + noize\times\sin(2\pi\times 50 t+\theta')$
 
 ---
 
 ## 2. 課題
-- [サンプルプログラム](https://github.com/daigokk/ImPlotSample/archive/refs/heads/master.zip)をダウンロードして雑音を含んだ模擬測定データを作成するプログラムを完成させてください。
-- ここでは雑音を含んだ信号を以下のように定義する:
-  - $v(t)=A \sin(\omega t + \theta) + noize$
-  - ただし、 $noize$ は「 $\pm$ 任意の値」のランダムな実数とする。
+1. [サンプルプログラム](https://github.com/daigokk/ImPlotSample/archive/refs/heads/master.zip)をダウンロードして雑音を含んだ模擬測定データを作成するプログラムを完成させてください。
+   - ここでは雑音を含んだ信号を以下のように定義する:
+     - $v(t)=A \sin(\omega t + \theta) + noize$
+     - ただし、 $noize$ は「 $\pm$ 任意の値」のランダムな実数とする。
+1. 矩形波を作成する。
+   - 矩形波: $f(t) = \sum_{n=1}^{\infty} \frac{4}{n\pi} \sin(n 2 \pi f t), \quad \text{ただし } n \text{ は奇数}$
 - Generate waveform window
 	```cpp
 	void ShowWindow1(const char title[]) {
@@ -42,11 +44,9 @@
 	        /*** 適切なコードを入力 ***************************************/
 	        srand(time(NULL));
 	        for (int i = 0; i < SIZE; i++) {
-	            /*** ここから *************************************************/
 	            times[i] = i * DT;
 	            waveform[i] = amplitude * std::sin(2 * PI * frequency * times[i] + phase_deg * PI / 180.0);
 	            waveform[i] += (double)rand() / RAND_MAX * 2 * noize - noize;
-	            /*** ここまで *************************************************/
 	        }
 	        /*** ここまで *************************************************/
 	        // 保存
@@ -54,11 +54,9 @@
 	        FILE* fp = fopen(FILENAME_RAW, "w");
 	        if (fp != NULL) {
 	            fprintf(fp, "# Time (S), Voltage (V)\n");
-	            /*** ここから *************************************************/
 	            for (int i = 0; i < SIZE; ++i) {
 	                fprintf(fp, "%e, %e\n", times[i], waveform[i]);
 	            }
-	            /*** ここまで *************************************************/
 	            fclose(fp);
 	            text = "Success.\n";
 	        }
