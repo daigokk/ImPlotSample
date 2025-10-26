@@ -5,7 +5,7 @@
 ---
 
 ## 1. 雑音とは？
-- 偶然誤差としての雑音の例: $v(t)=A \sin(\omega t + \theta) \pm noize$
+- 偶然誤差としての雑音の例: $v(t)=A \sin(\omega t + \theta) + noize$
 - 系統誤差としての雑音の例: $v(t)=A \sin(\omega t + \theta) + noize\times\sin(2\pi\times 50 t+\theta')$
 
 ---
