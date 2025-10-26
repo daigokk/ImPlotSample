@@ -11,10 +11,12 @@
 ---
 
 ## 2. 課題
-- [サンプルプログラム](https://github.com/daigokk/ImPlotSample/archive/refs/heads/master.zip)をダウンロードして雑音を含んだ模擬測定データを作成するプログラムを完成させてください。
-- ここでは雑音を含んだ信号を以下のように定義する:
-  - $v(t)=A \sin(\omega t + \theta) + noize$
-  - ただし、 $noize$ は「 $\pm$ 任意の値」のランダムな実数とする。
+1. [サンプルプログラム](https://github.com/daigokk/ImPlotSample/archive/refs/heads/master.zip)をダウンロードして雑音を含んだ模擬測定データを作成するプログラムを完成させてください。
+   - ここでは雑音を含んだ信号を以下のように定義する:
+    - $v(t)=A \sin(\omega t + \theta) + noize$
+    - ただし、 $noize$ は「 $\pm$ 任意の値」のランダムな実数とする。
+1. 矩形波を作成する。
+   - 矩形波: $f(t) = \sum_{n=1}^{\infty} \frac{4}{n\pi} \sin(n 2 \pi f t), \quad \text{ただし } n \text{ は奇数}$
 - Generate waveform window
 	```cpp
 	void ShowWindow1(const char title[]) {
