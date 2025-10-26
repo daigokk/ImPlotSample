@@ -28,7 +28,7 @@ int main() {
     // GUI初期化
     Gui::Initialize(
         "ImPlot sample",
-        0, 30, 1100, 750
+        0, 30, 1100, 780
     );
     if (Gui::GetWindow() == nullptr) {
         std::cerr << "[Error] Failed to initialize GUI\n";
@@ -72,11 +72,13 @@ void ShowWindow1(const char title[]) {
     static double amplitude = 1.0;
     static double phase_deg = 0.0;
     static double noize = 0.0; // 追加
+    static int func = 0;
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 240 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
+	ImGui::Combo("Function", &func, "Sine~\0Square‾_‾_\0Sawtooth/|/|\0Triangle/\\/\\\0");
     ImGui::InputDouble("Frequency (Hz)", &frequency, 100.0, 1000.0, "%.1f");
     ImGui::InputDouble("Amplitude (V)", &amplitude, 0.1, 1.0, "%.2f");
     ImGui::InputDouble("Phase (Deg.)", &phase_deg, 0.1, 1.0, "%.2f");
@@ -93,7 +95,19 @@ void ShowWindow1(const char title[]) {
 		wfp.noize = noize;
 		wfp.phase_deg = phase_deg;
 		wfp.size = SIZE;
-		Commands::getWaveform(&wfp, times, waveform);
+        if (func == 0) {
+            Commands::getSinWF(&wfp, times, waveform);
+        }
+        else if (func == 1) {
+            Commands::getSquareWF(&wfp, times, waveform);
+        }
+        else if (func == 2) {
+            Commands::getSawWF(&wfp, times, waveform);
+        }
+		else if (func == 3)
+            Commands::getTriangleWF(&wfp, times, waveform);
+		else
+            Commands::getSinWF(&wfp, times, waveform);
         /*** ここまで *************************************************/
         // 保存
         /*** 適切なコードを入力 ***************************************/
@@ -223,7 +237,7 @@ void ShowWindow3(const char title[]) {
     static Commands::WaveformParams wfp;
     static std::string text = "";
     // ウィンドウ開始
-    ImGui::SetNextWindowPos(ImVec2(0, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(0, 240 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 530 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
@@ -240,7 +254,7 @@ void ShowWindow3(const char title[]) {
             for (int i = 0; i < 1000; i++) {
                 double times[SIZE] = { 0 }, waveform[SIZE] = { 0 };
                 double x = 0, y = 0, wf_lpf[SIZE];
-                Commands::getWaveform(&wfp, times, waveform);
+                Commands::getSinWF(&wfp, times, waveform);
                 Commands::runLpf(&wfp, j+1, 100e3, waveform, wf_lpf);
                 freqs[i] = wfp.frequency;
                 gains[j][i] = 20.0 * log10(Commands::runPsd(&wfp, wf_lpf, &x, &y) / wfp.amplitude);

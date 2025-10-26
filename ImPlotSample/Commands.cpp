@@ -5,7 +5,7 @@
 #include "Butterworth.h"
 #include "Chebyshev.h"
 
-void Commands::getWaveform(WaveformParams* pWaveformParams, double times[], double waveform[]) {
+void Commands::getSinWF(WaveformParams* pWaveformParams, double times[], double waveform[]) {
     if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
     if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
     if (pWaveformParams->frequency < 0) throw std::runtime_error("frequencyに0以上の値を代入してください。");
@@ -17,6 +17,51 @@ void Commands::getWaveform(WaveformParams* pWaveformParams, double times[], doub
         waveform[i] = pWaveformParams->amplitude * std::sin(2 * PI * pWaveformParams->frequency * i * pWaveformParams->dt + phase_rad);
         waveform[i] += (double)rand() / RAND_MAX * 2 * pWaveformParams->noize - pWaveformParams->noize;
         /*** ここまで *************************************************/
+    }
+}
+
+void Commands::getSquareWF(WaveformParams* pWaveformParams, double times[], double waveform[]) {
+    if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
+    if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
+    if (pWaveformParams->frequency < 0) throw std::runtime_error("frequencyに0以上の値を代入してください。");
+    double phase_rad = pWaveformParams->phase_deg * PI / 180.0;
+    srand(time(NULL));
+    for (int i = 0; i < pWaveformParams->size; i++) {
+        times[i] = i * pWaveformParams->dt;
+        for (int n = 0; n < 300; n++) {
+            waveform[i] += (pWaveformParams->amplitude * (4.0 / ((2 * n + 1) * PI)) * std::sin(2 * PI * (2 * n + 1) * pWaveformParams->frequency * i * pWaveformParams->dt + phase_rad));
+        }
+        waveform[i] += (double)rand() / RAND_MAX * 2 * pWaveformParams->noize - pWaveformParams->noize;
+    }
+}
+
+void Commands::getSawWF(WaveformParams* pWaveformParams, double times[], double waveform[]) {
+    if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
+    if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
+    if (pWaveformParams->frequency < 0) throw std::runtime_error("frequencyに0以上の値を代入してください。");
+    double phase_rad = pWaveformParams->phase_deg * PI / 180.0;
+    srand(time(NULL));
+    for (int i = 0; i < pWaveformParams->size; i++) {
+        times[i] = i * pWaveformParams->dt;
+        for (int n = 1; n <= 500; n++) {
+            waveform[i] += (pWaveformParams->amplitude * (2.0 / (n * PI)) * std::sin(2 * PI * n * pWaveformParams->frequency * i * pWaveformParams->dt + phase_rad) * std::pow(-1, n + 1));
+        }
+        waveform[i] += (double)rand() / RAND_MAX * 2 * pWaveformParams->noize - pWaveformParams->noize;
+    }
+}
+
+void Commands::getTriangleWF(WaveformParams* pWaveformParams, double times[], double waveform[]) {
+    if (pWaveformParams->size <= 0) throw std::runtime_error("sizeに0以外の値を代入してください。");
+    if (pWaveformParams->dt <= 0) throw std::runtime_error("dtに0以外の値を代入してください。");
+    if (pWaveformParams->frequency < 0) throw std::runtime_error("frequencyに0以上の値を代入してください。");
+    double phase_rad = pWaveformParams->phase_deg * PI / 180.0;
+    srand(time(NULL));
+    for (int i = 0; i < pWaveformParams->size; i++) {
+        times[i] = i * pWaveformParams->dt;
+        for (int n = 0; n <100; n++) {
+            waveform[i] += (pWaveformParams->amplitude * (8.0 / (pow((2 * n + 1), 2) * pow(PI, 2))) * std::sin(2 * PI * (2 * n + 1) * pWaveformParams->frequency * i * pWaveformParams->dt + phase_rad) * std::pow(-1, ((2 * n + 1) - 1) / 2));
+        }
+        waveform[i] += (double)rand() / RAND_MAX * 2 * pWaveformParams->noize - pWaveformParams->noize;
     }
 }
 

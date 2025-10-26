@@ -13,7 +13,13 @@ public:
         double frequency = 0; // 周波数
         int size = 0;         // データ点数
     };
-    static void getWaveform(WaveformParams* pWaveformParams, double times[], double waveform[]);
+    static void getSinWF(WaveformParams* pWaveformParams, double times[], double waveform[]);
+
+    static void getSquareWF(WaveformParams* pWaveformParams, double times[], double waveform[]);
+
+    static void getSawWF(WaveformParams* pWaveformParams, double times[], double waveform[]);
+
+    static void getTriangleWF(WaveformParams* pWaveformParams, double times[], double waveform[]);
 
     static bool saveWaveforms(const int size, const char* filename, const double xs[], const double* ya, const int channels, const char label[] = "Time (s)");
 
