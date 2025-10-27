@@ -16,9 +16,10 @@ int main() {
 ```c
 #include <stdio.h>
 int main() {
-    double x;
-    scanf("%lf", &x);
-    printf("入力された値: %f\n", x);
+    double tall;
+    printf("How tall are you?> ");
+    scanf("%lf", &tall);
+    printf("Tall> %f\n", tall);
     return 0;
 }
 ```
