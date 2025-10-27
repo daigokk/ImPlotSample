@@ -74,17 +74,31 @@ void fft(std::vector<std::complex<double>>& a) {
      - 矩形波: $v(t) = \sum_{i=0}^{\infty} \frac{4A}{(2i+1)\pi} \sin\left(2\pi f (2i+1) t\right)$
        
        ![Square](./images/signal_fft_works_02_square.svg)
-1. 入力データの両端の値が不連続(入力信号の測定時間が被測定波形の周期で割り切れない)の場合、どのような影響(どのようなノイズ)が出るでしょうか？
+1. (追加)入力データの両端の値が不連続(入力信号の測定時間が被測定波形の周期で割り切れない)の場合、どのような影響(どのようなノイズ)が出るでしょうか？
    - 加点例: ノイズを軽減するWindow関数について調べる。
-1. 入力データのサイズを2のべき乗に限定せず、任意とするための方法を提案してください。
+1. (追加)入力データのサイズを2のべき乗に限定せず、任意とするための方法を提案してください。
    - 加点例: 提案を実装する。
      - FFTの元になったDFT
        ```cpp
-       
+       std::vector<std::complex<double>> DFT(const std::vector<std::complex<double>>& input) {
+            int N = input.size();
+            std::vector<std::complex<double>> output(N);
+        
+            for (int k = 0; k < N; ++k) {
+                std::complex<double> sum(0.0, 0.0);
+                for (int n = 0; n < N; ++n) {
+                    double angle = -2.0 * PI * k * n / N;
+                    sum += input[n] * std::polar(1.0, angle);
+                }
+                output[k] = sum;
+            }
+        
+            return output;
+        }
        ```
        -  入力データのサイズは任意
        -  FFTと比較して計算時間が長い
-1. 逆FFTは周波数スペクトルを入力すると波形を出力します。FFTと逆FFTのコードの違いを指摘してください。
+1. (追加)逆FFTは周波数スペクトルを入力すると波形を出力します。FFTと逆FFTのコードの違いを指摘してください。
    - 加点例: FFTと逆FFTに周波数スペクトルを入力したときの出力を比較する。
 - 逆FFT
     ```cpp
