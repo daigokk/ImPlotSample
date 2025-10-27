@@ -16,7 +16,7 @@
      - $v(t)=A \sin(\omega t + \theta) + noize$
      - ただし、 $noize$ は「 $\pm$ 任意の値」のランダムな実数とする。
 1. (追加)矩形波を作成する。
-   - 矩形波: $f(t) = \sum_{n=1}^{\infty} \frac{4}{n\pi} \sin(n 2 \pi f t), \quad \text{ただし } n \text{ は奇数}$
+   - 矩形波: $v(t) = \sum_{i=0}^{\infty} \frac{4A}{(2i+1)\pi} \sin\left(2\pi f (2i+1) t\right)$
   
    ![矩形波](./images/signal_01_02.png)
 - Generate waveform window
