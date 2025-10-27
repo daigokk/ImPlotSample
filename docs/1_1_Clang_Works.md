@@ -130,6 +130,8 @@
    - 上記を標準入力から得た`n`の回数実施し半径1mの円(面積$\pi \rm m^2$)の中にある点の数`k`回と一辺が2mの正方形(面積$4 \rm m^2$)の中にある点の数`n`の比から得られる式$\pi/4=k/n$を用いて円周率$\pi$を求める。
    - 検算には`math.h`を用いてもよい。
 
+     ![PI](./images/Clang_11.png)
+
 ### 参考資料
 - [Visual Studioの使い方](./1_3_VisualStudio.md)
 - [C言語 on Colab](https://colab.research.google.com/drive/1fewkHpqIm40EXWWdZ9eu6EUIN9MWQNO4)
