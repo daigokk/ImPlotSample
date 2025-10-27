@@ -133,4 +133,4 @@
 - [Visual Studioの使い方](./1_3_VisualStudio.md)
 - [C言語 on Colab](https://colab.research.google.com/drive/1fewkHpqIm40EXWWdZ9eu6EUIN9MWQNO4)
 - [C言語 課題解決チートシート](./1_2_Clang_CheatSheet.md)
-- [Colab](https://colab.research.google.com/drive/1RiSF2mSxuruAgYWGswEd85AlZJ4JpZQR)
+- [解答](./1_4_Clang_Answers.md), [解答 on Colab](https://colab.research.google.com/drive/1RiSF2mSxuruAgYWGswEd85AlZJ4JpZQR)
