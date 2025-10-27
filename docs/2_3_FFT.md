@@ -79,7 +79,7 @@ void fft(std::vector<std::complex<double>>& a) {
        ![Saw](./images/signal_fft_works_03_saw.svg)
      - 三角波
        
-       ![Triangle](./images/signal_fft_works_03_triangle.svg)
+       ![Triangle](./images/signal_fft_works_04_triangle.svg)
 1. (追加)入力データの両端の値が不連続(入力信号の測定時間が被測定波形の周期で割り切れない)の場合、どのような影響(どのようなノイズ)が出るでしょうか？
    - 加点例: ノイズを軽減するWindow関数について調べる。
 1. (追加)入力データのサイズを2のべき乗に限定せず、任意とするための方法を提案してください。
