@@ -122,6 +122,7 @@
 1. 外部ライブラリを用いたデータの可視化(Lv. 100、200分、評価基準: グラフが正しく表示され、ラベル・軸が適切に設定されている)
    - `data.csv`の値を[ImPlot](https://github.com/epezent/implot)を用いてグラフにして表示する。
    - [これ](https://github.com/daigokk/ImPlotSample/tree/master)を使えば簡単(Lv. 50くらい)になります。
+     
      ![Raw waveform](.images/Clang_10.png)
 1. モンテカルロ法を用いた円周率の導出(Lv. 8、60分、評価基準: 円周率を6桁(3.14159)以上表示する。加点例: `math.h`を用いない解法。マクローリン展開を用いた円周率の導出)
    - -1～1までの値を取る二つの乱数`x`,`y`を求める。
