@@ -8,8 +8,8 @@
 1. scanfとprintf(Lv. 1、15分、評価基準: 入力された実数が正しく表示される)
    - 標準入力(キーボード)から入力された実数を、標準出力に表示する。
      ```
-     Input> I'm a paerfect human.
-     Output> I'm a paerfect human.
+     How tall are you?> 185
+     Tall> 185.000000
      ```
 1. if文(Lv. 2、15分、評価基準: 奇数・偶数の判定が正しく行われる)
    - 標準入力から入力された整数の、奇数または偶数を判定する。判定結果は標準出力に表示する。
@@ -73,6 +73,51 @@
      ```
 1. for文と数学関数(sin等)(Lv. 3、30分、評価基準: 100kHzの波形が正しく生成され、時間・値が正確に出力される)
    - 標準入力から得た振幅、及び位相を用いて、100kHzの正弦波5周期分の時間と値を`,`区切りの実数で標準出力に表示する。ただし、`dt`は1e-8sとする。
+     ```cpp
+     %%cpp
+      #include <stdio.h>
+      #include <math.h>
+      
+      #define PI acos(-1)
+      #define DT 1e-8
+      #define FREQ 100e3
+      #define PERIOD 5
+      #define SIZE (int)(PERIOD/FREQ/DT)
+      
+      void sine_wave(double amplitude, double phase_rad, double frequency, double dt, int size, double x[], double y[]);
+      void print_array(double x[], double y[], int size);
+      
+      int main() {
+          double amplitude, phase;
+          double time[SIZE], volts[SIZE];
+      
+          printf("Input Amplitude> ");
+          scanf("%lf", &amplitude);
+          printf("Input Phase (in degrees)> ");
+          scanf("%lf", &phase);
+      
+          // Convert phase from degrees to radians
+          phase = phase * PI / 180.0;
+      
+          sine_wave(amplitude, phase, FREQ, DT, SIZE, time, volts);
+          print_array(time, volts, SIZE);
+      
+          return 0;
+      }
+      
+      void sine_wave(double amplitude, double phase_rad, double frequency, double dt, int size, double x[], double y[]) {
+          // ここに適切なコードを記入
+
+     
+      }
+      
+      void print_array(double x[], double y[], int size){
+          printf("# Time,Value\n");
+          // ここに適切なコードを記入
+
+     
+      }
+     ```
 1. 測定データの保存（fopen, fprintf, fclose）(Lv. 5、15分、評価基準: data.csvが正しく作成され、内容が正確に記録されている)
    - 上記の結果を`data.csv`ファイルに出力する。
 1. 外部ライブラリを用いたデータの可視化(Lv. 100、200分、評価基準: グラフが正しく表示され、ラベル・軸が適切に設定されている)
@@ -81,10 +126,11 @@
 1. モンテカルロ法を用いた円周率の導出(Lv. 8、60分、評価基準: 円周率を6桁(3.14159)以上表示する。加点例: `math.h`を用いない解法。マクローリン展開を用いた円周率の導出)
    - -1～1までの値を取る二つの乱数`x`,`y`を求める。
    - 得られた`xy`座標上の点が、原点を中心とする半径1mの円の中にあるかを判定する。
-   - 上記を`N`回実施し半径1mの円(面積$\pi \rm m^2$)の中にある点の数`k`回と一辺が2mの正方形(面積$4 \rm m^2$)の中にある点の数`N`の比から得られる式$\pi/4=k/N$を用いて円周率$\pi$を求める。
+   - 上記を`n`回実施し半径1mの円(面積$\pi \rm m^2$)の中にある点の数`k`回と一辺が2mの正方形(面積$4 \rm m^2$)の中にある点の数`n`の比から得られる式$\pi/4=k/n$を用いて円周率$\pi$を求める。
    - 検算には`math.h`を用いてもよい。
 
 ### 参考資料
 - [Visual Studioの使い方](./1_3_VisualStudio.md)
 - [C言語 on Colab](https://colab.research.google.com/drive/1fewkHpqIm40EXWWdZ9eu6EUIN9MWQNO4)
 - [C言語 課題解決チートシート](./1_2_Clang_CheatSheet.md)
+- [Colab](https://colab.research.google.com/drive/1RiSF2mSxuruAgYWGswEd85AlZJ4JpZQR)
