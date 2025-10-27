@@ -74,6 +74,9 @@ void fft(std::vector<std::complex<double>>& a) {
      - 矩形波: $v(t) = \sum_{i=0}^{\infty} \frac{4A}{(2i+1)\pi} \sin\left(2\pi f (2i+1) t\right)$
        
        ![Square](./images/signal_fft_works_02_square.svg)
+     - のこぎり波
+       
+       ![Saw](./images/signal_fft_works_03_saw.svg)
 1. (追加)入力データの両端の値が不連続(入力信号の測定時間が被測定波形の周期で割り切れない)の場合、どのような影響(どのようなノイズ)が出るでしょうか？
    - 加点例: ノイズを軽減するWindow関数について調べる。
 1. (追加)入力データのサイズを2のべき乗に限定せず、任意とするための方法を提案してください。
