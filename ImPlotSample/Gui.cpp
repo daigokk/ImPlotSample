@@ -455,3 +455,11 @@ bool MyKnobInt(const char* label, int* p_value, const int v_min, const int v_max
 
     return value_changed;
 }
+
+void MiliFormatter(double value, char* buff, int size, void*) {
+    snprintf(buff, size, "%.0f", value * 1e3); // mili: 1e-3
+}
+
+void MicroFormatter(double value, char* buff, int size, void*) {
+    snprintf(buff, size, "%.0f", value * 1e6); // micro: 1e-6
+}

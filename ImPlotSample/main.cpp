@@ -213,10 +213,11 @@ void ShowWindow2(const char title[]) {
     ImGui::Text("LPF X: %5.3f, Y: %5.3f", x_lpf, y_lpf);
     // プロット描画
     if (ImPlot::BeginPlot("Waveform", ImVec2(-1, 250 * Gui::monitorScale))) {
-        ImPlot::SetupAxis(ImAxis_X1, "Time (s)");
+        ImPlot::SetupAxis(ImAxis_X1, "Time (us)");
         ImPlot::SetupAxis(ImAxis_Y1, "v (V)");
+        ImPlot::SetupAxisFormat(ImAxis_X1, ImPlotFormatter(MicroFormatter));
         ImPlot::PlotLine("Ch1", times, wf_raw, SIZE);
-        ImPlot::PlotLine("LPF", times, wf_lpf, SIZE);
+        //ImPlot::PlotLine("LPF", times, wf_lpf, SIZE);
         ImPlot::EndPlot();
     }
     if (ImPlot::BeginPlot("FFT", ImVec2(-1, 250 * Gui::monitorScale))) {

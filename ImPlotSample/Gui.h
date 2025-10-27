@@ -18,6 +18,9 @@
 bool MyKnob(const char* label, float* p_value, const float v_min, const float v_max);
 bool MyKnobInt(const char* label, int* p_value, const int v_min, const int v_max); 
 
+void MiliFormatter(double value, char* buff, int size, void*);
+void MicroFormatter(double value, char* buff, int size, void*);
+
 class Gui {
 public:
     static void Initialize(
