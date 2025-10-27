@@ -85,7 +85,7 @@ void fft(std::vector<std::complex<double>>& a) {
        -  入力データのサイズは任意
        -  FFTと比較して計算時間が長い
 1. 逆FFTは周波数スペクトルを入力すると波形を出力します。FFTと逆FFTのコードの違いを指摘してください。
-   - 加点例: FFTに周波数スペクトルをの入力したときの出力と比較する。
+   - 加点例: FFTと逆FFTに周波数スペクトルを入力したときの出力を比較する。
 - 逆FFT
     ```cpp
     void ifft(std::vector<std::complex<double>>& a) {
