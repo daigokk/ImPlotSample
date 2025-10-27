@@ -1,6 +1,6 @@
 # 2.1. `rand`関数による雑音を含んだ模擬測定データの作成
 
-![完成イメージ](./images/signal_01.png)
+![完成イメージ](./images/signal_01_01.png)
 
 ---
 
@@ -17,6 +17,8 @@
      - ただし、 $noize$ は「 $\pm$ 任意の値」のランダムな実数とする。
 1. (追加)矩形波を作成する。
    - 矩形波: $f(t) = \sum_{n=1}^{\infty} \frac{4}{n\pi} \sin(n 2 \pi f t), \quad \text{ただし } n \text{ は奇数}$
+  
+   ![矩形波](./images/signal_01_02.png)
 - Generate waveform window
 	```cpp
 	void ShowWindow1(const char title[]) {
