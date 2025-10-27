@@ -1,5 +1,7 @@
 # 🧪 3.2. 計測器の共通言語！VISAとは？
 
+![VISA Over GPIB, USB and more](./images/visa_02_01.png)
+
 ## 概要: 万能アダプターとしてのVISA
 
 VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコンピュータをつなぐための**万能アダプター**や**翻訳家**のような役割を果たすソフトウェアインターフェース規格です。
@@ -29,8 +31,6 @@ VISAは、異なる通信方法の違いを気にせず、**同じ操作方法**
 * **接続方式の統一:** 異なる通信方式（**GPIB, USB, LAN**など）を**統一的なAPI** (Application Programming Interface)で扱えるようにします。
 * **制御の簡素化:** 難しい通信プロトコルの詳細を隠蔽し、計測器の制御を劇的に簡単にします。
 * **標準化:** 複数ベンダー（メーカー）の機器を、ほぼ同じコードで制御することを可能にします。
-
-![VISA Over GPIB, USB and more](./images/visa_02_01.png)
 
 ---
 
