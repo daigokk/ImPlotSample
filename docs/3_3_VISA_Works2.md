@@ -2,7 +2,7 @@
 
 ## 課題1
 
-![Work1](./images/visa_02.png)
+![Work2](./images/visa_02_02.png)
 
 ```cpp
 void ShowWindow4(const ViSession awg) {
