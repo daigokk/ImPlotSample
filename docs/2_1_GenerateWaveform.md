@@ -15,7 +15,7 @@
    - ここでは雑音を含んだ信号を以下のように定義する:
      - $v(t)=A \sin(\omega t + \theta) + noize$
      - ただし、 $noize$ は「 $\pm$ 任意の値」のランダムな実数とする。
-1. 矩形波を作成する。
+1. (追加)矩形波を作成する。
    - 矩形波: $f(t) = \sum_{n=1}^{\infty} \frac{4}{n\pi} \sin(n 2 \pi f t), \quad \text{ただし } n \text{ は奇数}$
 - Generate waveform window
 	```cpp
