@@ -52,7 +52,7 @@ int main() {
         ShowWindow3("Bode plots");
         //ShowWindow4(scope);
         //ShowWindow5(scope);
-        ShowWindow11("Monte Carlo method");
+        //ShowWindow11("Monte Carlo method");
 
         /*** ここまで **********************************/
         
