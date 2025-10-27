@@ -80,7 +80,21 @@ void fft(std::vector<std::complex<double>>& a) {
    - 加点例: 提案を実装する。
      - FFTの元になったDFT
        ```cpp
-       
+       std::vector<std::complex<double>> DFT(const std::vector<std::complex<double>>& input) {
+            int N = input.size();
+            std::vector<std::complex<double>> output(N);
+        
+            for (int k = 0; k < N; ++k) {
+                std::complex<double> sum(0.0, 0.0);
+                for (int n = 0; n < N; ++n) {
+                    double angle = -2.0 * PI * k * n / N;
+                    sum += input[n] * std::polar(1.0, angle);
+                }
+                output[k] = sum;
+            }
+        
+            return output;
+        }
        ```
        -  入力データのサイズは任意
        -  FFTと比較して計算時間が長い
