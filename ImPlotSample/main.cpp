@@ -23,6 +23,7 @@ void ShowWindow2(const char title[]);
 void ShowWindow3(const char title[]);
 //void ShowWindow4(const ViSession awg);
 //void ShowWindow5(const ViSession scop);
+void ShowWindow11(const char title[]);
 
 int main() {
     // GUI初期化
@@ -51,7 +52,7 @@ int main() {
         ShowWindow3("Bode plots");
         //ShowWindow4(scope);
         //ShowWindow5(scope);
-
+        ShowWindow11("Monte Carlo method");
 
         /*** ここまで **********************************/
         
@@ -300,6 +301,48 @@ void ShowWindow3(const char title[]) {
     // ウィンドウ終了
     ImGui::End();
 }
+void ShowWindow11(const char title[])
+{
+    static int trials = 1000;
+    static double estimate = 0.0;
+    static std::string text = "";
+    static std::vector<double> xs(trials), ys(trials), cxs(720), cys(720);
+    // ウィンドウ開始
+    ImGui::SetNextWindowPos(ImVec2(660 * Gui::monitorScale, 750 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(440 * Gui::monitorScale, 240 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::Begin(title);
+    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
+    ImGui::InputInt("Trials", &trials);
+    if (ImGui::Button("Estimate Pi")) {
+        // ボタンが押されたらここが実行される
+        xs.resize(trials); ys.resize(trials);
+        int inside_count = 0;
+        for (int i = 0; i < trials; i++) {
+            xs[i] = (double)(rand() * 2 - RAND_MAX)/ RAND_MAX;
+            ys[i] = (double)(rand() * 2 - RAND_MAX)/ RAND_MAX;
+            if (xs[i] * xs[i] + ys[i] * ys[i] <= 1.0) {
+                inside_count++;
+            }
+        }
+        estimate = 4.0 * inside_count / trials;
+        text = std::to_string(estimate);
+        for (int i = 0; i < cxs.size(); i++) {
+            cxs[i] = cos((double)i / cxs.size() * 2 * PI);
+            cys[i] = sin((double)i / cxs.size() * 2 * PI);
+        }
+    }
+    ImGui::SameLine();
+    ImGui::Text(text.c_str());
+    if (ImPlot::BeginPlot("",ImVec2(-1,0), ImPlotFlags_Equal)) {
+        ImPlot::SetupAxesLimits(-1, 1, -1, 1);
+        ImPlot::PlotScatter("##Randam", xs.data(), ys.data(), trials);
+        ImPlot::PlotLine("##Circle", cxs.data(), cys.data(), cxs.size());
+		ImPlot::EndPlot();
+    }
+    // ウィンドウ終了
+	ImGui::End();
+}
+
 //
 //void ShowWindow4(const ViSession awg) {
 //    // ウィンドウ開始
