@@ -74,6 +74,7 @@
 	}
 	```
 - View waveform window
+  
 	```cpp
 	void ShowWindow2(const char title[]) {
 	    static std::string text1 = "", text2 = "";
