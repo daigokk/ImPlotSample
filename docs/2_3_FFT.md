@@ -12,6 +12,8 @@
 ## 2. サンプルプログラム
 
 ```cpp
+#include <vector>
+#include <complex>
 void fft(std::vector<std::complex<double>>& a) {
     int N = a.size();
     if (N <= 1) return;
