@@ -73,6 +73,7 @@
 	    ImGui::End();
 	}
 	```
+
 - View waveform window
   
 	```cpp
