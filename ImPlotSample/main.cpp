@@ -17,6 +17,7 @@
 #define DT (10.0/100e3/SIZE)
 #define N_TH 3
 #define N_FREQ 13
+#define FREQS 10e3,20e3,50e3,60e3,70e3,80e3,90e3,100e3,120e3,150e3,200e3,500e3,1000e3
 
 // ImGuiのWindowの関数
 void ShowWindow1(const char title[]);
@@ -236,7 +237,7 @@ void ShowWindow2(const char title[]) {
 }
 
 void ShowWindow3(const char title[]) {
-    static double freqs[] = { 10e3,20e3,50e3,60e3,70e3,80e3,90e3,100e3,120e3,150e3,200e3,500e3,1000e3 }, gains[N_TH][N_FREQ] = { 0 }, phases[N_TH][N_FREQ];
+    static double freqs[] = { FREQS }, gains[N_TH][N_FREQ] = { 0 }, phases[N_TH][N_FREQ];
     static Commands::WaveformParams wfp;
     static std::string text = "";
     // ウィンドウ開始
@@ -249,7 +250,6 @@ void ShowWindow3(const char title[]) {
         wfp.amplitude = 1;
         wfp.dt = DT;
         wfp.size = SIZE;
-        wfp.frequency = 10e3;
         // 周波数特性
         /*** 適切なコードを入力 ***************************************/
         for (int j = 0; j < N_TH; j++) {
