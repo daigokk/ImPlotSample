@@ -152,13 +152,17 @@ void Commands::runLpf(WaveformParams* pWaveformParams, int order, double cutoffF
 	 /* start‚ÍÅ‰‚Ì’l */ 
 	 /* ranges”z—ñ‚É1,2,5,10,20,50,...‚Ì”—ñ‚ğŠi”[‚·‚é */
 	 ranges[0] = start;
+     std::cout << "ranges[" << 0 << "] = " << ranges[0] << std::endl;
      for (int i = 1; i < size; ++i) {
-         int prev = ranges[i - 1];
-         if (i % 2 == 1) {
+         if (i % 3 == 0) {
+             ranges[i] = ranges[i - 1] * 2;
+         }
+         else if (i % 3 == 1) {
              ranges[i] = ranges[i - 1] * 2;
          }
          else {
              ranges[i] = ranges[i - 1] * 2.5;
          }
+		 std::cout << "ranges[" << i << "] = " << ranges[i] << std::endl;
      }
  }

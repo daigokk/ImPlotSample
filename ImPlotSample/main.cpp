@@ -13,9 +13,10 @@
 #define FILENAME_LPF "03_lpf.csv"
 #define FILENAME_BODE_GAIN "04_bode_gain.csv"
 #define FILENAME_BODE_PHASE "05_bode_phase.csv"
-#define SIZE 1024 // 2^10
+#define SIZE 8192 // 2^13
 #define DT (10.0/100e3/SIZE)
 #define N_TH 3
+#define N_FREQ 13
 
 // ImGuiのWindowの関数
 void ShowWindow1(const char title[]);
@@ -214,11 +215,11 @@ void ShowWindow2(const char title[]) {
     ImGui::Text("LPF X: %5.3f, Y: %5.3f", x_lpf, y_lpf);
     // プロット描画
     if (ImPlot::BeginPlot("Waveform", ImVec2(-1, 250 * Gui::monitorScale))) {
-        ImPlot::SetupAxis(ImAxis_X1, "Time (us)");
+        ImPlot::SetupAxis(ImAxis_X1, "Time (µs)");
         ImPlot::SetupAxis(ImAxis_Y1, "v (V)");
         ImPlot::SetupAxisFormat(ImAxis_X1, ImPlotFormatter(MicroFormatter));
         ImPlot::PlotLine("Ch1", times, wf_raw, SIZE);
-        //ImPlot::PlotLine("LPF", times, wf_lpf, SIZE);
+        ImPlot::PlotLine("LPF", times, wf_lpf, SIZE);
         ImPlot::EndPlot();
     }
     if (ImPlot::BeginPlot("FFT", ImVec2(-1, 250 * Gui::monitorScale))) {
@@ -235,7 +236,7 @@ void ShowWindow2(const char title[]) {
 }
 
 void ShowWindow3(const char title[]) {
-    static double freqs[1000] = { 0 }, gains[N_TH][1000] = { 0 }, phases[N_TH][1000];
+    static double freqs[] = { 10e3,20e3,50e3,60e3,70e3,80e3,90e3,100e3,120e3,150e3,200e3,500e3,1000e3 }, gains[N_TH][N_FREQ] = { 0 }, phases[N_TH][N_FREQ];
     static Commands::WaveformParams wfp;
     static std::string text = "";
     // ウィンドウ開始
@@ -252,24 +253,21 @@ void ShowWindow3(const char title[]) {
         // 周波数特性
         /*** 適切なコードを入力 ***************************************/
         for (int j = 0; j < N_TH; j++) {
-            wfp.frequency = 10e3;
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < sizeof(freqs)/sizeof(double); i++) {
+                wfp.frequency = freqs[i];
                 double times[SIZE] = { 0 }, waveform[SIZE] = { 0 };
                 double x = 0, y = 0, wf_lpf[SIZE];
                 Commands::getSinWF(&wfp, times, waveform);
                 Commands::runLpf(&wfp, j+1, 100e3, waveform, wf_lpf);
-                freqs[i] = wfp.frequency;
                 gains[j][i] = 20.0 * log10(Commands::runPsd(&wfp, wf_lpf, &x, &y) / wfp.amplitude);
                 phases[j][i] = atan2(y, x) / PI * 180;
 				if (phases[j][i] > 0) phases[j][i] -= 360;
-                wfp.frequency += 1e3;
             }
         }
         /*** ここまで *************************************************/
         text = "[Error] Failed to open file for writing.";
-        wfp.size = 1000;
-        if (Commands::saveWaveforms(wfp.size, FILENAME_BODE_GAIN, freqs, (double*)gains, N_TH)) {
-            if (Commands::saveWaveforms(wfp.size, FILENAME_BODE_PHASE, freqs, (double*)phases, N_TH)) {
+        if (Commands::saveWaveforms(N_FREQ, FILENAME_BODE_GAIN, freqs, (double*)gains, N_TH)) {
+            if (Commands::saveWaveforms(N_FREQ, FILENAME_BODE_PHASE, freqs, (double*)phases, N_TH)) {
                 text = "Success.";
             }
         }
@@ -283,7 +281,7 @@ void ShowWindow3(const char title[]) {
         ImPlot::SetupAxis(ImAxis_Y1, "Gain (dB)");
         for (int j = 0; j < N_TH; j++) {
             std::string label = "Order " + std::to_string(j + 1);
-            ImPlot::PlotLine(label.c_str(), freqs, gains[j], 1000);
+            ImPlot::PlotLine(label.c_str(), freqs, gains[j], N_FREQ);
         }
         ImPlot::EndPlot();
     }
@@ -294,7 +292,7 @@ void ShowWindow3(const char title[]) {
         ImPlot::SetupAxis(ImAxis_Y1, "Phase (Deg.)");
         for (int j = 0; j < N_TH; j++) {
             std::string label = "Order " + std::to_string(j + 1);
-            ImPlot::PlotLine(label.c_str(), freqs, phases[j], 1000);
+            ImPlot::PlotLine(label.c_str(), freqs, phases[j], N_FREQ);
         }
         ImPlot::EndPlot();
     }
