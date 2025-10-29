@@ -51,7 +51,7 @@ void vi_checkError(const ViStatus status, const char filename[], const int line)
 void vi_getIdn(const ViSession resourceManager, const ViChar* instrDesc, char* ret) {
     ViSession instrument;
     ViStatus status;
-    status = viOpen(resourceManager, instrDesc, VI_NULL, VI_NULL, &instrument);
+    status = viOpen(resourceManager, instrDesc, VI_NULL, 10, &instrument);
     if (status < VI_SUCCESS) {
         std::cerr << "計測器のオープンに失敗しました。" << std::endl;
         return;
@@ -73,7 +73,7 @@ void vi_FindRsrc(const ViSession resourceManager) {
     ViStatus status;
     ViFindList findList;
     ViUInt32 numInstrs;
-    ViChar instrDesc[256], ret[256];
+    ViChar instrDesc[256], ret[256] = { 0 };
     status = viFindRsrc(resourceManager, "?*INSTR", &findList, &numInstrs, instrDesc);
     if (status < VI_SUCCESS) {
         std::cerr << "計測器の検索に失敗しました。" << std::endl;
@@ -90,6 +90,7 @@ void vi_FindRsrc(const ViSession resourceManager) {
 
     // 残りの計測器を取得
     for (ViUInt32 i = 1; i < numInstrs; ++i) {
+        ret[0] = '\0';
         status = viFindNext(findList, instrDesc);
         if (status < VI_SUCCESS) break;
         vi_getIdn(resourceManager, instrDesc, ret);
@@ -225,149 +226,144 @@ char visa_viGetchar(ViSession vi)
     return c;
 }
 
-// DLM2022専用関数群
-// レコード長を取得する
-int scope_get_RecordLength(ViSession vi)
-{
-    char ret[256];
-    vi_checkError(viQueryf(vi, "%s", "%255t", ":ACQuire:RLENgth?\n", ret), __FILE__, __LINE__);
-    return atoi(ret);
-}
-
-// チャンネルchを表示する
-void scope_set_ViewCh(ViSession vi, int ch)
-{
-    vi_checkError(viPrintf(vi, "CHANnel%d:DISPlay ON\n"), __FILE__, __LINE__);
-}
-
-// オシロスコープの動作状態を取得する。1:RUN, 0:STOP
-int scope_get_State(ViSession vi)
-{
-    char ret[256];
-    vi_checkError(viQueryf(vi, "%s", "%255t", ":STATus:CONDition?\n", ret), __FILE__, __LINE__);
-    if (atoi(ret) % 2 == 1)
-        return 1;	//RUN
-    else
-        return 0;	//STOP
-}
-
-// オシロスコープを停止する
-void scope_set_Stop(ViSession vi)
-{
-    vi_checkError(viPrintf(vi, "STOP\n"), __FILE__, __LINE__);
-}
-
-// オシロスコープを動作させる
-void scope_set_Run(ViSession vi)
-{
-    vi_checkError(viPrintf(vi, "STARt\n"), __FILE__, __LINE__);
-}
-
-// チャンネルchの垂直目盛りを設定・取得する
-void scope_set_Voltdir(ViSession vi, int ch, double volt)
-{
-    vi_checkError(viPrintf(vi, "CHANnel%d:VDIV %f\n", ch, volt), __FILE__, __LINE__);
-}
-
-double scope_get_Voltdir(ViSession vi, int ch)
-{
-    char ret[256];
-    vi_checkError(viQueryf(vi, "%s", "%255t", "CHANnel%d:VDIV?\n", ch, ret), __FILE__, __LINE__);
-    return atof(ret);
-}
-
-// 時間軸の時間目盛りを設定・取得する
-void scope_set_timediv(ViSession vi, double sec)
-{
-    vi_checkError(viPrintf(vi, "TIMebase:TDIV %f\n", sec), __FILE__, __LINE__);
-}
-
-// 時間軸の時間目盛りを取得する
-double scope_get_timediv(ViSession vi)
-{
-    char ret[256];
-    vi_checkError(viQueryf(vi, "%s", "%255t", "TIMebase:TDIV?\n", ret), __FILE__, __LINE__);
-    return atof(ret);
-}
-
-// 時間軸データをtimes配列に取得する
-void scope_get_times(const ViSession vi, double times[]) {
-    int length = scope_get_RecordLength(vi);
-    double dt = scope_get_timediv(vi) * 10 / length;
-    for (int i = 0; i < length; ++i) {
-        times[i] = (i + 1) * dt;
+class Scope_DLM2022 {
+public:
+    ViSession instr=0;
+    Scope_DLM2022(ViSession vi) : instr(vi) {};
+    ~Scope_DLM2022() {
+        if (instr != 0) {
+            vi_checkError(viClose(instr), __FILE__, __LINE__);
+            instr = 0;
+        }
+	}
+    void reset() {
+        vi_checkError(viPrintf(instr, "*RST\n"), __FILE__, __LINE__);
+	}
+    void set_autoset() {
+        vi_checkError(viPrintf(instr, "AUTOSet EXECute\n"), __FILE__, __LINE__);
+	}
+    // レコード長を取得する
+    int get_RecordLength() {
+        char ret[256];
+        vi_checkError(viQueryf(instr, "%s", "%255t", ":ACQuire:RLENgth?\n", ret), __FILE__, __LINE__);
+        return atoi(ret);
     }
-}
-
-// チャンネルchの波形データをvoltages配列に取得する
-void scope_get_Waveform(const ViSession vi, int ch, double voltages[]) {
-    vi_checkError(viPrintf(vi, "COMMunicate:HEADer OFF\n"), __FILE__, __LINE__);
-
-    int length = scope_get_RecordLength(vi);
-    scope_set_ViewCh(vi, ch);
-
-    vi_checkError(viPrintf(vi, "WAVeform:STARt 0\n"), __FILE__, __LINE__);
-    vi_checkError(viPrintf(vi, "WAVeform:END %d\n", length - 1), __FILE__, __LINE__);
-    vi_checkError(viPrintf(vi, "WAVeform:TRACe %d\n", ch), __FILE__, __LINE__);
-    vi_checkError(viPrintf(vi, "WAVeform:FORMat RBYTe\n"), __FILE__, __LINE__);
-
-    double position = atof(CppVisa::cviQueryf(vi, __FILE__, __LINE__, "WAVeform:POSition?\n"));
-    double range = atof(CppVisa::cviQueryf(vi, __FILE__, __LINE__, "WAVeform:RANGe?\n"));
-    double offset = atof(CppVisa::cviQueryf(vi, __FILE__, __LINE__, "WAVeform:OFFSet?\n"));
-
-    vi_checkError(viPrintf(vi, "WAVeform:SEND?\n"), __FILE__, __LINE__);
-
-    char c = visa_viGetchar(vi);
-    if (c != '#') exit(-1);
-
-    int count = visa_viGetchar(vi) - '0';
-    for (int i = 0; i < count; ++i) {
-        visa_viGetchar(vi); // skip header digits
+    // チャンネルchを表示する
+    void set_ViewCh(int ch) {
+        vi_checkError(viPrintf(instr, "CHANnel%d:DISPlay ON\n"), __FILE__, __LINE__);
     }
-
-    for (int i = 0; i < length; ++i) {
-        c = visa_viGetchar(vi);
-        voltages[i] = range * ((unsigned char)c - position) / 25.0 + offset;
+    // オシロスコープの動作状態を取得する。1:RUN, 0:STOP
+    int get_State() {
+        char ret[256];
+        vi_checkError(viQueryf(instr, "%s", "%255t", ":STATus:CONDition?\n", ret), __FILE__, __LINE__);
+        if (atoi(ret) % 2 == 1)
+            return 1;	//RUN
+        else
+            return 0;	//STOP
     }
-}
+    // オシロスコープを停止する
+    void set_Stop() {
+        vi_checkError(viPrintf(instr, "STOP\n"), __FILE__, __LINE__);
+    }
+    // オシロスコープを動作させる
+    void set_Run() {
+        vi_checkError(viPrintf(instr, "STARt\n"), __FILE__, __LINE__);
+    }
+    // チャンネルchの垂直目盛りを設定・取得する
+    void set_Voltdir(int ch, double volt) {
+        vi_checkError(viPrintf(instr, "CHANnel%d:VDIV %f\n", ch, volt), __FILE__, __LINE__);
+    }
+    double get_Voltdir(int ch) {
+        char ret[256];
+        vi_checkError(viQueryf(instr, "%s", "%255t", "CHANnel%d:VDIV?\n", ch, ret), __FILE__, __LINE__);
+        return atof(ret);
+    }
+    // 時間軸の時間目盛りを設定・取得する
+    void set_timediv(double sec) {
+        vi_checkError(viPrintf(instr, "TIMebase:TDIV %f\n", sec), __FILE__, __LINE__);
+    }
+    double get_timediv() {
+        char ret[256];
+        vi_checkError(viQueryf(instr, "%s", "%255t", "TIMebase:TDIV?\n", ret), __FILE__, __LINE__);
+        return atof(ret);
+    }
+    // 時間軸データをtimes配列に取得する
+    void get_times(double times[]) {
+        int length = get_RecordLength();
+        double dt = get_timediv() * 10 / length;
+        for (int i = 0; i < length; ++i) {
+            times[i] = (i + 1) * dt;
+        }
+    }
+    // チャンネルchの波形データをvoltages配列に取得する
+    void get_Waveform(int ch, double voltages[]) {
+        vi_checkError(viPrintf(instr, "COMMunicate:HEADer OFF\n"), __FILE__, __LINE__);
 
-// 波形データをファイルに保存する
-int scope_save_Waveformsf(const ViSession vi, const char* format, ...) {
-    char filename[256];
-    va_list ap;
-    va_start(ap, format);
-    vsnprintf(filename, sizeof(filename) - 1, format, ap);
-    va_end(ap);
+        int length = get_RecordLength();
+        set_ViewCh(ch);
 
-    int length = scope_get_RecordLength(vi);
-    double dt = scope_get_timediv(vi) * 10 / length;
+        vi_checkError(viPrintf(instr, "WAVeform:STARt 0\n"), __FILE__, __LINE__);
+        vi_checkError(viPrintf(instr, "WAVeform:END %d\n", length - 1), __FILE__, __LINE__);
+        vi_checkError(viPrintf(instr, "WAVeform:TRACe %d\n", ch), __FILE__, __LINE__);
+        vi_checkError(viPrintf(instr, "WAVeform:FORMat RBYTe\n"), __FILE__, __LINE__);
 
-    double* v1 = new double[length];
-    double* v2 = new double[length];
+        double position = atof(CppVisa::cviQueryf(instr, __FILE__, __LINE__, "WAVeform:POSition?\n"));
+        double range = atof(CppVisa::cviQueryf(instr, __FILE__, __LINE__, "WAVeform:RANGe?\n"));
+        double offset = atof(CppVisa::cviQueryf(instr, __FILE__, __LINE__, "WAVeform:OFFSet?\n"));
 
-    int wasRunning = scope_get_State(vi);
-    scope_set_Stop(vi);
-    scope_get_Waveform(vi, 1, v1);
-    scope_get_Waveform(vi, 2, v2);
-    if (wasRunning) scope_set_Run(vi);
+        vi_checkError(viPrintf(instr, "WAVeform:SEND?\n"), __FILE__, __LINE__);
 
-    FILE* fp;
-    fopen_s(&fp, filename, "w");
-    if (!fp) {
-        std::cerr << "Failed to open file: " << filename << "\n";
+        char c = visa_viGetchar(instr);
+        if (c != '#') exit(-1);
+
+        int count = visa_viGetchar(instr) - '0';
+        for (int i = 0; i < count; ++i) {
+            visa_viGetchar(instr); // skip header digits
+        }
+
+        for (int i = 0; i < length; ++i) {
+            c = visa_viGetchar(instr);
+            voltages[i] = range * ((unsigned char)c - position) / 25.0 + offset;
+        }
+    }
+    // 波形データをファイルに保存する
+    int save_Waveformsf(const char* format, ...) {
+        char filename[256];
+        va_list ap;
+        va_start(ap, format);
+        vsnprintf(filename, sizeof(filename) - 1, format, ap);
+        va_end(ap);
+
+        int length = get_RecordLength();
+        double dt = get_timediv() * 10 / length;
+
+        double* v1 = new double[length];
+        double* v2 = new double[length];
+
+        int wasRunning = get_State();
+        set_Stop();
+        get_Waveform(1, v1);
+        get_Waveform(2, v2);
+        if (wasRunning) set_Run();
+
+        FILE* fp;
+        fopen_s(&fp, filename, "w");
+        if (!fp) {
+            std::cerr << "Failed to open file: " << filename << "\n";
+            delete[] v1;
+            delete[] v2;
+            return -1;
+        }
+
+        for (int i = 0; i < length; ++i) {
+            fprintf(fp, "%e, %e, %e\n", (i + 1) * dt, v1[i], v2[i]);
+        }
+
+        fclose(fp);
+        std::cout << "Saved waveform to: " << filename << "\n";
+
         delete[] v1;
         delete[] v2;
-        return -1;
+        return 0;
     }
-
-    for (int i = 0; i < length; ++i) {
-        fprintf(fp, "%e, %e, %e\n", (i + 1) * dt, v1[i], v2[i]);
-    }
-
-    fclose(fp);
-    std::cout << "Saved waveform to: " << filename << "\n";
-
-    delete[] v1;
-    delete[] v2;
-    return 0;
-}
+};
