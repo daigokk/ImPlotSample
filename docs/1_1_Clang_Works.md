@@ -71,60 +71,22 @@
          
      }
      ```
-1. for文と構造体、数学関数(sin等)(Lv. 4、30分、評価基準: 100kHzの波形が正しく生成され、時間・値が正確に出力される)
-   - 標準入力から得た振幅、及び位相を用いて、100kHzの正弦波5周期分の時間と値を`,`区切りの実数で標準出力に表示する。ただし、`dt`は1e-8sとする。
+1. for文と数学関数(sin等)(Lv. 5、30分、評価基準: 100kHzの波形が正しく生成され、時間・値が正確に出力される)
+   - 標準入力から得た振幅、及び位相を用いて、100kHzの正弦波5周期分の時間と値を`,`区切りの実数で標準出力に表示する。ただし、サンプリング間隔`dt`は1e-8sとする。
      ```cpp
       #include <stdio.h>
       #include <math.h>
-      
       #define PI acos(-1)
-      #define DT 1e-8
-      #define FREQ 100e3
-      #define PERIOD 5
-      #define SIZE (int)(PERIOD/FREQ/DT)
-      
-      typedef struct WaveformParams {
-          double amplitude = 0; // 振幅
-          double phase = 0; // 位相(Radians)
-          double dt = DT;        // サンプリング間隔
-          double frequency = FREQ; // 周波数
-          int size = SIZE;         // データ点数
-      };
-      
-      void sine_wave(WaveformParams wfp, double x[], double y[]);
-      void print_array(double x[], double y[], int size);
-      
       int main() {
-          WaveformParams wfp;
-          double time[SIZE], volts[SIZE];
-      
-          printf("Input Amplitude> ");
-          scanf("%lf", &wfp.amplitude);
-          printf("Input Phase (in degrees)> ");
-          scanf("%lf", &wfp.phase);
-      
-          // ラジアン(弧度法, 0~2pi)からデグリー(度数法, 0~360)に変更
-          wfp.phase = wfp.phase * PI / 180.0;
-      
-      
-      
-          sine_wave(wfp, time, volts);
-          print_array(time, volts, wfp.size);
-      
+          double amp, phase_deg;
+          double omega = 2 * PI * 100e3;
+          scanf("%lf %lf", &amp, &phase_deg);
+          double phase_rad = phase_deg / 180.0 * PI;
+          *** ここから ***
+          
+          
+          *** ここまで ***
           return 0;
-      }
-      
-      void sine_wave(WaveformParams wfp, double x[], double y[]) {
-          // ここに適切なコードを記入
-      
-      
-      }
-      
-      void print_array(double x[], double y[], int size) {
-          printf("# Time,Value\n");
-          // ここに適切なコードを記入
-      
-      
       }
      ```
 1. 測定データの保存（fopen, fprintf, fclose）(Lv. 6、15分、評価基準: data.csvが正しく作成され、内容が正確に記録されている)
