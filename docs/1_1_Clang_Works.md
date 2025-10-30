@@ -83,38 +83,48 @@
       #define PERIOD 5
       #define SIZE (int)(PERIOD/FREQ/DT)
       
-      void sine_wave(double amplitude, double phase_rad, double frequency, double dt, int size, double x[], double y[]);
+      typedef struct WaveformParams {
+          double amplitude = 0; // 振幅
+          double phase = 0; // 位相(Radians)
+          double dt = DT;        // サンプリング間隔
+          double frequency = FREQ; // 周波数
+          int size = SIZE;         // データ点数
+      };
+      
+      void sine_wave(WaveformParams wfp, double x[], double y[]);
       void print_array(double x[], double y[], int size);
       
       int main() {
-          double amplitude, phase;
+          WaveformParams wfp;
           double time[SIZE], volts[SIZE];
       
           printf("Input Amplitude> ");
-          scanf("%lf", &amplitude);
+          scanf("%lf", &wfp.amplitude);
           printf("Input Phase (in degrees)> ");
-          scanf("%lf", &phase);
+          scanf("%lf", &wfp.phase);
       
           // ラジアン(弧度法, 0~2pi)からデグリー(度数法, 0~360)に変更
-          phase = phase * PI / 180.0;
+          wfp.phase = wfp.phase * PI / 180.0;
       
-          sine_wave(amplitude, phase, FREQ, DT, SIZE, time, volts);
-          print_array(time, volts, SIZE);
+      
+      
+          sine_wave(wfp, time, volts);
+          print_array(time, volts, wfp.size);
       
           return 0;
       }
       
-      void sine_wave(double amplitude, double phase_rad, double frequency, double dt, int size, double x[], double y[]) {
+      void sine_wave(WaveformParams wfp, double x[], double y[]) {
           // ここに適切なコードを記入
-
-     
+      
+      
       }
       
-      void print_array(double x[], double y[], int size){
+      void print_array(double x[], double y[], int size) {
           printf("# Time,Value\n");
           // ここに適切なコードを記入
-
-     
+      
+      
       }
      ```
 1. 測定データの保存（fopen, fprintf, fclose）(Lv. 5、15分、評価基準: data.csvが正しく作成され、内容が正確に記録されている)
