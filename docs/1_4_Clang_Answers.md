@@ -112,7 +112,7 @@ void sort(int length, double *arr) {
 
 ---
 
-### 8. sin波形生成（Lv. 3）
+### 8. sin波形生成（Lv. 5）
 ```c
 #include <stdio.h>
 #include <math.h>
@@ -135,7 +135,7 @@ int main() {
 
 ---
 
-### 9. CSV出力（Lv. 5）
+### 9. CSV出力（Lv. 6）
 ```c
 #include <stdio.h>
 #include <math.h>
