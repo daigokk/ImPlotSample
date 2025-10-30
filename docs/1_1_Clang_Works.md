@@ -82,7 +82,7 @@
           double omega = 2 * PI * 100e3;
           scanf("%lf %lf", &amp, &phase_deg);
           double phase_rad = phase_deg / 180.0 * PI;
-          *** ここから ***
+          // ここに適切なコードを記入
           
           
           *** ここまで ***
