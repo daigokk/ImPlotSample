@@ -95,7 +95,7 @@
           printf("Input Phase (in degrees)> ");
           scanf("%lf", &phase);
       
-          // ラジアン(弧度法, 0~PI)からデグリー(度数法, 0~360)に変更
+          // ラジアン(弧度法, 0~pi)からデグリー(度数法, 0~360)に変更
           phase = phase * PI / 180.0;
       
           sine_wave(amplitude, phase, FREQ, DT, SIZE, time, volts);
