@@ -95,7 +95,7 @@
           printf("Input Phase (in degrees)> ");
           scanf("%lf", &phase);
       
-          // Convert phase from degrees to radians
+          // ラジアンからデグリー(弧度法)に変更
           phase = phase * PI / 180.0;
       
           sine_wave(amplitude, phase, FREQ, DT, SIZE, time, volts);
