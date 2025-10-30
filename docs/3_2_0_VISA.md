@@ -88,13 +88,12 @@ SCPIコマンドを使えば、異なる計測器メーカーでも同じ結果�
   printf("IDN: %s", ret);
   ```
 * 計測器メーカーのSCPIの方言の例: オシロスコープのTime/divの問い合わせ
-  * 横河計測 DLM2022: `TIMebase:TDIV?`
+  * 横河計測 DLM2022([マニュアル](https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf)): `TIMebase:TDIV?`
   ```cpp
   char ret[256];
   viQueryf(vi, "%s", "%255t", "TIMebase:TDIV?\n", ret);
   printf("Time/div: %f", atof(ret));
   ```
-    * [マニュアル](https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf)
   * Tektronix: `HORizontal:SECdiv?`
     ```cpp
     char ret[256];
