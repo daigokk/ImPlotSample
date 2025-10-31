@@ -104,7 +104,7 @@ private:
    - 加点例: カットオフ周波数を変えて信号の通過具合を観察せよ。
    ```cpp
     void ShowWindow3(const char title[]) {
-        static double freqs[] = { FREQS }, gains[N_TH][N_FREQ] = { 0 }, phases[N_TH][N_FREQ];
+        static double freqs[] = { FREQS }, gains[N_TH][N_FREQS] = { 0 }, phases[N_TH][N_FREQS];
         static Commands::WaveformParams wfp;
         static std::string text = "";
         // ウィンドウ開始
@@ -133,8 +133,8 @@ private:
             }
             /*** ここまで *************************************************/
             text = "[Error] Failed to open file for writing.";
-            if (Commands::saveWaveforms(N_FREQ, FILENAME_BODE_GAIN, freqs, (double*)gains, N_TH)) {
-                if (Commands::saveWaveforms(N_FREQ, FILENAME_BODE_PHASE, freqs, (double*)phases, N_TH)) {
+            if (Commands::saveWaveforms(N_FREQS, FILENAME_BODE_GAIN, freqs, (double*)gains, N_TH)) {
+                if (Commands::saveWaveforms(N_FREQS, FILENAME_BODE_PHASE, freqs, (double*)phases, N_TH)) {
                     text = "Success.";
                 }
             }
@@ -148,7 +148,7 @@ private:
             ImPlot::SetupAxis(ImAxis_Y1, "Gain (dB)");
             for (int j = 0; j < N_TH; j++) {
                 std::string label = "Order " + std::to_string(j + 1);
-                ImPlot::PlotLine(label.c_str(), freqs, gains[j], N_FREQ);
+                ImPlot::PlotLine(label.c_str(), freqs, gains[j], N_FREQS);
             }
             ImPlot::EndPlot();
         }
@@ -159,7 +159,7 @@ private:
             ImPlot::SetupAxis(ImAxis_Y1, "Phase (Deg.)");
             for (int j = 0; j < N_TH; j++) {
                 std::string label = "Order " + std::to_string(j + 1);
-                ImPlot::PlotLine(label.c_str(), freqs, phases[j], N_FREQ);
+                ImPlot::PlotLine(label.c_str(), freqs, phases[j], N_FREQS);
             }
             ImPlot::EndPlot();
         }
