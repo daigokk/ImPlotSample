@@ -103,72 +103,68 @@ private:
    - $\theta = \theta_{out} - \theta_{in}$ [Deg.]
    - 加点例: カットオフ周波数を変えて信号の通過具合を観察せよ。
    ```cpp
-   void ShowWindow3(const char title[]) {
-    // ウィンドウ開始
-    ImGui::SetNextWindowPos(ImVec2(0, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 530 * Gui::monitorScale), ImGuiCond_FirstUseEver);
-    ImGui::Begin(title);
-    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
-    static double freqs[1000] = { 0 }, gains[3][1000] = { 0 }, phases[3][1000];
-    static Commands::WaveformParams wfp;
-    static std::string text = "";
-    if (ImGui::Button("Run")) {
-        // ボタンが押されたらここが実行される
-        /*** 適切なコードを入力 ***************************************/
-        wfp.amplitude = 1;
-        wfp.dt = DT;
-        wfp.size = SIZE;
-        wfp.frequency = 10e3;
-        // 周波数特性
-        for (int j = 0; j < 3; j++) {
-            wfp.frequency = 10e3;
-            for (int i = 0; i < 1000; i++) {
-                double waveform[SIZE] = { 0 };
-                double x = 0, y = 0, wf_lpf[SIZE];
-                Commands::getWaveform(&wfp, waveform);
-                Commands::runLpf(&wfp, j+1, 100e3, waveform, wf_lpf);
-                freqs[i] = wfp.frequency;
-                gains[j][i] = 20.0 * log10(Commands::runPsd(&wfp, wf_lpf, &x, &y) / wfp.amplitude);
-                phases[j][i] = atan2(y, x) / PI * 180;
-                if (phases[j][i] > 0) phases[j][i] -= 360;
-                wfp.frequency += 1e3;
+    void ShowWindow3(const char title[]) {
+        static double freqs[] = { FREQS }, gains[N_TH][N_FREQ] = { 0 }, phases[N_TH][N_FREQ];
+        static Commands::WaveformParams wfp;
+        static std::string text = "";
+        // ウィンドウ開始
+        ImGui::SetNextWindowPos(ImVec2(0, 240 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 530 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+        ImGui::Begin(title);
+        /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
+        if (ImGui::Button("Run")) {
+            // ボタンが押されたらここが実行される
+            wfp.amplitude = 1;
+            wfp.dt = DT;
+            wfp.size = SIZE;
+            // 周波数特性
+            /*** 適切なコードを入力 ***************************************/
+            for (int j = 0; j < N_TH; j++) {
+                for (int i = 0; i < sizeof(freqs)/sizeof(double); i++) {
+                    wfp.frequency = freqs[i];
+                    double times[SIZE] = { 0 }, waveform[SIZE] = { 0 };
+                    double x = 0, y = 0, wf_lpf[SIZE];
+                    Commands::getSinWF(&wfp, times, waveform);
+                    Commands::runLpf(&wfp, j+1, 100e3, waveform, wf_lpf);
+                    gains[j][i] = 20.0 * log10(Commands::runPsd(&wfp, wf_lpf, &x, &y) / wfp.amplitude);
+                    phases[j][i] = atan2(y, x) / PI * 180;
+    				if (phases[j][i] > 0) phases[j][i] -= 360;
+                }
+            }
+            /*** ここまで *************************************************/
+            text = "[Error] Failed to open file for writing.";
+            if (Commands::saveWaveforms(N_FREQ, FILENAME_BODE_GAIN, freqs, (double*)gains, N_TH)) {
+                if (Commands::saveWaveforms(N_FREQ, FILENAME_BODE_PHASE, freqs, (double*)phases, N_TH)) {
+                    text = "Success.";
+                }
             }
         }
-        text = "[Error] Failed to open file for writing.";
-        wfp.size = 1000;
-        if (Commands::saveWaveforms(&wfp, "bode_gain.csv", freqs, gains[0], gains[1], gains[2])) {
-            if (Commands::saveWaveforms(&wfp, "bode_phase.csv", freqs, phases[0], phases[1], phases[2])) {
-                text = "Success.";
+        ImGui::SameLine();
+        ImGui::Text(text.c_str());
+        ImPlot::SetNextAxesToFit();
+        if (ImPlot::BeginPlot("Gain", ImVec2(-1, 225 * Gui::monitorScale))) {
+            ImPlot::SetupAxisScale(ImAxis_X1, ImPlotScale_Log10);
+            ImPlot::SetupAxis(ImAxis_X1, "Frequency (Hz)");
+            ImPlot::SetupAxis(ImAxis_Y1, "Gain (dB)");
+            for (int j = 0; j < N_TH; j++) {
+                std::string label = "Order " + std::to_string(j + 1);
+                ImPlot::PlotLine(label.c_str(), freqs, gains[j], N_FREQ);
             }
+            ImPlot::EndPlot();
         }
-        /*** ここまで *************************************************/
-    }
-    ImGui::SameLine();
-    ImGui::Text(text.c_str());
-    ImPlot::SetNextAxesToFit();
-    if (ImPlot::BeginPlot("Gain", ImVec2(-1, 225 * Gui::monitorScale))) {
-        ImPlot::SetupAxisScale(ImAxis_X1, ImPlotScale_Log10);
-        ImPlot::SetupAxis(ImAxis_X1, "Frequency (Hz)");
-        ImPlot::SetupAxis(ImAxis_Y1, "Gain (dB)");
-        for (int j = 0; j < 3; j++) {
-            std::string label = "Order " + std::to_string(j + 1);
-            ImPlot::PlotLine(label.c_str(), freqs, gains[j], 1000);
+        ImPlot::SetNextAxesToFit();
+        if (ImPlot::BeginPlot("Phase", ImVec2(-1, 225 * Gui::monitorScale))) {
+            ImPlot::SetupAxisScale(ImAxis_X1, ImPlotScale_Log10);
+            ImPlot::SetupAxis(ImAxis_X1, "Frequency (Hz)");
+            ImPlot::SetupAxis(ImAxis_Y1, "Phase (Deg.)");
+            for (int j = 0; j < N_TH; j++) {
+                std::string label = "Order " + std::to_string(j + 1);
+                ImPlot::PlotLine(label.c_str(), freqs, phases[j], N_FREQ);
+            }
+            ImPlot::EndPlot();
         }
-        ImPlot::EndPlot();
+        // ウィンドウ終了
+        ImGui::End();
     }
-    ImPlot::SetNextAxesToFit();
-    if (ImPlot::BeginPlot("Phase", ImVec2(-1, 225 * Gui::monitorScale))) {
-        ImPlot::SetupAxisScale(ImAxis_X1, ImPlotScale_Log10);
-        ImPlot::SetupAxis(ImAxis_X1, "Frequency (Hz)");
-        ImPlot::SetupAxis(ImAxis_Y1, "Phase (Deg.)");
-        for (int j = 0; j < 3; j++) {
-            std::string label = "Order " + std::to_string(j + 1);
-            ImPlot::PlotLine(label.c_str(), freqs, phases[j], 1000);
-        }
-        ImPlot::EndPlot();
-    }
-    // ウィンドウ終了
-    ImGui::End();
-   }
    ```
    ![Hard copy](./images/HardCopy.png)
