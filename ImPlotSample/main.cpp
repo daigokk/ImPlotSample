@@ -6,6 +6,7 @@
 #include "Gui.h"
 #include "Commands.h"
 #include "CppVisa.h"
+#include "Scope.h"
 
 #define PI acos(-1)
 #define FILENAME_RAW "01_raw.csv"
@@ -16,15 +17,15 @@
 #define SIZE 8192 // 2^13
 #define DT (10.0/100e3/SIZE)
 #define N_TH 3
-#define N_FREQ 13
-#define FREQS 10e3,20e3,50e3,60e3,70e3,80e3,90e3,100e3,120e3,150e3,200e3,500e3,1000e3
+#define N_FREQS 22
+#define FREQS 10e3,20e3,50e3,60e3,70e3,80e3,90e3,100e3,110e3,120e3,130e3,140e3,150e3,160e3,170e3,180e3,190e3,200e3,300e3,400e3,500e3,1000e3
 
 // ImGuiのWindowの関数
 void ShowWindow1(const char title[]);
 void ShowWindow2(const char title[]);
 void ShowWindow3(const char title[]);
 //void ShowWindow4(ViSession awg);
-void ShowWindow5(Scope_DLM2022& scop);
+//void ShowWindow5(Scope& scop);
 void ShowWindow11(const char title[]);
 
 int main() {
@@ -39,8 +40,7 @@ int main() {
     }
 
 	CppVisa::OpenRM(__FILE__, __LINE__);
-	vi_FindRsrc(CppVisa::resourceManager);
-    Scope_DLM2022 scope(CppVisa::OpenInstrument("USB0::0x0B21::0x0030::39314C323339343037::INSTR", __FILE__, __LINE__));
+ //   Scope scope;
 
     // メインループ
     while (!glfwWindowShouldClose(Gui::GetWindow())) {
@@ -54,7 +54,7 @@ int main() {
         ShowWindow2("View waveform");
         ShowWindow3("Bode plots");
         //ShowWindow4(scope);
-        ShowWindow5(scope);
+        //ShowWindow5(scope);
         //ShowWindow11("Monte Carlo method");
 
         /*** ここまで **********************************/
@@ -62,7 +62,7 @@ int main() {
         // フレーム描画・スワップ
         Gui::EndFrame();
     }
-	CppVisa::CloseRM();
+	//CppVisa::CloseRM();
     // GUI終了処理
     Gui::Shutdown();
     return 0;
@@ -98,10 +98,7 @@ void ShowWindow1(const char title[]) {
 		wfp.noize = noize;
 		wfp.phase_deg = phase_deg;
 		wfp.size = SIZE;
-        if (func == 0) {
-            Commands::getSinWF(&wfp, times, waveform);
-        }
-        else if (func == 1) {
+        if (func == 1) {
             Commands::getSquareWF(&wfp, times, waveform);
         }
         else if (func == 2) {
@@ -237,7 +234,7 @@ void ShowWindow2(const char title[]) {
 }
 
 void ShowWindow3(const char title[]) {
-    static double freqs[] = { FREQS }, gains[N_TH][N_FREQ] = { 0 }, phases[N_TH][N_FREQ];
+    static double freqs[] = { FREQS }, gains[N_TH][N_FREQS] = { 0 }, phases[N_TH][N_FREQS];
     static Commands::WaveformParams wfp;
     static std::string text = "";
     // ウィンドウ開始
@@ -266,8 +263,8 @@ void ShowWindow3(const char title[]) {
         }
         /*** ここまで *************************************************/
         text = "[Error] Failed to open file for writing.";
-        if (Commands::saveWaveforms(N_FREQ, FILENAME_BODE_GAIN, freqs, (double*)gains, N_TH)) {
-            if (Commands::saveWaveforms(N_FREQ, FILENAME_BODE_PHASE, freqs, (double*)phases, N_TH)) {
+        if (Commands::saveWaveforms(N_FREQS, FILENAME_BODE_GAIN, freqs, (double*)gains, N_TH)) {
+            if (Commands::saveWaveforms(N_FREQS, FILENAME_BODE_PHASE, freqs, (double*)phases, N_TH)) {
                 text = "Success.";
             }
         }
@@ -281,7 +278,7 @@ void ShowWindow3(const char title[]) {
         ImPlot::SetupAxis(ImAxis_Y1, "Gain (dB)");
         for (int j = 0; j < N_TH; j++) {
             std::string label = "Order " + std::to_string(j + 1);
-            ImPlot::PlotLine(label.c_str(), freqs, gains[j], N_FREQ);
+            ImPlot::PlotLine(label.c_str(), freqs, gains[j], N_FREQS);
         }
         ImPlot::EndPlot();
     }
@@ -292,13 +289,14 @@ void ShowWindow3(const char title[]) {
         ImPlot::SetupAxis(ImAxis_Y1, "Phase (Deg.)");
         for (int j = 0; j < N_TH; j++) {
             std::string label = "Order " + std::to_string(j + 1);
-            ImPlot::PlotLine(label.c_str(), freqs, phases[j], N_FREQ);
+            ImPlot::PlotLine(label.c_str(), freqs, phases[j], N_FREQS);
         }
         ImPlot::EndPlot();
     }
     // ウィンドウ終了
     ImGui::End();
 }
+
 void ShowWindow11(const char title[])
 {
     static int trials = 1000;
@@ -342,110 +340,107 @@ void ShowWindow11(const char title[])
 }
 
 
-void ShowWindow4(const ViSession awg) {
-    // ウィンドウ開始
-    ImGui::SetNextWindowSize(ImVec2(500 * Gui::monitorScale, 450 * Gui::monitorScale), ImGuiCond_FirstUseEver);
-    ImGui::Begin("AWG");
-    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
-    // https://github.com/ocornut/imgui
-    // https://github.com/epezent/implot
-    // https://github.com/daigokk/ImPlotSample
-    /*** ここから *************************************************/
-    static float freq = 0, ampl = 0;
-    ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
-    if (ImGui::InputFloat("Freq.", &freq, 1, 1)) {
-        static std::string ret;
-		CppVisa::cviPrintf(awg, __FILE__, __LINE__, "HORizontal:SECdiv %e\n", freq);
-        ret = CppVisa::cviQueryf(awg, __FILE__, __LINE__, "HORizontal:SECdiv?\n");
-		freq = atof(ret.c_str());
-    }
-	ImGui::SameLine();
-	ImGui::Text(": %f Hz", freq);
-    ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
-    if (ImGui::InputFloat("Ampl.", &ampl, 1, 1)) {
-        static std::string ret;
-        CppVisa::cviPrintf(awg, __FILE__, __LINE__, "HORizontal:SECdiv %e\n", ampl);
-        ret = CppVisa::cviQueryf(awg, __FILE__, __LINE__, "HORizontal:SECdiv?\n");
-        freq = atof(ret.c_str());
-    }
-    ImGui::SameLine();
-    ImGui::Text(": %f V", ampl);
-    /*** ここまで *************************************************/
-    // ウィンドウ終了
-    ImGui::End();
-}
-
-void ShowWindow5(Scope_DLM2022& scope) {
-    // ウィンドウ開始
-    ImGui::SetNextWindowSize(ImVec2(500 * Gui::monitorScale, 450 * Gui::monitorScale), ImGuiCond_FirstUseEver);
-    ImGui::Begin("Scope");
-    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
-    // https://github.com/ocornut/imgui
-    // https://github.com/epezent/implot
-    // https://github.com/daigokk/ImPlotSample
-    /*** ここから *************************************************/
-    static int t_index = 0, v_index[2] = { 0 };
-    static double timediv = 0, voltsdiv[2] = { 0 };
-    ImGui::SetNextItemWidth(20.0f * Gui::monitorScale);
-    if (ImGui::InputInt("Time/div", &t_index, 1, 1)) {
-        if (t_index < 0) t_index = 0;
-        if (t_index > 29) t_index = 29;
-        static std::string ret;
-        static double t_ranges[30] = {};
-        Commands::makeRanges(30, 5e-9, t_ranges);
-		scope.set_timediv(t_ranges[t_index]);
-        timediv = scope.get_timediv();
-    }
-    ImGui::SameLine();
-    ImGui::Text(": %.0e s", timediv);
-    for(int ch =0; ch < 2; ch++) {
-        ImGui::SetNextItemWidth(20.0f * Gui::monitorScale);
-        std::string label = "Ch" + std::to_string(ch + 1) + " Volts/div";
-        if (ImGui::InputInt(label.c_str(), &v_index[ch], 1, 1)) {
-            if (v_index[ch] < 0) v_index[ch] = 0;
-            if (v_index[ch] > 29) v_index[ch] = 29;
-            static std::string ret;
-            static double v_ranges[30] = {};
-            Commands::makeRanges(30, 20e-3, v_ranges);
-			scope.set_Voltdir(ch + 1, v_ranges[v_index[ch]]);
-            voltsdiv[ch] = scope.get_Voltdir(ch);
-        }
-        ImGui::SameLine();
-        ImGui::Text(": %.0e V", voltsdiv[ch]);
-	}
-    if(ImGui::Button("Auto")) {
-        scope.set_autoset();
-	}
-    ImGui::SameLine();
-    if (ImGui::Button("Run/Stop")) {
-		int state = scope.get_State();
-        if(state == 1) {
-            scope.set_Stop();
-        }
-        else {
-            scope.set_Run();
-        }
-    }
-    ImGui::SameLine();
-	static std::vector<double> times, voltages[2];
-    if(ImGui::Button("Capture")) {
-        int length = scope.get_RecordLength();
-        times.resize(length);
-        for(int ch = 0; ch <2; ch++) {
-            voltages[ch].resize(length);
-            scope.get_Waveform(ch, voltages[ch].data());
-
-		}
-	}
-    ImPlot::SetNextAxesToFit();
-    if (ImPlot::BeginPlot("Waveform", ImVec2(-1, -1))) {
-        ImPlot::SetupAxis(ImAxis_X1, "Time (s)");
-        ImPlot::SetupAxis(ImAxis_Y1, "Volts (V)");
-        ImPlot::PlotLine("Ch1", times.data(), voltages[0].data(), times.size());
-        ImPlot::PlotLine("Ch2", times.data(), voltages[1].data(), times.size());
-		ImPlot::EndPlot();
-    }
-    /*** ここまで *************************************************/
-    // ウィンドウ終了
-    ImGui::End();
-}
+//void ShowWindow4(const ViSession awg) {
+//    // ウィンドウ開始
+//    ImGui::SetNextWindowSize(ImVec2(500 * Gui::monitorScale, 450 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+//    ImGui::Begin("AWG");
+//    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
+//    // https://github.com/ocornut/imgui
+//    // https://github.com/epezent/implot
+//    // https://github.com/daigokk/ImPlotSample
+//    /*** ここから *************************************************/
+//    static float freq = 0, ampl = 0;
+//    ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
+//    if (ImGui::InputFloat("Freq.", &freq, 1, 1)) {
+//        static std::string ret;
+//		CppVisa::cviPrintf(awg, __FILE__, __LINE__, "HORizontal:SECdiv %e\n", freq);
+//        ret = CppVisa::cviQueryf(awg, __FILE__, __LINE__, "HORizontal:SECdiv?\n");
+//		freq = atof(ret.c_str());
+//    }
+//	ImGui::SameLine();
+//	ImGui::Text(": %f Hz", freq);
+//    ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
+//    if (ImGui::InputFloat("Ampl.", &ampl, 1, 1)) {
+//        static std::string ret;
+//        CppVisa::cviPrintf(awg, __FILE__, __LINE__, "HORizontal:SECdiv %e\n", ampl);
+//        ret = CppVisa::cviQueryf(awg, __FILE__, __LINE__, "HORizontal:SECdiv?\n");
+//        freq = atof(ret.c_str());
+//    }
+//    ImGui::SameLine();
+//    ImGui::Text(": %f V", ampl);
+//    /*** ここまで *************************************************/
+//    // ウィンドウ終了
+//    ImGui::End();
+//}
+//
+//void ShowWindow5(Scope& scope) {
+//    // ウィンドウ開始
+//    ImGui::SetNextWindowSize(ImVec2(500 * Gui::monitorScale, 450 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+//    ImGui::Begin("Scope");
+//    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
+//    // https://github.com/ocornut/imgui
+//    // https://github.com/epezent/implot
+//    // https://github.com/daigokk/ImPlotSample
+//    /*** ここから *************************************************/
+//    static int t_index = 0, v_index[2] = { 0 };
+//    static double timediv = 0, voltsdiv[2] = { 0 };
+//    ImGui::SetNextItemWidth(20.0f * Gui::monitorScale);
+//    if (ImGui::InputInt("Time/div", &t_index, 1, 1)) {
+//        if (t_index < 0) t_index = 0;
+//        if (t_index > 29) t_index = 29;
+//        static std::string ret;
+//		scope.setTimeDivIdx(t_index);
+//        timediv = scope.getTimeDiv();
+//    }
+//    ImGui::SameLine();
+//    ImGui::Text(": %.0e s", timediv);
+//    for(int ch =0; ch < 2; ch++) {
+//        ImGui::SetNextItemWidth(20.0f * Gui::monitorScale);
+//        std::string label = "Ch" + std::to_string(ch + 1) + " Volts/div";
+//        if (ImGui::InputInt(label.c_str(), &v_index[ch], 1, 1)) {
+//            if (v_index[ch] < 0) v_index[ch] = 0;
+//            if (v_index[ch] > 29) v_index[ch] = 29;
+//            static std::string ret;
+//            static double v_ranges[30] = {};
+//			scope.setVDivIdx(ch, v_index[ch]);
+//            voltsdiv[ch] = scope.getVDiv(ch);
+//        }
+//        ImGui::SameLine();
+//        ImGui::Text(": %.0e V", voltsdiv[ch]);
+//	}
+//    if(ImGui::Button("Auto")) {
+//        scope.setExecute();
+//	}
+//    ImGui::SameLine();
+//    if (ImGui::Button("Run/Stop")) {
+//		int state = scope.getState();
+//        if(state == 1) {
+//            scope.setStop();
+//        }
+//        else {
+//            scope.setRun();
+//        }
+//    }
+//    ImGui::SameLine();
+//	static std::vector<double> times, voltages[2];
+//    if(ImGui::Button("Capture")) {
+//        int length = scope.getRecordLength();
+//        times.resize(length);
+//        for(int ch = 0; ch <2; ch++) {
+//            voltages[ch].resize(length);
+//            scope.getWaveforms(ch, voltages[ch].data());
+//
+//		}
+//	}
+//    ImPlot::SetNextAxesToFit();
+//    if (ImPlot::BeginPlot("Waveform", ImVec2(-1, -1))) {
+//        ImPlot::SetupAxis(ImAxis_X1, "Time (s)");
+//        ImPlot::SetupAxis(ImAxis_Y1, "Volts (V)");
+//        ImPlot::PlotLine("Ch1", times.data(), voltages[0].data(), times.size());
+//        ImPlot::PlotLine("Ch2", times.data(), voltages[1].data(), times.size());
+//		ImPlot::EndPlot();
+//    }
+//    /*** ここまで *************************************************/
+//    // ウィンドウ終了
+//    ImGui::End();
+//}

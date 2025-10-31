@@ -30,6 +30,4 @@ public:
     static void runFft(WaveformParams* pWaveformParams, double waveform[], double freqs[], double amps[]);
 
     static void runLpf(WaveformParams* pWaveformParams, int order, double cutoffFreq, const double input[], double output[]);
-
-    static void makeRanges(const int size, double start, double ranges[]);
 };
