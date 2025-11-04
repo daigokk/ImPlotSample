@@ -103,7 +103,7 @@ private:
 1. カットオフ周波数100kHzとして、一から三次での10kHzから1000kHzまでの周波数特性をボード線図(Gainと位相$\theta$)で示せ。
    - $Gain = 20 \log_{10}\frac{𝑉_{𝑜𝑢𝑡}}{𝑉_{𝑖𝑛}}$ [dB]
    - $\theta = \theta_{out} - \theta_{in}$ [Deg.]
-   - 加点例: カットオフ周波数を変えて信号の通過具合を観察せよ。
+   - 加点例: ハイパスフィルター、またはバンドパスフィルターを実装せよ。
    ```cpp
     void ShowWindow3(const char title[]) {
         static double freqs[] = { FREQS }, gains[N_TH][N_FREQS] = { 0 }, phases[N_TH][N_FREQS];
