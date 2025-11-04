@@ -1,17 +1,20 @@
 #pragma once
 
-#include "VisaInst.h"
+#include "CppVisa.h"
 
-class Scope : public VisaInst
+
+class Scope
 {
+private:
+	ViSession vi = VI_NULL;
 public:
 	Scope();
-	Scope(const char *model);
+	Scope(const char keyword[]);
 	~Scope();
 
 	const char* model = "710105";
 
-	void init(const char *id);
+	void initialize(const char address[]);
 	char* getError();
 	void setRun();
 	void setStop();
@@ -43,10 +46,8 @@ public:
 	void setViewCh(int ch);
 	int getRecordLength();
 	void setRecordLength(const int val);
-	void getWaveforms(int ch, double *voltages);
-	void getWaveforms(double *voltages1, double *voltages2);
-	void saveWaveforms(int ch, const char *filename);
-	void saveWaveforms(int ch);
-	void saveWaveforms(const char *filename);
-	void saveWaveforms();
+	void getWaveforms(int ch, std::vector<double>& voltages);
+	void getWaveforms(std::vector<double>& voltages1, std::vector<double>& voltages2);
+	void saveWaveforms(int ch, const char* filename = "data.csv");
+	void saveWaveforms(const char* filename = "data.csv");
 };

@@ -18,10 +18,9 @@ Awg_wf1973::~Awg_wf1973()
 //	writef("");
 }
 
-void Awg_wf1973::init(const char *id)
+void Awg_wf1973::init(const char address[])
 {
-	enableOPC = 0;
-	open(id);
+	vi = CppVisa::OpenInstrument(address);
 	setVmin();
 	setLoad50();
 	setSin();
@@ -29,32 +28,32 @@ void Awg_wf1973::init(const char *id)
 
 char* Awg_wf1973::getError()
 {
-	return queryf("SYSTem:ERRor?");
+	return CppVisa::Queryf(vi, "SYSTem:ERRor?\n");
 }
 
 void Awg_wf1973::setLoad50()
 {
-	writef("OUTP1:LOAD 50OHM");
+	CppVisa::Printf(vi, "OUTP1:LOAD 50OHM\n");
 }
 
 void Awg_wf1973::setLoadHi()
 {
-	writef("OUTP:LOAD INFinity");
+	CppVisa::Printf(vi, "OUTP:LOAD INFinity\n");
 }
 void Awg_wf1973::setOn()
 {
-	writef("OUTP:STAT ON");
+	CppVisa::Printf(vi, "OUTP:STAT ON\n");
 }
 
 void Awg_wf1973::setOff()
 {
-	writef("OUTP:STAT OFF");
+	CppVisa::Printf(vi, "OUTP:STAT OFF\n");
 }
 
 int Awg_wf1973::getMode()
 {
 	char *ret;
-	ret = queryf("MODE?");
+	ret = CppVisa::Queryf(vi, "MODE?\n");
 	if (strcmp(ret, "NORMal") == 0)
 		return 0;
 	else if (strcmp(ret, "BURSt") == 0)
@@ -65,90 +64,90 @@ int Awg_wf1973::getMode()
 
 void Awg_wf1973::setModeCont()
 {
-	writef("MODE NORMal");
+	CppVisa::Printf(vi, "MODE NORMal\n");
 }
 
 void Awg_wf1973::setModeBrst()
 {
-	writef("MODE BURSt");
-	writef("BM:TYPE BURst");
+	CppVisa::Printf(vi, "MODE BURSt\n");
+	CppVisa::Printf(vi, "BM:TYPE BURst\n");
 }
 
 void Awg_wf1973::setBrstCycles(double val)
 {
-	writef("BM:MARK  %f", val);
+	CppVisa::Printf(vi, "BM:MARK  %f\n", val);
 }
 
 double Awg_wf1973::getBrstCycles()
 {
-	return atof(queryf("BM:MARK?"));
+	return atof(CppVisa::Queryf(vi, "BM:MARK?\n"));
 }
 
 void Awg_wf1973::setBrstSpaces(double val)
 {
-	writef("BM:SPACe  %f", val);
+	CppVisa::Printf(vi, "BM:SPACe  %f\n", val);
 }
 
 double Awg_wf1973::getBrstSpaces()
 {
-	return atof(queryf("BM:SPACe?"));
+	return atof(CppVisa::Queryf(vi, "BM:SPACe?\n"));
 }
 
 void Awg_wf1973::setModeTrig()
 {
-	writef("BM:TYPE TRIGger");
+	CppVisa::Printf(vi, "BM:TYPE TRIGger\n");
 }
 
 void Awg_wf1973::setSin()
 {
-	writef("FUNC:SHAP SIN");
+	CppVisa::Printf(vi, "FUNC:SHAP SIN\n");
 }
 
 void Awg_wf1973::setSqu()
 {
-	writef("FUNC:SHAP SQU");
+	CppVisa::Printf(vi, "FUNC:SHAP SQU\n");
 }
 
 void Awg_wf1973::setTri()
 {
-	writef("FUNC:SHAP RAMP");
+	CppVisa::Printf(vi, "FUNC:SHAP RAMP\n");
 }
 
 void Awg_wf1973::setVmin()
 {
-	writef("VOLT MIN");
+	CppVisa::Printf(vi, "VOLT MIN\n");
 }
 
 double Awg_wf1973::getFreq()
 {
-	return atof(queryf("FREQ?"));
+	return atof(CppVisa::Queryf(vi, "FREQ?\n"));
 }
 
 void Awg_wf1973::setFreq(double val)
 {
-	writef("FREQ %f", val);
+	CppVisa::Printf(vi, "FREQ %f\n", val);
 }
 
 double Awg_wf1973::getVpp()
 {
-	writef("VOLT:UNIT VPP");
-	return atof(queryf("VOLT?"));
+	CppVisa::Printf(vi, "VOLT:UNIT VPP\n");
+	return atof(CppVisa::Queryf(vi, "VOLT?\n"));
 }
 
 void Awg_wf1973::setVpp(double val)
 {
-	writef("VOLT:UNIT VPP");
-	writef("VOLT %fVPP", val);
+	CppVisa::Printf(vi, "VOLT:UNIT VPP\n");
+	CppVisa::Queryf(vi, "VOLT %fVPP\n", val);
 }
 
 double Awg_wf1973::getVrms()
 {
 	char *ret;
 	double v;
-	writef("VOLT:UNIT VRMS");
-	v = atof(queryf("VOLT?"));
+	CppVisa::Printf(vi, "VOLT:UNIT VRMS\n");
+	v = atof(CppVisa::Queryf(vi, "VOLT?\n"));
 
-	ret = queryf("FUNC:SHAP?");
+	ret = CppVisa::Queryf(vi, "FUNC:SHAP?\n");
 	if (strcmp("SIN", ret))
 	{
 		printf("'VRMS' cannot be used with the %s mode.\n", ret);
@@ -165,26 +164,26 @@ double Awg_wf1973::getVrms()
 void Awg_wf1973::setVrms(double val)
 {
 	char *ret;
-	ret = queryf("FUNC:SHAP?");
+	ret = CppVisa::Queryf(vi, "FUNC:SHAP?\n");
 	if (strcmp("SIN", ret))
 	{
 		printf("'VRMS' cannot be used with the %s mode.\n", ret);
 	}
-	writef("VOLT:UNIT VRMS");
-	writef("VOLT %fVRMS", val);
+	CppVisa::Printf(vi, "VOLT:UNIT VRMS\n");
+	CppVisa::Printf(vi, "VOLT %fVRMS\n", val);
 }
 
 double Awg_wf1973::getOffset()
 {
-	return atof(queryf("VOLT:OFFSet?"));
+	return atof(CppVisa::Queryf(vi, "VOLT:OFFSet?\n"));
 }
 
 void Awg_wf1973::setOffset(double val)
 {
-	writef("VOLT:OFFSet %f", val);
+	CppVisa::Printf(vi, "VOLT:OFFSet %f\n", val);
 }
 
 void Awg_wf1973::setDuty(double parcent)
 {
-	writef("PULS:DCYCle:CENTer %f", parcent);
+	CppVisa::Printf(vi, "PULS:DCYCle:CENTer %f\n", parcent);
 }

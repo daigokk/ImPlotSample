@@ -1,11 +1,12 @@
 #pragma once
 
-#include "VisaInst.h"
+#include "CppVisa.h"
 
-class Awg_wf1973 : public VisaInst
+
+class Awg_wf1973
 {
 private:
-
+	ViSession vi = VI_NULL;
 public:
 	Awg_wf1973(const char *serial);
 	Awg_wf1973();
@@ -13,7 +14,7 @@ public:
 
 	const char *model = "WF1973";
 
-	void init(const char *id); 
+	void init(const char address[]);
 	char* getError();
 	void setLoad50();
 	void setLoadHi();

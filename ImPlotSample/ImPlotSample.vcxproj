@@ -151,7 +151,6 @@
     <ClCompile Include="IMGUI\implot_items.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Scope.cpp" />
-    <ClCompile Include="VisaInst.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Butterworth.h" />
@@ -164,7 +163,6 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="fft.h" />
     <ClInclude Include="Chebyshev.h" />
-    <ClInclude Include="VisaInst.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

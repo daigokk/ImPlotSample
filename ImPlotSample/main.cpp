@@ -39,8 +39,8 @@ int main() {
         return -1;
     }
 
-	CppVisa::OpenRM(__FILE__, __LINE__);
- //   Scope scope;
+	CppVisa::OpenRM();
+    Scope scope;
 
     // メインループ
     while (!glfwWindowShouldClose(Gui::GetWindow())) {
@@ -62,7 +62,6 @@ int main() {
         // フレーム描画・スワップ
         Gui::EndFrame();
     }
-	//CppVisa::CloseRM();
     // GUI終了処理
     Gui::Shutdown();
     return 0;
@@ -329,7 +328,7 @@ void ShowWindow11(const char title[])
     }
     ImGui::SameLine();
     ImGui::Text(text.c_str());
-    if (ImPlot::BeginPlot("",ImVec2(-1,0), ImPlotFlags_Equal)) {
+    if (ImPlot::BeginPlot("##PI",ImVec2(-1,0), ImPlotFlags_Equal)) {
         ImPlot::SetupAxesLimits(-1, 1, -1, 1);
         ImPlot::PlotScatter("##Randam", xs.data(), ys.data(), trials);
         ImPlot::PlotLine("##Circle", cxs.data(), cys.data(), cxs.size());
