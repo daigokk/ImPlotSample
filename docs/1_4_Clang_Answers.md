@@ -64,7 +64,7 @@ int main() {
 
 ---
 
-### 5. if文とfor文と文字配列（大文字変換）（Lv. 4）
+### 5. for文とif文と文字配列（大文字変換）（Lv. 4）
 ```c
 #include <stdio.h>
 int main(void) {
