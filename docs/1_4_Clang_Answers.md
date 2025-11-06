@@ -52,9 +52,10 @@ int main() {
     char ch = 'A';
     for (int i = 0; i < 6; i++) {
         for (int j = 0; j < 10; j++) {
-            printf("%c ", ch++);
+            printf("%c ", ch+6*j);
         }
         printf("\n");
+        ch++;
     }
     return 0;
 }
