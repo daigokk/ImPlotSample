@@ -25,12 +25,12 @@
    - 評価基準: 指定された文字列が正しく整形されて出力される。
    - 加点例: 文字列の並びを縦方向、または逆方向にする。
      ```
-     A B C D E F G H I J
-     K L M N O P Q R S T
-     U V W X Y Z [ \ ] ^
-     _ ` a b c d e f g h
-     i j k l m n o p q r
-     s t u v w x y z { |
+     A G M S Y _ e k q w 
+     B H N T Z ` f l r x 
+     C I O U [ a g m s y 
+     D J P V \ b h n t z 
+     E K Q W ] c i o u { 
+     F L R X ^ d j p v | 
      ```
 1. if文とfor文と文字配列: 標準入力から入力された文字列を大文字に変換して出力する。
    - Lv. 4、30分
