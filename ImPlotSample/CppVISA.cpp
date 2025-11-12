@@ -227,21 +227,21 @@ inline bool CppVisa::GetIdn(const ViChar* instrDesc, char* ret) {
     ViSession instrument = VI_NULL;
     ViStatus status = viOpen(resourceManager, instrDesc, VI_NULL, 10, &instrument);
     if (status < VI_SUCCESS) {
-        std::cerr << "計測器のオープンに失敗しました。" << std::endl;
+        std::cerr << "[Error] 計測器のオープンに失敗しました。" << std::endl;
         return false;
     }
 
     // *IDN? に対して %255t で読み取る
     status = viQueryf(instrument, "%s", "%255t", "*IDN?\n", ret);
     if (status < VI_SUCCESS) {
-        std::cerr << "計測器の問い合わせに失敗しました。" << std::endl;
+        std::cerr << "[Error] 計測器の問い合わせに失敗しました。" << std::endl;
         viClose(instrument);
         return false;
     }
 
     status = viClose(instrument);
     if (status < VI_SUCCESS) {
-        std::cerr << "計測器のクローズに失敗しました。" << std::endl;
+        std::cerr << "[Error] 計測器のクローズに失敗しました。" << std::endl;
         return false;
     }
     return true;
@@ -256,13 +256,13 @@ void CppVisa::FindRsrc() {
 
     status = viFindRsrc(resourceManager, "?*INSTR", &findList, &numInstrs, instrDesc);
     if (status < VI_SUCCESS) {
-        std::cerr << "計測器の検索に失敗しました。" << std::endl;
+        std::cerr << "[Error] 計測器の検索に失敗しました。" << std::endl;
         return;
     }
 
     std::cout << "見つかった計測器の数: " << numInstrs << std::endl;
     if (numInstrs == 0) {
-        std::cout << "計測器が見つかりませんでした。" << std::endl;
+        std::cout << "[Error] 計測器が見つかりませんでした。" << std::endl;
         viClose(findList);
         return;
     }
