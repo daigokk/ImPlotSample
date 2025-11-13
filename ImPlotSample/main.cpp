@@ -5,8 +5,7 @@
 #include <vector>
 #include "Gui.h"
 #include "Commands.h"
-#include "CppVisa.h"
-#include "Scope.h"
+#include "VisaInstrument.hpp"
 
 #define PI acos(-1)
 #define FILENAME_RAW "01_raw.csv"
@@ -39,8 +38,7 @@ int main() {
         return -1;
     }
 
-	CppVisa::OpenRM();
-    Scope scope;
+    auto scope = VisaInstrument::create("yokogawa");
 
     // メインループ
     while (!glfwWindowShouldClose(Gui::GetWindow())) {
