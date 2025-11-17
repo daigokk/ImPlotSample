@@ -103,7 +103,7 @@
    - 評価基準: data.csvが正しく作成され、内容が正確に記録されている。
 1. 外部ライブラリを用いたデータの可視化: `data.csv`の値を[ImPlot](https://github.com/epezent/implot)を用いてグラフにして表示する。
    - Lv. 100、200分
-   - 評価基準: グラフが正しく表示され、ラベル・軸が適切に設定されている
+   - 評価基準: グラフが正しく表示され、ラベル・軸が適切に設定されている。
    - [これ](https://github.com/daigokk/ImPlotSample/tree/master)を使えば簡単(Lv. 50くらい)になります。
      
      ![Raw waveform](./images/Clang_10.png)
@@ -121,7 +121,7 @@
    - Lv. 7、30分、評価基準
    - 評価基準: 6桁(1.41421)以上表示する。検算には`math.h`を用いてもよい。加点例: 任意の実数のルートを求める。
    -  $x_{i+1}=x_i - \frac{f(x_i)}{f'(x_i)}$
-
+   
 ### 参考資料
 - [Visual Studioの使い方](./1_3_VisualStudio.md)
 - [C言語 on Colab](https://colab.research.google.com/drive/1fewkHpqIm40EXWWdZ9eu6EUIN9MWQNO4)
