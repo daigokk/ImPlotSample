@@ -158,9 +158,12 @@ int main() {
     viOpen(defaultRM, "USB0::????????::INSTR", VI_NULL, VI_NULL, &instr); 
     
     // 3. 質問する（SCPIコマンド、ここでは*IDN?を送信）
+    // 【重要】コマンドの末尾には必ず改行コード(\n)をつけてください！
+    // これがないと計測器は命令の終わりを認識できず、フリーズしたようになります。
     viPrintf(instr, "*IDN?\n");
     
     // 4. 答えを聞く（直前のSCPIコマンドに対する返信を受信）
+    // %t はVISA特有の書式で「終端文字までテキストとして読み込む」という意味です
     viScanf(instr, "%255t", buffer);
     
     printf("Instrument ID: %s\n", buffer); // 結果表示
