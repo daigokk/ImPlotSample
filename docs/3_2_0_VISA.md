@@ -9,7 +9,7 @@ VISA（Virtual Instrument Software Architecture、ビサ）は、計測器とコ
 もしVISAがなければ、USB機器、LAN機器、または古いGPIB機器を制御するために**それぞれ異なる通信方式専用のコード**を書く必要がありました。
 
 VISAは、異なる通信方法の違いを気にせず、**同じ操作方法**でどのメーカーの、どの通信方式の機器でも統一的に操作できるようにします。[計測機業界の主要メンバー](https://www.ivifoundation.org/About-the-Foundation/Current-Members.html#sponsor-members)で構成された[IVI Foundation](https://www.ivifoundation.org/)で制定され、多くの計測器メーカーが採用している業界標準です。
-* VISAの実装(ソフトウェア)の例
+* VISAの実装(ドライバーソフトウェア)の例
   - [NI-VISA](https://www.ni.com/ja/support/downloads/drivers/download.ni-visa.html)
   - [KeySight VISA](https://www.keysight.com/jp/ja/lib/software-detail/computer-software/io-libraries-suite-downloads-2175637.html)
   - [TekVISA](https://www.tek.com/ja/manual/tekvisa-programmer-manual)
@@ -24,6 +24,14 @@ VISAは、異なる通信方法の違いを気にせず、**同じ操作方法**
   - 横河計測(株)
   - その他多数
 
+- ⚠️ 【重要】事前準備：ドライバのインストール
+
+プログラムを書く前に、必ず **VISAドライバ(NI-VISAなど)** をPCにインストールする必要があります。
+VISAはあくまで「規格」であり、実際に通信を行う「実体(ドライバー)」がないとプログラムは動きません。
+例えば最初に以下の手順を実行する必要があります。教室のPCにはすでにインストールされているので以下の手順は不要です。
+
+1. 上記リンク等からVISAドライバをインストールし、PCを再起動してください。
+2. USBなどで計測器を接続し、PCに認識させます。
 ---
 
 ## デモンストレーション
@@ -123,49 +131,6 @@ VISAは、接続方法に関わらず計測器に一意の「住所」を割り�
 
 ![NI MAX](./images/visa_02_02.png)
 
-  * 以下は接続された計測器を列挙するプログラムです。NI MAXも内部で以下のようにVISAを使っています。
-    ```cpp
-    void vi_getIdn(const ViSession resourceManager, const ViChar* instrDesc, char* ret) {
-        ViSession instrument;
-        viOpen(resourceManager, instrDesc, VI_NULL, VI_NULL, &instrument);
-        viQueryf(instrument, "%s", "%255t", "*IDN?\n", ret);
-        viClose(instrument);
-    }
-    
-    void vi_FindRsrc() {
-        // 接続されている計測器のアドレスとメーカ名等を列挙する
-        ViSession defaultRM;
-        ViFindList findList;
-        ViUInt32 numInstrs;
-        ViChar instrDesc[256], ret[256];
-        
-        viOpenDefaultRM(&defaultRM);
-        // 接続されている計測器を検索（例: GPIB, USB, TCPIPなど）
-        viFindRsrc(defaultRM, "?*INSTR", &findList, &numInstrs, instrDesc);
-        printf("見つかった計測器の数: %d\n", numInstrs);
-        if(numInstrs == 0) {
-            std::cout << "計測器が見つかりませんでした。" << std::endl;
-            return;
-        }
-        
-        // 最初の計測器を表示
-        vi_getIdn(defaultRM, instrDesc, ret);
-        printf("1: %s, %s\n", instrDesc, ret);
-    
-        // 残りの計測器を取得
-        for (ViUInt32 i = 1; i < numInstrs; ++i) {
-            if (viFindNext(findList, instrDesc) < VI_SUCCESS) break;
-            vi_getIdn(defaultRM, instrDesc, ret);
-            printf("%d: %s, %s\n", i + 1, instrDesc, ret);
-        }
-        
-        viClose(findList);
-        viClose(defaultRM);
-    }
-    ```
-    - `findList`: 検索結果（アドレスリスト）全体を管理するための**識別子（ハンドル）**が格納されます。残りの計測器のアドレスを取得するために、後続のviFindNext関数に渡されます。
-    - `numInstrs`: 検索条件に一致した計測器の総数が格納されます。この値に基づいてviFindNextのループ回数を決定します。
-    - `instrDesc`: 検索で見つかった**最初の計測器のVISAアドレス**が格納されます。
 -----
 
 ## 🔧 最小のサンプルプログラム
@@ -239,8 +204,55 @@ print("接続を終了しました。")
 ```
 
 -----
+## 応用: 機器の自動探索(C言語)
+- NI MAXのように、PCに接続されている機器をプログラムで自動的に探したい場合は、viFindRsrc関数を使用します。
+- 以下は接続された計測器を列挙するプログラムです。NI MAXも内部で以下のようにVISAを使っています。少し複雑ですが、複数の機器を扱う際に役立ちます。
 
+    ```cpp
+    void vi_getIdn(const ViSession resourceManager, const ViChar* instrDesc, char* ret) {
+        ViSession instrument;
+        viOpen(resourceManager, instrDesc, VI_NULL, VI_NULL, &instrument);
+        viQueryf(instrument, "%s", "%255t", "*IDN?\n", ret);
+        viClose(instrument);
+    }
+    
+    void vi_FindRsrc() {
+        // 接続されている計測器のアドレスとメーカ名等を列挙する
+        ViSession defaultRM;
+        ViFindList findList;
+        ViUInt32 numInstrs;
+        ViChar instrDesc[256], ret[256];
+        
+        viOpenDefaultRM(&defaultRM);
+        // 接続されている計測器を検索（例: GPIB, USB, TCPIPなど）
+        viFindRsrc(defaultRM, "?*INSTR", &findList, &numInstrs, instrDesc);
+        printf("見つかった計測器の数: %d\n", numInstrs);
+        if(numInstrs == 0) {
+            std::cout << "計測器が見つかりませんでした。" << std::endl;
+            return;
+        }
+        
+        // 最初の計測器を表示
+        vi_getIdn(defaultRM, instrDesc, ret);
+        printf("1: %s, %s\n", instrDesc, ret);
+    
+        // 残りの計測器を取得
+        for (ViUInt32 i = 1; i < numInstrs; ++i) {
+            if (viFindNext(findList, instrDesc) < VI_SUCCESS) break;
+            vi_getIdn(defaultRM, instrDesc, ret);
+            printf("%d: %s, %s\n", i + 1, instrDesc, ret);
+        }
+        
+        viClose(findList);
+        viClose(defaultRM);
+    }
+    ```
+    - `findList`: 検索結果（アドレスリスト）全体を管理するための**識別子（ハンドル）**が格納されます。残りの計測器のアドレスを取得するために、後続のviFindNext関数に渡されます。
+    - `numInstrs`: 検索条件に一致した計測器の総数が格納されます。この値に基づいてviFindNextのループ回数を決定します。
+    - `instrDesc`: 検索で見つかった**最初の計測器のVISAアドレス**が格納されます。
+-----
 ## 🧠 まとめ
 
-VISAは、現代の計測器制御において**必須の共通言語**です。複雑な通信方式の壁を取り払い、統一されたシンプルな手順（API）で機器を扱えるようにすることで、開発効率と保守性を大幅に向上させています。
+- VISAは、現代の計測器制御において**必須の共通言語**です。複雑な通信方式の壁を取り払い、統一されたシンプルな手順（API）で機器を扱えるようにすることで、開発効率と保守性を大幅に向上させています。
+- まずはNI MAXで接続確認を行い、最小限のサンプルコードで通信ができるか試してみましょう。
 
