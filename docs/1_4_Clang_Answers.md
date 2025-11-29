@@ -222,3 +222,69 @@ int main() {
 - `rand()`で乱数生成、次に円内判定。
 
 ---
+
+### 12. モンティ・ホール問題
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main() {
+    int i;
+    int trials = 10000; // 試行回数
+    int win_stay = 0;   // 変えないで勝った回数
+    int win_switch = 0; // 変えて勝った回数
+
+    // 乱数の種を初期化（これがないと毎回同じ結果になります）
+    srand(time(NULL));
+
+    printf("モンティ・ホール問題を %d 回シミュレーションします...\n", trials);
+
+    for (i = 0; i < trials; i++) {
+        // 1. 当たりのドアを決める (0, 1, 2 のいずれか)
+        int car = rand() % 3;
+
+        // 2. プレイヤーが最初に選ぶドアを決める
+        int choice = rand() % 3;
+
+        // 3. 司会者(モンティ)が開けるドアを決める
+        // 司会者は「当たり(car)ではなく」かつ「プレイヤーが選んだドア(choice)ではない」ドアを開ける
+        int monty_open;
+        do {
+            monty_open = rand() % 3;
+        } while (monty_open == car || monty_open == choice);
+
+        // --- 勝敗判定 ---
+
+        // 戦略A: ドアを変えない場合 (Stay)
+        // 最初の選択が当たりなら勝ち
+        if (choice == car) {
+            win_stay++;
+        }
+
+        // 戦略B: ドアを変える場合 (Switch)
+        // 「残っているドア」に変える。
+        // つまり、今の選択(choice)でもなく、モンティが開けたドア(monty_open)でもないドアが新しい選択になる。
+        // 実はもっと単純に、「最初にハズレを選んでいれば、変えると必ず当たる」というロジックでも判定可能ですが、
+        // ここでは丁寧にシミュレーションします。
+        int new_choice;
+        for (int j = 0; j < 3; j++) {
+            if (j != choice && j != monty_open) {
+                new_choice = j;
+                break;
+            }
+        }
+
+        if (new_choice == car) {
+            win_switch++;
+        }
+    }
+
+    // 結果発表
+    printf("\n--- 結果 ---\n");
+    printf("変えない場合の勝率: %.2f%%\n", (double)win_stay / trials * 100.0);
+    printf("変える場合の勝率  : %.2f%%\n", (double)win_switch / trials * 100.0);
+
+    return 0;
+}
+```
