@@ -223,7 +223,48 @@ int main() {
 
 ---
 
-### 12. モンティ・ホール問題
+### 12. ニュートン・ラプソン法
+```c
+#include <stdio.h>
+#include <math.h> // fabs()を使うために必要
+
+int main() {
+    double x = 1.0;        // 初期値（適当な正の数）
+    double prev_x;         // 前回のxの値を保持する変数
+    const double EPSILON = 0.000000001; // 許容誤差（これ以下なら計算終了）
+    int max_iter = 100;    // 無限ループ防止用の最大反復回数
+    int i;
+
+    printf("ニュートン法によるルート2の導出:\n");
+    printf("初期値: %f\n\n", x);
+
+    for (i = 1; i <= max_iter; i++) {
+        prev_x = x; // 現在の値を保存
+
+        // ニュートン法の更新式: x = (x + 2/x) / 2
+        x = (x + 2.0 / x) / 2.0;
+
+        printf("%d回目: %.15f\n", i, x);
+
+        // 収束判定: 前回の値との差が誤差範囲内なら終了
+        // fabsは絶対値を求める関数です
+        if (fabs(x - prev_x) < EPSILON) {
+            printf("\n収束しました。\n");
+            break;
+        }
+    }
+
+    printf("\n--- 結果 ---\n");
+    printf("計算結果: %.15f\n", x);
+    printf("実際の値: %.15f (sqrt(2))\n", sqrt(2.0));
+
+    return 0;
+}
+```
+
+---
+
+### 13. モンティ・ホール問題
 ```c
 #include <stdio.h>
 #include <stdlib.h>
