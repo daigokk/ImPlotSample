@@ -44,6 +44,7 @@
    - 評価基準: minimax関数が正しく定義され、結果が正しく表示される。加点例: 平均 $\bar{x}$ や不偏標準偏差 $\sigma = \sqrt{\frac{1}{N-1} \sum_{i=1}^{N} (x_i - \bar{x})^2}$ を表示する。
      ```c
      #include <stdio.h>
+     #include <math.h> // 標準偏差を求める際に必要なルートを求めるsqrt関数を使う際に必要です
      void minimax(int length, double *arr, double *minimum, double *maximum);
      int main(void) {
          double arr[] = { 1,5,4,3,2 }, minimum, maximum;
