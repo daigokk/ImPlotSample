@@ -9,6 +9,7 @@
 1. scanfとprintf: 標準入力(キーボード)から入力された実数を、標準出力に表示する。
    - Lv. 1、15分
    - 評価基準: 入力された実数が正しく表示される。
+   - Visual Studioではデフォルトではscanfが使えません。scanf_sを使うか、プログラムの最初の行に`#define _CRT_SECURE_NO_WARNINGS`を挿入してください。
      ```
      How tall are you?> 185
      Tall> 185.000000
@@ -35,6 +36,7 @@
 1. for文とif文と文字配列: 標準入力から入力された文字列を大文字に変換して出力する。
    - Lv. 4、30分
    - 評価基準: 大文字で出力される。加点例: 小文字は大文字、大文字は小文字に変換する。
+   - Visual Studioではデフォルトではscanfが使えません。scanf_sを使うか、プログラムの最初の行に`#define _CRT_SECURE_NO_WARNINGS`を挿入してください。
      ```
      Input> Ptu
      Output> PTU
