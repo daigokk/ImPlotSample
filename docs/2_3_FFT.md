@@ -14,7 +14,7 @@
 ```cpp
 #include <vector>
 #include <complex>
-void fft(std::vector<std::complex<double>>& a) {
+void _fft(std::vector<std::complex<double>>& a) {
     int size = a.size();
     if (size <= 1) return;
 
@@ -34,6 +34,15 @@ void fft(std::vector<std::complex<double>>& a) {
         std::complex<double> t = std::polar(1.0, -2 * PI * k / size) * odd[k];
         a[k] = even[k] + t;
         a[k + size / 2] = even[k] - t;
+    }
+}
+
+void fft(const int size, const double in_array[], double out_array[], double freqs[]) {
+    std::vector<std::complex<double>> vec(in_array, in_array + size);
+    _fft(vec);
+    for (int i = 0; i < SIZE; i++) {
+        freqs[i] = i / (DT * SIZE);
+        out_array[i] = pow(pow(vec[i].real(), 2) + pow(vec[i].imag(), 2), 0.5) / size;
     }
 }
 ```
@@ -63,12 +72,23 @@ void fft(std::vector<std::complex<double>>& a) {
 - じつは入力も複素数。今回の入力は虚数成分が0の複素数を用いている。
 - FFTは入力信号が周期的であると仮定して解析するため、入力信号の両端の値が不連続だと不備がある(どのような？)。
 - 二次元に応用すると画像を周波数成分に分解することができる。
+- 配列からvectorへの変換
+  ```cpp
+  std::vector<std::complex<double>> vec(v, v + SIZE);
+  ```
+- vectprから配列へ変換
+  ```cpp
+  for (int i = 0; i < SIZE; i++) {
+      f[i] = i / (DT * SIZE);
+      amp[i] = pow(pow(vec[i].real(), 2) + pow(vec[i].imag(),2), 0.5);
+  }
+  ```
 
 ---
 
 ## 4. レポート課題
 
-1. 「100kHzの正弦波」の、振幅の周波数スペクトルのグラフを作ってください。
+1. 「10kHzの正弦波」の、振幅の周波数スペクトルのグラフを作ってください。
    - 加点例: 矩形波等のグラフと比較する。
      - 正弦波
        
