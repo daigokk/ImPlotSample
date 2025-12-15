@@ -17,8 +17,8 @@
       - (例)dt: 1e-6 [s]
    1. 「View」ボタンを押すとWindowに模擬測定データの波形が表示される。
    1. ここでは雑音を含んだ信号を以下のように定義する:
-     - $v(t)=A \sin(\omega t + \theta) + noize$
-     - ただし、 $noize$ は「 $\pm$ 任意の値」のランダムな実数とする。
+      - $v(t)=A \sin(\omega t + \theta) + noize$
+      - ただし、 $noize$ は「 $\pm$ 任意の値」のランダムな実数とする。
      
 1. 加点例: 矩形波を作成する。
    - 矩形波: $v(t) = \sum_{i=0}^{\infty} \frac{4A}{(2i+1)\pi} \sin\left(2\pi f (2i+1) t\right)$
