@@ -83,97 +83,33 @@
   
 	```cpp
 	void ShowWindow2(const char title[]) {
-	    static std::string text1 = "", text2 = "";
-	    static double times[SIZE] = { 0 }, wf_raw[SIZE] = { 0 }, wf_lpf[SIZE] = { 0 };
-	    static double freqs[SIZE] = { 0 }, amps_raw[SIZE] = { 0 }, amps_lpf[SIZE] = { 0 };
-	    static double freq = 100e3, x = 0, y = 0, x_lpf = 0, y_lpf = 0;
-	    static int order = 2;
-	    static float lpfreq = 1e4;
-	    static Commands::WaveformParams wfp;
+	    static std::string text = "";
+	    static double t[N], v[N];
 	    // ウィンドウ開始
-	    ImGui::SetNextWindowPos(ImVec2(660 * Gui::monitorScale, 0), ImGuiCond_FirstUseEver);
-	    ImGui::SetNextWindowSize(ImVec2(440 * Gui::monitorScale, 750 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+	    ImGui::SetNextWindowPos(ImVec2(100, 200), ImGuiCond_FirstUseEver);
+	    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 240 * Gui::monitorScale), ImGuiCond_FirstUseEver);
 	    ImGui::Begin(title);
 	    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
-	    ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
-	    ImGui::InputDouble("Freq. (Hz)", &freq, 100.0, 1000.0, "%.1f");
-	    ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
-	    if (ImGui::InputInt("Order", &order, 1, 10)) {
-	        if (order < 1) order = 1;
-	        Commands::WaveformParams wfp;
-	        wfp.dt = DT;
-	        wfp.size = SIZE;
-			wfp.frequency = freq;
-	        Commands::runLpf(&wfp, order, lpfreq, wf_raw, wf_lpf);
-	        Commands::runFft(&wfp, wf_lpf, freqs, amps_lpf);
-	        wfp.size = 1.0 / wfp.frequency / wfp.dt;
-	        Commands::runPsd(&wfp, &wf_lpf[SIZE - wfp.size], &x_lpf, &y_lpf);
-	    }
 	    if (ImGui::Button("View")) {
 	        // ボタンが押されたらここが実行される
-	        /*** 適切なコードを入力 ***************************************/
-	        // 波形データ読み込み
-	        wfp.size = SIZE;
-			wfp.dt = DT;
-			wfp.frequency = freq;
-	        if(Commands::loadWaveform(&wfp, FILENAME_RAW, times, wf_raw)) {
-	            text1 = "Success.";
+	        FILE* fp;
+	        fp = fopen("data.csv", "r");
+	        if (fp != nullptr) {
+	            char buf[256];
+	            fgets(buf, sizeof(buf), fp);  // 1行目はラベル(t (s), v (V))なので読み飛ばす
+	            for (int i = 0; i < N; i++) {
+	                fscanf(fp, "%lf, %lf", &t[i], &v[i]);
+	            }
+	            fclose(fp);
+	            text = "Success.";
 	        }
 	        else {
-	            text1 = "[Error] Failed to open file for reading.";
-			}
-	        // PSD
-	        
-	        // Raw波形のFFT計算
-	        
-			// ローパスフィルタ処理とFFT計算
-	        
-	        /*** ここまで *************************************************/
-	        ImPlot::SetNextAxesToFit();
-	    }
-	    ImGui::SameLine();
-	    ImGui::Text(text1.c_str());
-	    if (text1 == "Success.") {
-	        ImGui::SameLine();
-	        if (ImGui::Button("Save")) {
-	            if (Commands::saveWaveform(&wfp, FILENAME_LPF, wf_lpf)) {
-	                text2 = "Success.";
-	            }
-	            else {
-	                text2 = "[Error] Failed to open file for writing.";
-	            }
+	            text = "Fail.";
 	        }
-	        ImGui::SameLine();
-	        ImGui::Text(text2.c_str());
 	    }
-	    if (ImGui::SliderFloat("LPF", &lpfreq, 1e4, 0.5e6, "%.0fHz")) {
-	        Commands::WaveformParams wfp;
-			wfp.dt = DT;
-	        wfp.size = SIZE;
-			wfp.frequency = freq;
-	        Commands::runLpf(&wfp, order, lpfreq, wf_raw, wf_lpf);
-			// FFT計算
-	        Commands::runFft(&wfp, wf_lpf, freqs, amps_lpf);
-	        wfp.size = 1.0 / wfp.frequency / wfp.dt;
-	        Commands::runPsd(&wfp, &wf_lpf[SIZE - wfp.size], &x_lpf, &y_lpf);
-	    }
-	    ImGui::Text("RAW X: %5.3f, Y: %5.3f", x, y);
-	    ImGui::Text("LPF X: %5.3f, Y: %5.3f", x_lpf, y_lpf);
-	    // プロット描画
-	    if (ImPlot::BeginPlot("Waveform", ImVec2(-1, 250 * Gui::monitorScale))) {
-	        ImPlot::SetupAxis(ImAxis_X1, "Time (s)");
-	        ImPlot::SetupAxis(ImAxis_Y1, "v (V)");
-	        ImPlot::PlotLine("Ch1", times, wf_raw, SIZE);
-	        ImPlot::PlotLine("LPF", times, wf_lpf, SIZE);
-	        ImPlot::EndPlot();
-	    }
-	    if (ImPlot::BeginPlot("FFT", ImVec2(-1, 250 * Gui::monitorScale))) {
-	        ImPlot::SetupAxisLimits(ImAxis_X1, 0.0, 1.0 / DT, ImPlotCond_Once);
-	        ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0, 1.0, ImPlotCond_Once);
-	        ImPlot::SetupAxis(ImAxis_X1, "Frequency (Hz)");
-	        ImPlot::SetupAxis(ImAxis_Y1, "v (V)");
-	        ImPlot::PlotLine("Ch1", freqs, amps_raw, SIZE);
-	        ImPlot::PlotLine("LPF", freqs, amps_lpf, SIZE);
+	    ImGui::Text(text.c_str());
+	    if (ImPlot::BeginPlot(title, ImVec2(-1, 250 * Gui::monitorScale))) {
+	        ImPlot::PlotLine("Ch1", t, v, N);
 	        ImPlot::EndPlot();
 	    }
 	    // ウィンドウ終了
