@@ -12,7 +12,7 @@
 
 ## 2. 課題
 1. [サンプルプログラム](https://github.com/daigokk/ImPlotSample/archive/refs/heads/master.zip)をダウンロードして雑音を含んだ模擬測定データ(data.csv)を作成し、表示するプログラムを完成させてください。
-   - 「Save」ボタンを押すと「data.csv」ファイルに模擬測定データが保存される。
+   - 「Save」ボタンを押すと「data.csv」ファイルに模擬測定データ(時間, 電圧)が保存される。
    - 「View」ボタンを押すとWindowに模擬測定データの波形が表示される。
    - ここでは雑音を含んだ信号を以下のように定義する:
      - $v(t)=A \sin(\omega t + \theta) + noize$
