@@ -20,7 +20,7 @@
       - $v(t)=A \sin(\omega t + \theta) + noize$
       - ただし、 $noize$ は「 $\pm$ 任意の値」のランダムな実数とする。
      
-1. 加点例: 矩形波を作成する。
+1. 矩形波・三角波・のこぎり波を作成する。
    - 矩形波: $v(t) = \sum_{i=0}^{\infty} \frac{4A}{(2i+1)\pi} \sin\left(2\pi f (2i+1) t\right)$
   
    ![矩形波](./images/signal_01_02.png)
