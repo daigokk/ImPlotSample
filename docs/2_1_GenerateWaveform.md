@@ -18,7 +18,7 @@
    1. 設定値「amplitude」と「noise」がマイナスにならないようにする。 
    1. 設定値「phase」の範囲は-180～180度とする。
    1. ここでは雑音を含んだ信号を以下のように定義する:
-      - $v(t)=A \sin(\omega t + \theta) + noize$
+      - $v(t)=A \sin(\omega t + \theta) + noise$
       - ただし、 $noise$ は「 $\pm$ 設置値」の範囲内のランダムな実数とする。
    1. 「View」ボタンを押すとWindowに模擬測定データの波形が表示される。
      
