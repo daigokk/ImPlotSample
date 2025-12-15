@@ -11,7 +11,7 @@
 ---
 
 ## 2. 課題
-1. [サンプルプログラム](https://github.com/daigokk/ImPlotSample/archive/refs/heads/master.zip)をダウンロードして雑音を含んだ模擬測定データ(data.csv)を作成し、表示するプログラムを完成させてください。
+1. [サンプルプログラム](https://github.com/daigokk/ImPlotSample/archive/refs/heads/master.zip)をダウンロードして雑音を含んだ模擬測定データ(raw.csv)を作成し、表示するプログラムを完成させてください。
    1. 「Save」ボタンを押すと「raw.csv」ファイルに模擬測定データ(時間, 電圧)が保存される。
       - (例)データ数 N: 10000
       - (例)サンプリング間隔 DT: 1e-6 [s]
