@@ -3,13 +3,15 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <complex>
 #include "Gui.h"
 
 #define PI acos(-1)
+#define SIZE 10000
+#define DT 1e-6
 
 // ImGuiのWindowの関数
 void ShowWindow1(const char title[]);
-
 
 int main() {
     // GUI初期化
@@ -26,12 +28,11 @@ int main() {
     while (!glfwWindowShouldClose(Gui::GetWindow())) {
         // フレーム開始
         Gui::BeginFrame();
-        
+
         // ウィンドウ描画
-		/*** 描画したいImGuiのWindowをここに記述する ***/
+        /*** 描画したいImGuiのWindowをここに記述する ***/
         ShowWindow1("Generate waveform");
 
-        
         // フレーム描画・スワップ
         Gui::EndFrame();
     }
@@ -43,16 +44,21 @@ int main() {
 // ウィンドウの定義
 void ShowWindow1(const char title[]) {
     static std::string text = "";
+    static double frequency = 10e3;
+    static double amplitude = 1.0;
+    static double phase_deg = 0.0;
+    static double noise = 0.0; // 追加
     // ウィンドウ開始
     ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 240 * Gui::monitorScale), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin(title);
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     if (ImGui::Button("Save")) {
         // ボタンが押されたらここが実行される
-		text = "Push the button.\n";
+        text = "Success.";
     }
-	ImGui::Text(text.c_str());
+    ImGui::SameLine();
+    ImGui::Text(text.c_str());
     // ウィンドウ終了
     ImGui::End();
 }
