@@ -28,7 +28,7 @@
 	```cpp
 	void ShowWindow1(const char title[]) {
 	    static std::string text = "";
-	    static double frequency = 100e3;
+	    static double frequency = 1000;
 	    static double amplitude = 1.0;
 	    static double phase_deg = 0.0;
 	    static double noize = 0.0; // 追加
@@ -50,8 +50,8 @@
 	            fprintf(fp, "t (s), v (V)\n");
 	            for (int i = 0; i < N; i++) {
 	                double t = DT * i;
-	                double v = frequency  * sin(2 * PI * frequency * t + phase_deg / 180 * PI);
-	                v += ((double)rand() / RAND_MAX * 2 - 1) * noize;
+	                double v = amplitude * sin(2 * PI * frequency * t + phase_deg / 180 * PI);
+	                //v += ((double)rand() / RAND_MAX * 2 - 1) * noize;
 	                fprintf(fp, "%f, %f\n", t, v);
 	            }
 	            fclose(fp);
@@ -96,8 +96,10 @@
 	            text = "Fail.";
 	        }
 	    }
+	    ImGui::SameLine();
 	    ImGui::Text(text.c_str());
 	    if (ImPlot::BeginPlot(title, ImVec2(-1, 250 * Gui::monitorScale))) {
+	        ImPlot::SetupAxes("Time (s)", "Voltage (V)");
 	        ImPlot::PlotLine("Ch1", t, v, N);
 	        ImPlot::EndPlot();
 	    }
