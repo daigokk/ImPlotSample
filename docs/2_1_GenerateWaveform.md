@@ -5,8 +5,8 @@
 ---
 
 ## 1. 雑音とは？
-- 偶然誤差としての雑音の例(ホワイトノイズ): $v(t)=A \sin(\omega t + \theta) + noize$
-- 系統誤差としての雑音の例(商用電源からのノイズ): $v(t)=A \sin(\omega t + \theta) + noize\times\sin(2\pi\times 50 t+\theta')$
+- 偶然誤差としての雑音の例(ホワイトノイズ): $v(t)=A \sin(\omega t + \theta) + noise$
+- 系統誤差としての雑音の例(商用電源からのノイズ): $v(t)=A \sin(\omega t + \theta) + noise\times\sin(2\pi\times 50 t+\theta')$
 
 ---
 
@@ -15,7 +15,7 @@
    1. 「Save」ボタンを押すと「data.csv」ファイルに模擬測定データ(時間, 電圧)が保存される。
       - (例)データ数 N: 10000
       - (例)サンプリング間隔 DT: 1e-6 [s]
-   1. 設定値「amplitude」と「noize」がマイナスにならないようにする。 
+   1. 設定値「amplitude」と「noise」がマイナスにならないようにする。 
    1. 設定値「phase」の範囲は-180～180度とする。
    1. ここでは雑音を含んだ信号を以下のように定義する:
       - $v(t)=A \sin(\omega t + \theta) + noize$
@@ -33,7 +33,7 @@
 	    static double frequency = 1000;
 	    static double amplitude = 1.0;
 	    static double phase_deg = 0.0;
-	    static double noize = 0.0; // 追加
+	    static double noise = 0.0; // 追加
 	    // ウィンドウ開始
 	    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 	    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
@@ -42,7 +42,7 @@
 	    ImGui::InputDouble("Frequency (Hz)", &frequency, 100.0, 1000.0, "%.1f");
 	    ImGui::InputDouble("Amplitude (V)", &amplitude, 0.1, 1.0, "%.2f");
 	    ImGui::InputDouble("Phase (Deg.)", &phase_deg, 0.1, 1.0, "%.2f");
-	    ImGui::InputDouble("Noize (V)", &noize, 0.1, 1.0, "%.2f");
+	    ImGui::InputDouble("Noise (V)", &noise, 0.1, 1.0, "%.2f");
 	    if (ImGui::Button("Save")) {
 	        // ボタンが押されたらここが実行される
 	        srand(time(NULL));
@@ -53,7 +53,7 @@
 	            for (int i = 0; i < N; i++) {
 	                double t = DT * i;
 	                double v = amplitude * sin(2 * PI * frequency * t + phase_deg / 180 * PI);
-	                v += ((double)rand() / RAND_MAX * 2 - 1) * noize;
+	                v += ((double)rand() / RAND_MAX * 2 - 1) * noise;
 	                fprintf(fp, "%f, %f\n", t, v);
 	            }
 	            fclose(fp);
