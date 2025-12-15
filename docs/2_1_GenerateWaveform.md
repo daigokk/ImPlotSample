@@ -12,7 +12,7 @@
 
 ## 2. 課題
 1. [サンプルプログラム](https://github.com/daigokk/ImPlotSample/archive/refs/heads/master.zip)をダウンロードして雑音を含んだ模擬測定データ(data.csv)を作成し、表示するプログラムを完成させてください。
-   1. 「Save」ボタンを押すと「data.csv」ファイルに模擬測定データ(時間, 電圧)が保存される。
+   1. 「Save」ボタンを押すと「raw.csv」ファイルに模擬測定データ(時間, 電圧)が保存される。
       - (例)データ数 N: 10000
       - (例)サンプリング間隔 DT: 1e-6 [s]
    1. 設定値「amplitude」と「noise」がマイナスにならないようにする。 
@@ -47,7 +47,7 @@
 	        // ボタンが押されたらここが実行される
 	        srand(time(NULL));
 	        FILE* fp;
-	        fp = fopen("data.csv", "w");
+	        fp = fopen("raw.csv", "w");
 	        if (fp != nullptr) {
 	            fprintf(fp, "t (s), v (V)\n");
 	            for (int i = 0; i < N; i++) {
@@ -84,7 +84,7 @@
 	    if (ImGui::Button("View")) {
 	        // ボタンが押されたらここが実行される
 	        FILE* fp;
-	        fp = fopen("data.csv", "r");
+	        fp = fopen("raw.csv", "r");
 	        if (fp != nullptr) {
 	            char buf[256];
 	            fgets(buf, sizeof(buf), fp);  // 1行目はラベル(t (s), v (V))なので読み飛ばす
