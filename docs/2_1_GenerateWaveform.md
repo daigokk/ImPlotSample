@@ -51,7 +51,7 @@
 	            for (int i = 0; i < N; i++) {
 	                double t = DT * i;
 	                double v = amplitude * sin(2 * PI * frequency * t + phase_deg / 180 * PI);
-	                //v += ((double)rand() / RAND_MAX * 2 - 1) * noize;
+	                v += ((double)rand() / RAND_MAX * 2 - 1) * noize;
 	                fprintf(fp, "%f, %f\n", t, v);
 	            }
 	            fclose(fp);
