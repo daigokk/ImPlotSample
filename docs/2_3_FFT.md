@@ -15,12 +15,12 @@
 #include <vector>
 #include <complex>
 void fft(std::vector<std::complex<double>>& a) {
-    int N = a.size();
-    if (N <= 1) return;
+    int size = a.size();
+    if (size <= 1) return;
 
     // 偶数・奇数に分割 配列のサイズが半分になる！！！
-    std::vector<std::complex<double>> even(N / 2), odd(N / 2);
-    for (int i = 0; i < N / 2; ++i) {
+    std::vector<std::complex<double>> even(size / 2), odd(size / 2);
+    for (int i = 0; i < size / 2; ++i) {
         even[i] = a[i * 2];
         odd[i] = a[i * 2 + 1];
     }
@@ -30,10 +30,10 @@ void fft(std::vector<std::complex<double>>& a) {
     fft(odd);
 
     // 合成: バラフライ演算
-    for (int k = 0; k < N / 2; ++k) {
-        std::complex<double> t = std::polar(1.0, -2 * PI * k / N) * odd[k];
+    for (int k = 0; k < size / 2; ++k) {
+        std::complex<double> t = std::polar(1.0, -2 * PI * k / size) * odd[k];
         a[k] = even[k] + t;
-        a[k + N / 2] = even[k] - t;
+        a[k + size / 2] = even[k] - t;
     }
 }
 ```
@@ -89,13 +89,13 @@ void fft(std::vector<std::complex<double>>& a) {
      - FFTの元になったDFT
        ```cpp
        std::vector<std::complex<double>> DFT(const std::vector<std::complex<double>>& input) {
-            int N = input.size();
-            std::vector<std::complex<double>> output(N);
+            int size = input.size();
+            std::vector<std::complex<double>> output(size);
         
-            for (int k = 0; k < N; ++k) {
+            for (int k = 0; k < size; ++k) {
                 std::complex<double> sum(0.0, 0.0);
-                for (int n = 0; n < N; ++n) {
-                    double angle = -2.0 * PI * k * n / N;
+                for (int n = 0; n < size; ++n) {
+                    double angle = -2.0 * PI * k * n / size;
                     sum += input[n] * std::polar(1.0, angle);
                 }
                 output[k] = sum;
@@ -111,12 +111,12 @@ void fft(std::vector<std::complex<double>>& a) {
 - 逆FFT
     ```cpp
     void ifft(std::vector<std::complex<double>>& a) {
-        int N = a.size();
-        if (N <= 1) return;
+        int size = a.size();
+        if (size <= 1) return;
     
         // 偶数・奇数に分割
-        std::vector<std::complex<double>> even(N / 2), odd(N / 2);
-        for (int i = 0; i < N / 2; ++i) {
+        std::vector<std::complex<double>> even(size / 2), odd(size / 2);
+        for (int i = 0; i < size / 2; ++i) {
             even[i] = a[i * 2];
             odd[i]  = a[i * 2 + 1];
         }
@@ -126,16 +126,16 @@ void fft(std::vector<std::complex<double>>& a) {
         ifft(odd);
     
         // 合成（回転因子polarの引数の符号が正）
-        for (int k = 0; k < N / 2; ++k) {
-            std::complex<double> t = std::polar(1.0, 2 * PI * k / N) * odd[k];
+        for (int k = 0; k < size / 2; ++k) {
+            std::complex<double> t = std::polar(1.0, 2 * PI * k / size) * odd[k];
             a[k]       = even[k] + t;
-            a[k + N/2] = even[k] - t;
+            a[k + size/2] = even[k] - t;
         }
     
         // スケーリング（1/N）
-        if (N == a.size()) {
-            for (int i = 0; i < N; ++i) {
-                a[i] /= N;
+        if (size == a.size()) {
+            for (int i = 0; i < size; ++i) {
+                a[i] /= size;
             }
         }
     }
