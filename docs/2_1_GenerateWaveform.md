@@ -30,9 +30,8 @@
 	    static std::string text = "";
 	    static double frequency = 100e3;
 	    static double amplitude = 1.0;
-	    static double phase_deg = 0.0, phase_rad = 0.0;
+	    static double phase_deg = 0.0;
 	    static double noize = 0.0; // 追加
-	    static double fft[SIZE] = { 0 };
 	    // ウィンドウ開始
 	    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 	    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 220 * Gui::monitorScale), ImGuiCond_FirstUseEver);
@@ -40,10 +39,8 @@
 	    /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
 	    ImGui::InputDouble("Frequency (Hz)", &frequency, 100.0, 1000.0, "%.1f");
 	    ImGui::InputDouble("Amplitude (V)", &amplitude, 0.1, 1.0, "%.2f");
-	    if (ImGui::InputDouble("Phase (Deg.)", &phase_deg, 0.1, 1.0, "%.2f")) {
-	        phase_rad = phase_deg * PI / 180.0f;
-	    }
-	    ImGui::InputDouble("Noize (V)", &noize, 0.1, 1.0, "%.2f"); // 追加
+	    ImGui::InputDouble("Phase (Deg.)", &phase_deg, 0.1, 1.0, "%.2f");
+	    ImGui::InputDouble("Noize (V)", &noize, 0.1, 1.0, "%.2f");
 	    if (ImGui::Button("Save")) {
 	        // ボタンが押されたらここが実行される
 	        srand(time(NULL));
@@ -53,7 +50,7 @@
 	            fprintf(fp, "t (s), v (V)\n");
 	            for (int i = 0; i < N; i++) {
 	                double t = DT * i;
-	                double v = amp * sin(2 * PI * freq * t + phase / 180 * PI);
+	                double v = frequency  * sin(2 * PI * frequency * t + phase_deg / 180 * PI);
 	                v += ((double)rand() / RAND_MAX * 2 - 1) * noize;
 	                fprintf(fp, "%f, %f\n", t, v);
 	            }
