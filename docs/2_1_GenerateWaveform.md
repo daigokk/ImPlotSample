@@ -46,31 +46,23 @@
 	    ImGui::InputDouble("Noize (V)", &noize, 0.1, 1.0, "%.2f"); // 追加
 	    if (ImGui::Button("Save")) {
 	        // ボタンが押されたらここが実行される
-	        // 波形データ生成
-	        double times[SIZE] = { 0 }, waveform[SIZE] = { 0 };
-	        /*** 適切なコードを入力 ***************************************/
 	        srand(time(NULL));
-	        for (int i = 0; i < SIZE; i++) {
-	            times[i] = i * DT;
-	            waveform[i] = amplitude * std::sin(2 * PI * frequency * times[i] + phase_deg * PI / 180.0);
-	            waveform[i] += (double)rand() / RAND_MAX * 2 * noize - noize;
-	        }
-	        /*** ここまで *************************************************/
-	        // 保存
-	        /*** 適切なコードを入力 ***************************************/
-	        FILE* fp = fopen(FILENAME_RAW, "w");
-	        if (fp != NULL) {
-	            fprintf(fp, "# Time (S), Voltage (V)\n");
-	            for (int i = 0; i < SIZE; ++i) {
-	                fprintf(fp, "%e, %e\n", times[i], waveform[i]);
+	        FILE* fp;
+	        fp = fopen("data.csv", "w");
+	        if (fp != nullptr) {
+	            fprintf(fp, "t (s), v (V)\n");
+	            for (int i = 0; i < N; i++) {
+	                double t = DT * i;
+	                double v = amp * sin(2 * PI * freq * t + phase / 180 * PI);
+	                v += ((double)rand() / RAND_MAX * 2 - 1) * noize;
+	                fprintf(fp, "%f, %f\n", t, v);
 	            }
 	            fclose(fp);
-	            text = "Success.\n";
+	            text = "Success.";
 	        }
 	        else {
-	            text = "[Error] Failed to open file for writing.\n";
+	            text = "Fail.";
 	        }
-	        /*** ここまで *************************************************/
 	    }
 	    ImGui::SameLine();
 	    ImGui::Text(text.c_str());
