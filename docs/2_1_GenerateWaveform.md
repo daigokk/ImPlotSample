@@ -24,6 +24,7 @@
      
 1. 矩形波・三角波・のこぎり波を作成・表示する。
    - 矩形波: $v(t) = \sum_{i=0}^{\infty} \frac{4A}{(2i+1)\pi} \sin\left(2\pi f (2i+1) t\right)$
+   - `ImGui::Combo`を使うと「Sine」、「Square」等を選択できる。
   
    ![矩形波](./images/signal_01_02.png)
 - Generate waveform window
