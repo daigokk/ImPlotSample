@@ -107,7 +107,7 @@ private:
    - $\theta = \theta_{out} - \theta_{in}$ [Deg.]
    - 加点例: ハイパスフィルター、またはバンドパスフィルターを実装せよ。
    ```cpp
-    void ShowWindow3(const char title[]) {
+    void ShowWindow4(const char title[]) {
         static double freqs[] = { FREQS }, gains[N_TH][N_FREQS] = { 0 }, phases[N_TH][N_FREQS];
         static Commands::WaveformParams wfp;
         static std::string text = "";
@@ -123,25 +123,9 @@ private:
             wfp.size = SIZE;
             // 周波数特性
             /*** 適切なコードを入力 ***************************************/
-            for (int j = 0; j < N_TH; j++) {
-                for (int i = 0; i < sizeof(freqs)/sizeof(double); i++) {
-                    wfp.frequency = freqs[i];
-                    double times[SIZE] = { 0 }, waveform[SIZE] = { 0 };
-                    double x = 0, y = 0, wf_lpf[SIZE];
-                    Commands::getSinWF(&wfp, times, waveform);
-                    Commands::runLpf(&wfp, j+1, 100e3, waveform, wf_lpf);
-                    gains[j][i] = 20.0 * log10(Commands::runPsd(&wfp, wf_lpf, &x, &y) / wfp.amplitude);
-                    phases[j][i] = atan2(y, x) / PI * 180;
-    				if (phases[j][i] > 0) phases[j][i] -= 360;
-                }
-            }
+
+            
             /*** ここまで *************************************************/
-            text = "[Error] Failed to open file for writing.";
-            if (Commands::saveWaveforms(N_FREQS, FILENAME_BODE_GAIN, freqs, (double*)gains, N_TH)) {
-                if (Commands::saveWaveforms(N_FREQS, FILENAME_BODE_PHASE, freqs, (double*)phases, N_TH)) {
-                    text = "Success.";
-                }
-            }
         }
         ImGui::SameLine();
         ImGui::Text(text.c_str());
