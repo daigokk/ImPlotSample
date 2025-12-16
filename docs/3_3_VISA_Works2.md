@@ -33,16 +33,18 @@ void ShowWindow4(const ViSession awg) {
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
     /*** ここから *************************************************/
     static float freq = 1000, ampl = 1;
-    ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
     ImGui::InputFloat("Freq.", &freq, 1, 1);
     ImGui::InputFloat("Ampl.", &ampl, 1, 1);
     if(ImGui::Button("Set")){
+        /*** 48ページ, 「2.3.20 周波数 設定/問合せ」参照 ***/
+        /*** https://www.nfcorp.co.jp/files/WF1973_74_InstructionManual_ExternalControl_Jp.pdf ***/
         char ret[256];
-        viPrintf(awg, ":SOURce:FREQuency %e\n", freq);
-        viQueryf(awg, ":SOURce:FREQuency?\n", "%255t", ret);
+        viPrintf(awg, ":SOURce1:FREQuency %e\n", freq);
+        viQueryf(awg, ":SOURce1:FREQuency?\n", "%255t", ret);
         freq = atof(ret);
-        viPrintf(awg, ":SOURce:VOLTage %e\n", ampl);
-        viQueryf(awg, ":SOURce:VOLTage?\n", "%255t", ret);
+        /*** 50ページ, 「2.3.23 振幅 設定/問合せ」参照 ***/
+        viPrintf(awg, "XXXXXXXXXXXXXXX\n", ampl);
+        viQueryf(awg, "XXXXXXXXXXXXXXX?\n", "%255t", ret);
         ampl = atof(ret);
     }
     ImGui::Text("%f Hz, %f V", freq, ampl);
@@ -56,99 +58,49 @@ void ShowWindow5(const ViSession scope) {
     ImGui::SetNextWindowSize(ImVec2(500 * Gui::monitorScale, 450 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin("Scope");
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
-    // https://github.com/ocornut/imgui
-    // https://github.com/epezent/implot
-    // https://github.com/daigokk/ImPlotSample
     /*** ここから *************************************************/
-    static int t_index = 0, v_index[2] = { 0 };
-    static double timediv = 0, voltsdiv[2] = { 0 };
-    ImGui::SetNextItemWidth(20.0f * Gui::monitorScale);
-    if (ImGui::InputInt("Time/div", &t_index, 1, 1)) {
-        if (t_index < 0) t_index = 0;
-        if (t_index > 29) t_index = 29;
-        static std::string ret;
-        static double t_ranges[30] = {};
-        Commands::makeRanges(30, 5e-9, t_ranges);
-        CppVisa::cviPrintf(scope, __FILE__, __LINE__, "HORizontal:SECdiv %e\n", t_ranges[t_index]);
-        ret = CppVisa::cviQueryf(scope, __FILE__, __LINE__, "HORizontal:SECdiv?\n");
-        timediv = atof(ret.c_str());
+    static double tdiv = 1e-3, vdiv1 = 0.1, vdiv2=0.1;
+    ImGui::InputDouble("Time/Div", &tdiv, 1, 1);
+    ImGui::InputDouble("Ch1 Volts/Div", &vdiv1, 1, 1);
+    ImGui::InputDouble("Ch2 Volts/Div", &vdiv2, 1, 1);
+    if (ImGui::Button("Set")) {
+        /*** 5-238, 5-79ページ参照 ***/
+        /*** https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf ***/
+        viPrintf(scope, "XXXXXXXXXXXXXXX %e\n", tdiv);
+        viPrintf(scope, "XXXXXXXXXXXXXXX %e\n", vdiv1);
+        viPrintf(scope, "XXXXXXXXXXXXXXX %e\n", vdiv2);
     }
-    ImGui::SameLine();
-    ImGui::Text(": %.0e s", timediv);
-    for(int ch =0; ch < 2; ch++) {
-        ImGui::SetNextItemWidth(20.0f * Gui::monitorScale);
-        std::string label = "Ch" + std::to_string(ch + 1) + " Volts/div";
-        if (ImGui::InputInt(label.c_str(), &v_index[ch], 1, 1)) {
-            if (v_index[ch] < 0) v_index[ch] = 0;
-            if (v_index[ch] > 29) v_index[ch] = 29;
-            static std::string ret;
-            static double v_ranges[30] = {};
-            Commands::makeRanges(30, 20e-3, v_ranges);
-            CppVisa::cviPrintf(scope, __FILE__, __LINE__, "CH%d:VOLts %e\n", ch + 1, v_ranges[v_index[ch]]);
-            ret = CppVisa::cviQueryf(scope, __FILE__, __LINE__, "CH%d:VOLts?\n", ch + 1);
-            voltsdiv[ch] = atof(ret.c_str());
-        }
-        ImGui::SameLine();
-        ImGui::Text(": %.0e V", voltsdiv[ch]);
-	}
-    if(ImGui::Button("Auto")) {
-        CppVisa::cviPrintf(scope, __FILE__, __LINE__, "AUTOSet EXECute\n");
-	}
+    if (ImGui::Button("Auto")) {
+        /*** 5-75ページ参照 ***/
+        viPrintf(scope, "XXXXXXXXXXXXXXX\n");
+    }
     ImGui::SameLine();
     if (ImGui::Button("Run/Stop")) {
-		char* ret = CppVisa::cviQueryf(scope, __FILE__, __LINE__, "ACQuire:STATE?\n");
-        if(ret != nullptr && std::string(ret) == "1\n") {
-            CppVisa::cviPrintf(scope, __FILE__, __LINE__, "ACQuire:STATE STOP\n");
+        static bool state = true;
+        char ret[256];
+        if (state) {
+            /*** 5-234ページ参照 ***/
+            viPrintf(scope, "XXXXXXXXXXXXXXX\n");
+            state = false;
         }
         else {
-            CppVisa::cviPrintf(scope, __FILE__, __LINE__, "ACQuire:STATE RUN\n");
+            /*** 5-232ページ参照 ***/
+            viPrintf(scope,"XXXXXXXXXXXXXXX\n");
+            state = true;
         }
     }
     ImGui::SameLine();
-	static std::vector<double> times, voltages[2];
-    if(ImGui::Button("Capture")) {
-        double offset, mult;
-        int length, count;
-        char c;
-
-        length = atoi(CppVisa::cviQueryf(scope, __FILE__, __LINE__, "HORizontal:RECOrdlength?\n"));
-
-        CppVisa::cviPrintf(scope, __FILE__, __LINE__, "DATa:start 1;DATa:stop %d\n", length);
-        CppVisa::cviPrintf(scope, __FILE__, __LINE__, "DATa:ENCdg RPBinary\n");
-        CppVisa::cviPrintf(scope, __FILE__, __LINE__, "DATa:WIDth 1");
-        offset = atof(CppVisa::cviQueryf(scope, __FILE__, __LINE__, "WFMPre:YOFf?\n"));
-        mult = atof(CppVisa::cviQueryf(scope, __FILE__, __LINE__, "WFMPre:YMUlt?\n"));
+    static std::vector<double> times, voltages[2];
+    if (ImGui::Button("Capture")) {
         
-        times.resize(length);
-        for(int ch = 0; ch <2; ch++) {
-            voltages[ch].resize(length);
-            CppVisa::cviPrintf(scope, __FILE__, __LINE__, "DATa:SOUrce CH%d\n", ch);
-            CppVisa::cviPrintf(scope, __FILE__, __LINE__, "CURVe?\n");
-            viScanf(scope, "%c", &c);
-            if (c != '#') exit(EXIT_FAILURE);
-            viScanf(scope, "%c", &c);
-            if (c < '0' && '9' < c) exit(EXIT_FAILURE);
-            count = c - '0';
-            for (int i = 0; i < count; i++)
-            {
-                viScanf(scope, "%c", &c);
-                if (c < '0' && '9' < c) exit(EXIT_FAILURE);
-            }
-            for (int i = 0; i < length; i++)
-            {
-                viScanf(scope, "%c", &c);
-                voltages[ch][i] = ((unsigned char)c - offset) * mult;
-            }
-            viScanf(scope, "%c", &c); // For deleting a delimiter in the read buffer.
-		}
-	}
+    }
     ImPlot::SetNextAxesToFit();
     if (ImPlot::BeginPlot("Waveform", ImVec2(-1, -1))) {
         ImPlot::SetupAxis(ImAxis_X1, "Time (s)");
         ImPlot::SetupAxis(ImAxis_Y1, "Volts (V)");
         ImPlot::PlotLine("Ch1", times.data(), voltages[0].data(), times.size());
         ImPlot::PlotLine("Ch2", times.data(), voltages[1].data(), times.size());
-		ImPlot::EndPlot();
+        ImPlot::EndPlot();
     }
     /*** ここまで *************************************************/
     // ウィンドウ終了
