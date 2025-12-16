@@ -43,6 +43,7 @@ void fft(const int size, const double in_array[], double out_array[], double fre
     for (int i = 0; i < SIZE; i++) {
         freqs[i] = i / (DT * SIZE);
         out_array[i] = pow(pow(vec[i].real(), 2) + pow(vec[i].imag(), 2), 0.5) / size;
+        if(i != 0 || i != SIZE-1) out_array[i] *= 2; //最初と最後以外は2倍する。
     }
 }
 ```
@@ -88,7 +89,7 @@ void fft(const int size, const double in_array[], double out_array[], double fre
 
 ## 4. レポート課題
 
-1. 「10kHzの正弦波」の、振幅の周波数スペクトルのグラフを作ってください。
+1. 1kHz、振幅1V、位相差0度の正弦波の、振幅の周波数スペクトルのグラフを作ってください。
    - 加点例: 矩形波等のグラフと比較する。
      - 正弦波
        
