@@ -107,7 +107,7 @@ private:
    - $\theta = \theta_{out} - \theta_{in}$ [Deg.]
    - 加点例: ハイパスフィルター、またはバンドパスフィルターを実装せよ。
    ```cpp
-    void ShowWindow3(const char title[]) {
+   void ShowWindow3(const char title[]) {
         static double freqs[] = { FREQS }, gains[N_TH][N_FREQS] = { 0 }, phases[N_TH][N_FREQS];
         static std::string text = "";
         // ウィンドウ開始
@@ -118,10 +118,25 @@ private:
         if (ImGui::Button("Run")) {
             // ボタンが押されたらここが実行される
             // 周波数特性
-            /*** 適切なコードを入力 ***************************************/
-
-            
-            /*** ここまで *************************************************/
+            for (int j = 0; j < N_FREQS; j++) {
+                double v_in[SIZE], v_out[SIZE];
+                for (int k = 0; k < SIZE; k++) {
+                    v_in[k] = sin(2 * PI * freqs[j] * DT * k);
+                }
+                for (int i = 0; i < N_TH; i++) {
+                    ButterworthLPF lpf(i+1, 1000, 1 / DT);
+                    for (int k = 0; k < SIZE; k++) {
+                        v_out[k] = lpf.process(v_in[k]);
+                    }
+                    double x, y;
+                    psd(v_out, freqs[j], DT, SIZE, &x, &y);
+                    gains[i][j] = pow(pow(x, 2) + pow(y, 2), 0.5);
+                    phases[i][j] = atan2(y, x) / PI * 180;
+                    if (phases[i][j] > 0) {
+                        phases[i][j] -= 360;
+                    }
+                }
+            }
         }
         ImGui::SameLine();
         ImGui::Text(text.c_str());
@@ -150,5 +165,5 @@ private:
         // ウィンドウ終了
         ImGui::End();
     }
-   ```
+    ```
    ![Hard copy](./images/HardCopy.png)
