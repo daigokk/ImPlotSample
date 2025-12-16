@@ -109,7 +109,6 @@ private:
    ```cpp
     void ShowWindow3(const char title[]) {
         static double freqs[] = { FREQS }, gains[N_TH][N_FREQS] = { 0 }, phases[N_TH][N_FREQS];
-        static Commands::WaveformParams wfp;
         static std::string text = "";
         // ウィンドウ開始
         ImGui::SetNextWindowPos(ImVec2(0, 240 * Gui::monitorScale), ImGuiCond_FirstUseEver);
