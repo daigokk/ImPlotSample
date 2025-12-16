@@ -117,9 +117,6 @@ private:
         /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
         if (ImGui::Button("Run")) {
             // ボタンが押されたらここが実行される
-            wfp.amplitude = 1;
-            wfp.dt = DT;
-            wfp.size = SIZE;
             // 周波数特性
             /*** 適切なコードを入力 ***************************************/
 
