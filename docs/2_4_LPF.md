@@ -107,7 +107,7 @@ private:
    - $\theta = \theta_{out} - \theta_{in}$ [Deg.]
    - 加点例: ハイパスフィルター、またはバンドパスフィルターを実装せよ。
    ```cpp
-    void ShowWindow4(const char title[]) {
+    void ShowWindow3(const char title[]) {
         static double freqs[] = { FREQS }, gains[N_TH][N_FREQS] = { 0 }, phases[N_TH][N_FREQS];
         static Commands::WaveformParams wfp;
         static std::string text = "";
