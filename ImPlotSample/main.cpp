@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <complex>
+
+#include <visa.h>
 #include "Gui.h"
 #include "Butterworth.h"
 
