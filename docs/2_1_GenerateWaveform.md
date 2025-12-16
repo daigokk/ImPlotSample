@@ -50,7 +50,7 @@
 	        fp = fopen("raw.csv", "w");
 	        if (fp != nullptr) {
 	            fprintf(fp, "t (s), v (V)\n");
-	            for (int i = 0; i < N; i++) {
+	            for (int i = 0; i < SIZE; i++) {
 	                double t = DT * i;
 	                double v = amplitude * sin(2 * PI * frequency * t + phase_deg / 180 * PI);
 	                v += ((double)rand() / RAND_MAX * 2 - 1) * noise;
@@ -75,7 +75,7 @@
 	```cpp
 	void ShowWindow2(const char title[]) {
 	    static std::string text = "";
-	    static double t[N], v[N];
+	    static double t[SIZE], v[SIZE];
 	    // ウィンドウ開始
 	    ImGui::SetNextWindowPos(ImVec2(100, 200), ImGuiCond_FirstUseEver);
 	    ImGui::SetNextWindowSize(ImVec2(660 * Gui::monitorScale, 240 * Gui::monitorScale), ImGuiCond_FirstUseEver);
@@ -88,7 +88,7 @@
 	        if (fp != nullptr) {
 	            char buf[256];
 	            fgets(buf, sizeof(buf), fp);  // 1行目はラベル(t (s), v (V))なので読み飛ばす
-	            for (int i = 0; i < N; i++) {
+	            for (int i = 0; i < SIZE; i++) {
 	                fscanf(fp, "%lf, %lf", &t[i], &v[i]);
 	            }
 	            fclose(fp);
@@ -102,7 +102,7 @@
 	    ImGui::Text(text.c_str());
 	    if (ImPlot::BeginPlot(title, ImVec2(-1, 250 * Gui::monitorScale))) {
 	        ImPlot::SetupAxes("Time (s)", "Voltage (V)");
-	        ImPlot::PlotLine("Ch1", t, v, N);
+	        ImPlot::PlotLine("Ch1", t, v, SIZE);
 	        ImPlot::EndPlot();
 	    }
 	    // ウィンドウ終了
