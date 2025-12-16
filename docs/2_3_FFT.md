@@ -26,8 +26,8 @@ void _fft(std::vector<std::complex<double>>& a) {
     }
 
     // 再帰呼び出し
-    fft(even);
-    fft(odd);
+    _fft(even);
+    _fft(odd);
 
     // 合成: バラフライ演算
     for (int k = 0; k < size / 2; ++k) {
