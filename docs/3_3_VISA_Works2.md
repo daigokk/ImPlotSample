@@ -10,36 +10,42 @@
    * 横河計測DL2022 [マニュアル](https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf)
    * NF回路設計ブロックWF1973 [マニュアル](https://www.nfcorp.co.jp/files/WF1973_74_InstructionManual_ExternalControl_Jp.pdf)
 1. ImGuiのウィジェットにコマンドを割り当てる。
+	- main関数の最初と最後にVISAのリソースマネージャーの初期化と終了処理を追加する。
+	```cpp
+ 	int main() {
+    	ViSession defaultRM, awg, scope;
+    	viOpenDefaultRM(&defaultRM);
+    	viOpen(defaultRM, "USB0::ここにはNI MAXで調べたVISAアドレスを入力する::INSTR", VI_NULL, VI_NULL, &awg);
+ 		viOpen(defaultRM, "USB0::ここにはNI MAXで調べたVISAアドレスを入力する::INSTR", VI_NULL, VI_NULL, &scope);
 
+ 		途中省略
+
+ 		viClose(scope);
+ 		viClose(awg);
+ 	    viClose(defaultRM);
+ 	}
+ 	```
 ```cpp
 void ShowWindow4(const ViSession awg) {
     // ウィンドウ開始
     ImGui::SetNextWindowSize(ImVec2(500 * Gui::monitorScale, 450 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin("AWG");
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
-    // https://github.com/ocornut/imgui
-    // https://github.com/epezent/implot
-    // https://github.com/daigokk/ImPlotSample
     /*** ここから *************************************************/
-    static float freq = 0, ampl = 0;
+    static float freq = 1000, ampl = 1;
     ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
-    if (ImGui::InputFloat("Freq.", &freq, 1, 1)) {
-        static std::string ret;
-		CppVisa::cviPrintf(awg, __FILE__, __LINE__, "HORizontal:SECdiv %e\n", freq);
-        ret = CppVisa::cviQueryf(awg, __FILE__, __LINE__, "HORizontal:SECdiv?\n");
-		freq = atof(ret.c_str());
+    ImGui::InputFloat("Freq.", &freq, 1, 1);
+    ImGui::InputFloat("Ampl.", &ampl, 1, 1);
+    if(ImGui::Button("Set")){
+        char ret[256];
+        viPrintf(awg, ":SOURce:FREQuency %e\n", freq);
+        viQueryf(awg, ":SOURce:FREQuency?\n", "%255t", ret);
+        freq = atof(ret);
+        viPrintf(awg, ":SOURce:VOLTage %e\n", ampl);
+        viQueryf(awg, ":SOURce:VOLTage?\n", "%255t", ret);
+        ampl = atof(ret);
     }
-	ImGui::SameLine();
-	ImGui::Text(": %f Hz", freq);
-    ImGui::SetNextItemWidth(200.0f * Gui::monitorScale);
-    if (ImGui::InputFloat("Ampl.", &ampl, 1, 1)) {
-        static std::string ret;
-        CppVisa::cviPrintf(awg, __FILE__, __LINE__, "HORizontal:SECdiv %e\n", ampl);
-        ret = CppVisa::cviQueryf(awg, __FILE__, __LINE__, "HORizontal:SECdiv?\n");
-        freq = atof(ret.c_str());
-    }
-    ImGui::SameLine();
-    ImGui::Text(": %f V", ampl);
+    ImGui::Text("%f Hz, %f V", freq, ampl);
     /*** ここまで *************************************************/
     // ウィンドウ終了
     ImGui::End();
