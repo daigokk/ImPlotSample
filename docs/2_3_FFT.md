@@ -37,13 +37,13 @@ void _fft(std::vector<std::complex<double>>& a) {
     }
 }
 
-void fft(const int size, const double in_array[], double out_array[], double freqs[]) {
+void fft(const int size, const double dt, const double in_array[], double out_array[], double freqs[]) {
     std::vector<std::complex<double>> vec(in_array, in_array + size);
     _fft(vec);
-    for (int i = 0; i < SIZE; i++) {
-        freqs[i] = i / (DT * SIZE);
+    for (int i = 0; i < size; i++) {
+        freqs[i] = i / (dt * size);
         out_array[i] = pow(pow(vec[i].real(), 2) + pow(vec[i].imag(), 2), 0.5) / size;
-        if(i != 0 || i != SIZE/2-1 || i != SIZE-1) out_array[i] *= 2; //最初、真ん中、及び、最後以外は2倍する。
+        if (i != 0 || i != size / 2 - 1 || i != size - 1) out_array[i] *= 2; //最初、真ん中、及び、最後以外は2倍する。
     }
 }
 ```
