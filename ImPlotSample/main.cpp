@@ -10,8 +10,8 @@
 #include "Butterworth.h"
 
 #define PI acos(-1)
-#define SIZE 10000
-#define DT 1e-6
+#define SIZE 32768
+#define DT (0.1/SIZE)
 
 // ImGuiのWindowの関数
 void ShowWindow1(const char title[]);

@@ -48,7 +48,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -150,6 +150,7 @@
     <ClCompile Include="IMGUI\implot_items.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Scope.cpp" />
+    <ClCompile Include="sub_visa.cpp" />
     <ClCompile Include="VisaInstrument.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +160,7 @@
     <ClInclude Include="CppVisa.h" />
     <ClInclude Include="IniWrapper.h" />
     <ClInclude Include="Scope.h" />
+    <ClInclude Include="sub_visa.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="fft.h" />
     <ClInclude Include="Chebyshev.h" />
