@@ -67,9 +67,9 @@ $$
 #include <cmath>
 #define PI acos(-1)
 
-class FirstOrderStage {
+class FirstOrderStageLPF {
 public:
-    FirstOrderStage(double cutoffFreq, double sampleRate) {
+    FirstOrderStageLPF(double cutoffFreq, double sampleRate) {
         // プリワーピングを行い、正規化されたカットオフ角周波数を計算
         double wc_warped = tan(PI * cutoffFreq / sampleRate);
 
