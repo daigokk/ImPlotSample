@@ -5,6 +5,7 @@
 #include <vector>
 #include <complex>
 #include "Gui.h"
+#include "Butterworth.h"
 
 #define PI acos(-1)
 #define SIZE 10000
