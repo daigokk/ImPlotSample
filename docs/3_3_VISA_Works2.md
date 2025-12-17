@@ -49,6 +49,19 @@ void ShowWindow4(const ViSession awg) {
         viQueryf(awg, "XXXXXXXXXXXXXXX?\n", "%255t", ret);
         ampl = atof(ret);
     }
+    ImGui::SameLine();
+    if (ImGui::Button("Out")) {
+        static bool state = false;
+        if (state) {
+            /*** 42ページ参照 ***/
+            viPrintf(awg, "XXXXXXXXXXXXXXX OFF\n");
+        }
+        else {
+            /*** 42ページ参照 ***/
+            viPrintf(awg, "XXXXXXXXXXXXXXX ON\n");
+        }
+        state = !state;
+    }
     ImGui::Text("%f Hz, %f V", freq, ampl);
     // ウィンドウ終了
     ImGui::End();
@@ -77,17 +90,15 @@ void ShowWindow5(const ViSession scope) {
     ImGui::SameLine();
     if (ImGui::Button("Run/Stop")) {
         static bool state = true;
-        char ret[256];
         if (state) {
             /*** 5-234ページ参照 ***/
             viPrintf(scope, "XXXXXXXXXXXXXXX\n");
-            state = false;
         }
         else {
             /*** 5-232ページ参照 ***/
             viPrintf(scope,"XXXXXXXXXXXXXXX\n");
-            state = true;
         }
+		state = !state;
     }
     ImGui::SameLine();
     static std::vector<double> times, voltages[2];
