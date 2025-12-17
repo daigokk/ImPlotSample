@@ -45,7 +45,7 @@ void ShowWindow4(const ViSession awg) {
         viQueryf(awg, ":SOURce1:FREQuency?\n", "%255t", ret);
         freq = atof(ret);
         /*** 50ページ, 「2.3.23 振幅 設定/問合せ」参照 ***/
-        viPrintf(awg, "XXXXXXXXXXXXXXX\n", ampl);
+        viPrintf(awg, "XXXXXXXXXXXXXXX %e\n", ampl);
         viQueryf(awg, "XXXXXXXXXXXXXXX?\n", "%255t", ret);
         ampl = atof(ret);
     }
