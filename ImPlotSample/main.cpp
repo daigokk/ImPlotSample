@@ -6,6 +6,7 @@
 #include <complex>
 
 #include <visa.h>
+#include "sub_visa.h"
 #include "Gui.h"
 #include "Butterworth.h"
 
