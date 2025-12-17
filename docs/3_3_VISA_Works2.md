@@ -9,8 +9,7 @@
 1. 計測器のマニュアルから該当するコマンドを探す。
    * 横河計測DL2022 [マニュアル](https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf)
    * NF回路設計ブロックWF1973 [マニュアル](https://www.nfcorp.co.jp/files/WF1973_74_InstructionManual_ExternalControl_Jp.pdf)
-1. ImGuiのウィジェットにコマンドを割り当てる。
-	- main関数の最初と最後にVISAのリソースマネージャーの初期化と終了処理を追加する。
+1. main関数の最初と最後にVISAのリソースマネージャーの初期化と終了処理を追加する。
 	```cpp
  	int main() {
     	ViSession defaultRM, awg, scope;
@@ -25,6 +24,7 @@
  	    viClose(defaultRM);
  	}
  	```
+1. ImGuiのウィジェットにコマンドを割り当てる。
 ```cpp
 void ShowWindow4(const ViSession awg) {
     // ウィンドウ開始
