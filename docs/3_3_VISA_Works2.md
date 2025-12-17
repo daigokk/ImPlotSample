@@ -5,7 +5,7 @@
 
 ![Work2](./images/visa_03_01.png)
 
-1. ImGuiのウィジェットを使ってPCに操作パネルを再現する。
+1. ImGuiのウィジェットを使って操作パネルを再現する。
 1. 計測器のマニュアルから該当するコマンドを探す。
    * 横河計測DL2022 [マニュアル](https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf)
    * NF回路設計ブロックWF1973 [マニュアル](https://www.nfcorp.co.jp/files/WF1973_74_InstructionManual_ExternalControl_Jp.pdf)
