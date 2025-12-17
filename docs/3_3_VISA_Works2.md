@@ -11,20 +11,20 @@
    * NF回路設計ブロックWF1973 [マニュアル](https://www.nfcorp.co.jp/files/WF1973_74_InstructionManual_ExternalControl_Jp.pdf)
 1. main関数の最初と最後にVISAのリソースマネージャーの初期化と終了処理を追加する。
 
-	```cpp
- 	int main() {
-    	ViSession defaultRM, awg, scope;
-    	viOpenDefaultRM(&defaultRM);
-    	viOpen(defaultRM, "USB0::ここにはNI MAXで調べたVISAアドレスを入力する::INSTR", VI_NULL, VI_NULL, &awg);
- 		viOpen(defaultRM, "USB0::ここにはNI MAXで調べたVISAアドレスを入力する::INSTR", VI_NULL, VI_NULL, &scope);
+```cpp
+int main() {
+	ViSession defaultRM, awg, scope;
+	viOpenDefaultRM(&defaultRM);
+	viOpen(defaultRM, "USB0::ここにはNI MAXで調べたVISAアドレスを入力する::INSTR", VI_NULL, VI_NULL, &awg);
+	viOpen(defaultRM, "USB0::ここにはNI MAXで調べたVISAアドレスを入力する::INSTR", VI_NULL, VI_NULL, &scope);
 
- 		途中省略
+	/* 途中省略 */
 
- 		viClose(scope);
- 		viClose(awg);
- 	    viClose(defaultRM);
- 	}
- 	```
+	viClose(scope);
+	viClose(awg);
+	viClose(defaultRM);
+}
+```
 
 1. ImGuiのウィジェットにコマンドを割り当てる。
 
