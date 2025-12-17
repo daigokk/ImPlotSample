@@ -58,7 +58,6 @@ void ShowWindow5(const ViSession scope) {
     ImGui::SetNextWindowSize(ImVec2(500 * Gui::monitorScale, 450 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin("Scope");
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
-    /*** ここから *************************************************/
     static double tdiv = 1e-3, vdiv1 = 0.1, vdiv2=0.1;
     ImGui::InputDouble("Time/Div", &tdiv, 1, 1);
     ImGui::InputDouble("Ch1 Volts/Div", &vdiv1, 1, 1);
@@ -92,7 +91,9 @@ void ShowWindow5(const ViSession scope) {
     ImGui::SameLine();
     static std::vector<double> times, voltages[2];
     if (ImGui::Button("Capture")) {
-        
+		/*** ここから *************************************************/
+    
+        /*** ここまで *************************************************/
     }
     ImPlot::SetNextAxesToFit();
     if (ImPlot::BeginPlot("Waveform", ImVec2(-1, -1))) {
@@ -102,7 +103,6 @@ void ShowWindow5(const ViSession scope) {
         ImPlot::PlotLine("Ch2", times.data(), voltages[1].data(), times.size());
         ImPlot::EndPlot();
     }
-    /*** ここまで *************************************************/
     // ウィンドウ終了
     ImGui::End();
 }
