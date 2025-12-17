@@ -31,7 +31,6 @@ void ShowWindow4(const ViSession awg) {
     ImGui::SetNextWindowSize(ImVec2(500 * Gui::monitorScale, 450 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin("AWG");
     /*** 描画したいImGuiのWidgetやImPlotのPlotをここに記述する ***/
-    /*** ここから *************************************************/
     static float freq = 1000, ampl = 1;
     ImGui::InputFloat("Freq.", &freq, 1, 1);
     ImGui::InputFloat("Ampl.", &ampl, 1, 1);
@@ -48,7 +47,6 @@ void ShowWindow4(const ViSession awg) {
         ampl = atof(ret);
     }
     ImGui::Text("%f Hz, %f V", freq, ampl);
-    /*** ここまで *************************************************/
     // ウィンドウ終了
     ImGui::End();
 }
