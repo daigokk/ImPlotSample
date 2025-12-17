@@ -13,4 +13,6 @@ double fg_get_freq(ViSession vi);
 int os_get_error(ViSession vi);
 void os_set_timediv(ViSession vi, double sec);
 double os_get_timediv(ViSession vi);
+int os_get_RecordLength(ViSession vi);
+void os_get_Waveforms(ViSession vi, int ch, double* voltages);
 int os_save_Waveformsf(ViSession vi, const char* format, ...);
