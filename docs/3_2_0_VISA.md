@@ -145,6 +145,9 @@ VISAは、接続方法に関わらず計測器に一意の「住所」を割り�
 // "USB0::????????::INSTR" の部分は、NI MAXで確認した実際のアドレスに置き換えてください。
 // このコードはVisual Studio環境を想定しています。
 
+// "visa64.lib"は"C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Lib_x64\msc"にあります。
+// "visa.h"と"visatype.h", "vpptype.h"は"C:\Program Files (x86)\IVI Foundation\VISA\WinNT\Include"にあります。
+// それぞれコピーして"main.cpp"と同じ場所に置いてください。
 #pragma comment(lib, "visa64.lib")
 #include <visa.h>
 #include <stdio.h>
