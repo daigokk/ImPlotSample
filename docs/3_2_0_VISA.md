@@ -90,7 +90,7 @@ VISAはあくまで「規格」であり、実際に通信を行う「実体(ド
 
 SCPIコマンドを使えば、異なる計測器メーカーでも同じ結果が期待できます。**しかしながら計測器メーカーごとに方言が存在するのでマニュアルを確認することが必要です。**
 
-* 異なる計測器メーカーでも同じ結果が期待できるSCPI`*IDN?`の使用例:
+* 異なる計測器メーカーでも同じ結果が期待できるSCPIコモンコマンドの一つである`*IDN?`の使用例:
   ```cpp
   char ret[256];
   viQueryf(vi, "%s", "%255t", "*IDN?\n", ret);
@@ -98,11 +98,11 @@ SCPIコマンドを使えば、異なる計測器メーカーでも同じ結果�
   ```
 * 計測器メーカーのSCPIの方言の例: オシロスコープのTime/divの問い合わせ
   * 横河計測 DLM2022([マニュアル](https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf)): `TIMebase:TDIV?`
-  ```cpp
-  char ret[256];
-  viQueryf(vi, "%s", "%255t", "TIMebase:TDIV?\n", ret);
-  printf("Time/div: %f", atof(ret));
-  ```
+    ```cpp
+    char ret[256];
+    viQueryf(vi, "%s", "%255t", "TIMebase:TDIV?\n", ret);
+    printf("Time/div: %f", atof(ret));
+    ```
   * Tektronix: `HORizontal:SECdiv?`
     ```cpp
     char ret[256];
