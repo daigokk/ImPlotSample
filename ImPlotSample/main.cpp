@@ -1,4 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <Windows.h>
+#undef SIZE
 #include <cmath>
 #include <iostream>
 #include <string>
