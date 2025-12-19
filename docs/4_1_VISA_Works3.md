@@ -18,7 +18,7 @@ void ShowWindow6(const ViSession awg, const ViSession scope) {
         for (int i = 0; i < N_F; i++) {
             // ファンクションジェネレータの周波数を設定する。
             viPrintf(awg, "XXXXXXXXXXXXXXXX %e\n", freqs[i]);
-            // オシロスコープのTime/divを設定する。
+            // オシロスコープのTime/divを設定する。以下の例だと10周期表示される。
             viPrintf(scope, "XXXXXXXXXXXXXXXX %.3f\n", 1.0 / freqs[i]);
             printf("%f\n", freqs[i]);
             // 波形がオシロスコープの画面に表示されるまで待つ(Time/Divの10倍以上)。
