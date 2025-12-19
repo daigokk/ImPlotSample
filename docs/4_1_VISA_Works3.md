@@ -32,7 +32,6 @@ void ShowWindow6(const ViSession awg, const ViSession scope) {
     
     ImGui::SameLine();
     if (ImGui::Button("Analysis")) {
-        double freqs[] = { FREQS };
         char filepath[256];
         for (int i = 0; i < N_FREQS; i++) {
             double times[N_LENGTH], ch1[N_LENGTH], ch2[N_LENGTH];
