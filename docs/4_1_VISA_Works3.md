@@ -34,10 +34,6 @@ void ShowWindow6(const ViSession awg, const ViSession scope) {
     if (ImGui::Button("Analysis")) {
         double freqs[] = { FREQS };
         char filepath[256];
-        std::vector<double> times, voltages[2];
-        times.resize(N_LENGTH);
-        voltages[0].resize(N_LENGTH);
-        voltages[1].resize(N_LENGTH);
         for (int i = 0; i < N_FREQS; i++) {
             double times[N_LENGTH], ch1[N_LENGTH], ch2[N_LENGTH];
             FILE* fp;
