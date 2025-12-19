@@ -127,4 +127,4 @@
 
 ## 謝辞
 
-サンプルプログラムでは[Dear ImGui](https://github.com/ocornut/imgui)と[ImPlot](https://github.com/epezent/implot)を使用しています。これらのシンプルで使いやすいGUIライブラリを公開してくれた作者はコミュニティーに感謝します。
+サンプルプログラムでは[Dear ImGui](https://github.com/ocornut/imgui)と[ImPlot](https://github.com/epezent/implot)を使用しています。これらのシンプルで使いやすいGUIライブラリを公開してくれた作者とコミュニティーに感謝申し上げます。
