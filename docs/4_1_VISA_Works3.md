@@ -39,7 +39,7 @@ void ShowWindow6(const ViSession awg, const ViSession scope) {
         for (int i = 0; i < N_FREQS; i++) {
             double times[N_LENGTH], ch1[N_LENGTH], ch2[N_LENGTH];
             FILE* fp;
-            sprintf(filepath, "waveforms_%06.0f.csv");
+            sprintf(filepath, "waveforms_%06.0f.csv", freqs[i]);
             fp = fopen(filepath, "r");
             for (int i = 0; i < N_LENGTH; i++) {
                 fscanf(fp, "%lf, %lf, %lf", &times[i], &ch1[i], &ch2[i]);
