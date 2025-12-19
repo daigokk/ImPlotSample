@@ -11,6 +11,8 @@ void ShowWindow6(const ViSession awg, const ViSession scope) {
     ImGui::SetNextWindowSize(ImVec2(500 * Gui::monitorScale, 450 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin("Bode");
     if (ImGui::Button("Measure")) {
+        // ファンクションジェネレータの出力をONにする。
+        viPrintf(awg, "XXXXXXXXXXXXXXXX\n");
         // トリガーモードをNORMにする。50Hz以下でも波形を止めるため。
         viPrintf(scope, "XXXXXXXXXXXXXXXX\n");
         // トリガーレベルを0Vにする。
