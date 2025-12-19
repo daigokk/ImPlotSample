@@ -89,6 +89,9 @@ void fft(const int size, const double dt, const double in_array[], double out_ar
 
 ## 4. レポート課題
 
+- レポートタイトル(自動計測実習 FFT)、学籍番号、氏名、図の説明、図番号を記載してください。
+
+
 1. 1kHz、振幅1V、位相差0度の正弦波の、振幅の周波数スペクトルのグラフを作ってください。
    - 加点例: 矩形波等のグラフと比較する。
      - 正弦波
