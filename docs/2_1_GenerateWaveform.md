@@ -123,3 +123,8 @@
 - 確認2: 改行コード
   
   ![ソースファイルの改行コード](./images/vs_12.png)
+
+
+## 謝辞
+
+サンプルプログラムでは[Dear ImGui](https://github.com/ocornut/imgui)と[ImPlot](https://github.com/epezent/implot)を使用しています。これらのシンプルで使いやすいGUIライブラリを公開してくれた作者はコミュニティーに感謝します。
