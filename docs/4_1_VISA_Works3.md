@@ -6,7 +6,7 @@
 
 void ShowWindow6(const ViSession awg, const ViSession scope) {
     static double freqs[] = { FREQS };
-    static double gains[N_F] = { 0 }, phases[N_F] = { 0 };
+    static double gains[N_FREQS] = { 0 }, phases[N_FREQS] = { 0 };
     // ウィンドウ開始
     ImGui::SetNextWindowSize(ImVec2(500 * Gui::monitorScale, 450 * Gui::monitorScale), ImGuiCond_FirstUseEver);
     ImGui::Begin("Bode");
@@ -15,10 +15,10 @@ void ShowWindow6(const ViSession awg, const ViSession scope) {
         viPrintf(scope, "XXXXXXXXXXXXXXXX\n");
         // トリガーレベルを0Vにする。
         viPrintf(scope, "XXXXXXXXXXXXXXXX\n");
-        for (int i = 0; i < N_F; i++) {
+        for (int i = 0; i < N_FREQS; i++) {
             // ファンクションジェネレータの周波数を設定する。
             viPrintf(awg, "XXXXXXXXXXXXXXXX %e\n", freqs[i]);
-            // オシロスコープのTime/divを設定する。以下の例だと10周期表示される。
+            // オシロスコープのTime/divを設定する。
             viPrintf(scope, "XXXXXXXXXXXXXXXX %.3f\n", 1.0 / freqs[i]);
             printf("%f\n", freqs[i]);
             // 波形がオシロスコープの画面に表示されるまで待つ(Time/Divの10倍以上)。
@@ -36,7 +36,7 @@ void ShowWindow6(const ViSession awg, const ViSession scope) {
         times.resize(N_LENGTH);
         voltages[0].resize(N_LENGTH);
         voltages[1].resize(N_LENGTH);
-        for (int i = 0; i < N_F; i++) {
+        for (int i = 0; i < N_FREQS; i++) {
             double times[N_LENGTH], ch1[N_LENGTH], ch2[N_LENGTH];
             FILE* fp;
             sprintf(filepath, "waveforms_%06.0f.csv");
@@ -61,9 +61,9 @@ void ShowWindow6(const ViSession awg, const ViSession scope) {
         ImPlot::SetupAxis(ImAxis_Y1, "Gain (dB)");
         ImPlot::SetupAxis(ImAxis_Y2, "Phase (Deg.)", ImPlotAxisFlags_Opposite);
         ImPlot::SetAxis(ImAxis_Y1);
-        ImPlot::PlotScatter("Gain", freqs, gains, N_F);
+        ImPlot::PlotScatter("Gain", freqs, gains, N_FREQS);
         ImPlot::SetAxis(ImAxis_Y2);
-        ImPlot::PlotScatter("Phase", freqs, phases, N_F);
+        ImPlot::PlotScatter("Phase", freqs, phases, N_FREQS);
         ImPlot::EndPlot();
     }
     // ウィンドウ終了
