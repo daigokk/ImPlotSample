@@ -13,7 +13,7 @@ void ShowWindow6(const ViSession awg, const ViSession scope) {
     if (ImGui::Button("Measure")) {
         // ファンクションジェネレータの出力をONにする。
         viPrintf(awg, "XXXXXXXXXXXXXXXX\n");
-        // トリガーモードをNORMにする。50Hz以下でも波形を止めるため。
+        // トリガーモードをNormalにする。50Hz以下でも波形を止めるため。
         viPrintf(scope, "XXXXXXXXXXXXXXXX\n");
         // トリガーレベルを0Vにする。
         viPrintf(scope, "XXXXXXXXXXXXXXXX\n");
