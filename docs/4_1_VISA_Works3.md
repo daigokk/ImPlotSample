@@ -1,7 +1,7 @@
 ```cpp
 // 「#define」はmain関数より前に置く。
-#define FREQS 1,2,5,10,20,50,100,200,500,1000,2000,5000
-#define N_F 12
+#define FREQS 10,20,50,100,200,500,1000,2000,5000
+#define N_F 9
 #define N_LENGTH 12500
 
 void ShowWindow6(const ViSession awg, const ViSession scope) {
