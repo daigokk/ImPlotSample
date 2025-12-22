@@ -79,9 +79,9 @@
 	    if (ImGui::Button("Set")) {
 	        /*** 5-238, 5-79ページ参照 ***/
 	        /*** https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf ***/
-	        viPrintf(scope, "XXXXXXXXXXXXXXX %e\n", tdiv);
-	        viPrintf(scope, "XXXXXXXXXXXXXXX %e\n", vdiv1);
-	        viPrintf(scope, "XXXXXXXXXXXXXXX %e\n", vdiv2);
+	        viPrintf(scope, "XXXXXXXXXXXXXXX %1.0e\n", tdiv);
+	        viPrintf(scope, "XXXXXXXXXXXXXXX %1.0e\n", vdiv1);
+	        viPrintf(scope, "XXXXXXXXXXXXXXX %1.0e\n", vdiv2);
 	    }
 	    if (ImGui::Button("Auto")) {
 	        /*** 5-75ページ参照 ***/
