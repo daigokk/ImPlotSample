@@ -79,6 +79,7 @@
 	    if (ImGui::Button("Set")) {
 	        /*** 5-238, 5-79ページ参照 ***/
 	        /*** https://cdn.tmi.yokogawa.com/IM710105-17.jp.pdf ***/
+ 			/*** 1,2,5以外の係数は基本的には送らない ***/
 	        viPrintf(scope, "XXXXXXXXXXXXXXX %1.0e\n", tdiv);
 	        viPrintf(scope, "XXXXXXXXXXXXXXX %1.0e\n", vdiv1);
 	        viPrintf(scope, "XXXXXXXXXXXXXXX %1.0e\n", vdiv2);
