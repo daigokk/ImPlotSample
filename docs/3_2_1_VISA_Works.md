@@ -1,4 +1,4 @@
-# 📝 3.2.2. VISAに関する演習問題
+# 📝 3.2.2. VISAに関する演習問題((回答)[./3_2_2_VISA_Answer.md])
 
 ## Q1. 次は、VISA(Virtual Instrument Software Architecture)が計測器制御において果たす役割を示している。正しいものを一つ選べ。
 * A. 計測器の電源規格
